@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
+import Container from "@/components/ui/Container.astro";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import { buildBreadcrumbSchema, buildThingSchema } from "@/lib/seo/schema";
+import type { BreadcrumbItem, SeoData } from "@/types/seo";
+
+interface Props {
+  title: string;
+  description: string;
+  seo: SeoData;
+  breadcrumbs: BreadcrumbItem[];
+}
+
+const { title, description, seo, breadcrumbs } = Astro.props;
+---
+<BaseLayout seo={seo}>
+  <Breadcrumbs items={breadcrumbs} />
+  <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
+  <JsonLd data={buildThingSchema("Service", seo, description)} />
+  <section class="page-hero">
+    <Container>
+      <div class="flow">
+        <h1>{title}</h1>
+        <p>{description}</p>
+      </div>
+    </Container>
+  </section>
+  <slot />
+</BaseLayout>

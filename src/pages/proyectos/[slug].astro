@@ -1,0 +1,49 @@
+---
+import Container from "@/components/ui/Container.astro";
+import ProjectGallery from "@/components/projects/ProjectGallery.astro";
+import { getProjectBySlug, getPublishedProjects } from "@/lib/content/projects";
+import { buildPageSeo } from "@/lib/seo/metadata";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+export async function getStaticPaths() {
+  const projects = await getPublishedProjects();
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const project = await getProjectBySlug(slug!);
+
+if (!project) {
+  throw new Error(`Proyecto no encontrado: ${slug}`);
+}
+
+const { Content } = await project.render();
+---
+<PageLayout
+  title={project.data.title}
+  intro={project.data.description}
+  seo={buildPageSeo({
+    ...project.data.seo,
+    canonical: project.data.seo.canonical ?? `/proyectos/${project.slug}`,
+    image: project.data.seo.image ?? project.data.coverImage,
+  })}
+  breadcrumbs={[
+    { name: "Proyectos", url: "/proyectos" },
+    { name: project.data.title, url: `/proyectos/${project.slug}` },
+  ]}
+>
+  <section class="section-padding">
+    <Container>
+      <div class="detail-grid">
+        <article class="prose flow">
+          <Content />
+        </article>
+        <aside class="flow">
+          <ProjectGallery images={[project.data.coverImage, ...project.data.gallery]} alt={project.data.coverAlt} />
+        </aside>
+      </div>
+    </Container>
+  </section>
+</PageLayout>

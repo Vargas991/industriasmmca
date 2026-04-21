@@ -1,0 +1,19 @@
+---
+import Container from "@/components/ui/Container.astro";
+import { getPageBySlug } from "@/lib/content/pages";
+import { buildPageSeo } from "@/lib/seo/metadata";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const page = await getPageBySlug("about");
+const seo = buildPageSeo(page?.data.seo);
+const { Content } = await page!.render();
+---
+<PageLayout title={page!.data.title} intro={page!.data.excerpt} seo={seo} breadcrumbs={[{ name: "Nosotros", url: "/nosotros" }]}>
+  <section class="section-padding">
+    <Container>
+      <article class="prose">
+        <Content />
+      </article>
+    </Container>
+  </section>
+</PageLayout>

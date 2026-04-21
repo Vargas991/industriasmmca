@@ -1,0 +1,13 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ServiceCard from "@/components/services/ServiceCard.astro";
+
+interface Props {
+  services: CollectionEntry<"services">[];
+}
+
+const { services } = Astro.props;
+---
+<div class="grid-cards">
+  {services.map((service) => <ServiceCard service={service} />)}
+</div>

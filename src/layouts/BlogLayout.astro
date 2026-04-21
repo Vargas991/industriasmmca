@@ -1,0 +1,15 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import type { SeoData } from "@/types/seo";
+
+interface Props {
+  title: string;
+  intro?: string;
+  seo: SeoData;
+}
+
+const { title, intro, seo } = Astro.props;
+---
+<PageLayout title={title} intro={intro} seo={seo}>
+  <slot />
+</PageLayout>

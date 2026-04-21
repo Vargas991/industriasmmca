@@ -1,0 +1,25 @@
+:root {
+  --color-ink: #22302d;
+  --color-sage: #6d8b86;
+  --color-sage-deep: #46645f;
+  --color-mint: #dceee8;
+  --color-ice: #f6fbf9;
+  --color-gold: #c8a64b;
+  --color-gold-light: #e2c978;
+  --color-gold-deep: #9b7a2e;
+  --color-border: #b8c4bf;
+  --color-surface: #ffffff;
+  --color-surface-alt: #eef6f3;
+  --color-muted: #66746f;
+  --font-display: "Segoe UI", "Trebuchet MS", sans-serif;
+  --font-body: "Verdana", "Geneva", sans-serif;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --radius: 1rem;
+  --shadow: 0 20px 42px rgba(34, 48, 45, 0.1);
+  --shadow-soft: 0 12px 28px rgba(70, 100, 95, 0.08);
+  --max-width: 1180px;
+}

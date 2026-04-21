@@ -1,0 +1,14 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ProductCard from "@/components/products/ProductCard.astro";
+
+interface Props {
+  products: CollectionEntry<"products">[];
+  categoryLabels?: Record<string, string>;
+}
+
+const { products, categoryLabels = {} } = Astro.props;
+---
+<div class="grid-cards">
+  {products.map((product) => <ProductCard product={product} categoryLabel={categoryLabels[product.data.category]} />)}
+</div>

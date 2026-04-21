@@ -1,0 +1,22 @@
+---
+import ServiceGrid from "@/components/services/ServiceGrid.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Container from "@/components/ui/Container.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  services: CollectionEntry<"services">[];
+}
+
+const { services } = Astro.props;
+---
+<section class="section-padding section-alt">
+  <Container>
+    <SectionHeading
+      eyebrow="Servicios"
+      title="Acompanamos desde el diseno hasta la instalacion"
+      description="Fabricamos, montamos y resolvemos necesidades a medida."
+    />
+    <ServiceGrid services={services} />
+  </Container>
+</section>

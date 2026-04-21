@@ -1,0 +1,29 @@
+---
+import CTASection from "@/components/home/CTASection.astro";
+import FeaturedProducts from "@/components/home/FeaturedProducts.astro";
+import HeroSection from "@/components/home/HeroSection.astro";
+import ProjectsPreview from "@/components/home/ProjectsPreview.astro";
+import ServicesOverview from "@/components/home/ServicesOverview.astro";
+import TestimonialsSection from "@/components/home/TestimonialsSection.astro";
+import WhyChooseUs from "@/components/home/WhyChooseUs.astro";
+import { getFeaturedProducts } from "@/lib/content/products";
+import { getFeaturedProjects } from "@/lib/content/projects";
+import { getFeaturedServices } from "@/lib/content/services";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildPageSeo } from "@/lib/seo/metadata";
+
+const [products, services, projects] = await Promise.all([
+  getFeaturedProducts(),
+  getFeaturedServices(),
+  getFeaturedProjects(),
+]);
+---
+<BaseLayout seo={buildPageSeo()}>
+  <HeroSection />
+  <FeaturedProducts products={products} />
+  <ServicesOverview services={services} />
+  <WhyChooseUs />
+  <ProjectsPreview projects={projects} />
+  <TestimonialsSection />
+  <CTASection />
+</BaseLayout>

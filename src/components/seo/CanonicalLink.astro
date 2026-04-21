@@ -1,0 +1,8 @@
+---
+interface Props {
+  href?: string;
+}
+
+const { href } = Astro.props;
+---
+{href && <link rel="canonical" href={href} />}

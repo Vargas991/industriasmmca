@@ -1,0 +1,20 @@
+---
+interface Props {
+  specs?: Array<{
+    label: string;
+    value: string;
+  }>;
+}
+
+const { specs } = Astro.props;
+---
+{specs && specs.length > 0 && (
+  <dl class="spec-grid">
+    {specs.map((spec) => (
+      <>
+        <dt>{spec.label}</dt>
+        <dd>{spec.value}</dd>
+      </>
+    ))}
+  </dl>
+)}

@@ -1,0 +1,19 @@
+---
+import Container from "@/components/ui/Container.astro";
+import type { BreadcrumbItem } from "@/types/seo";
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+<Container>
+  <nav aria-label="Breadcrumb" class="breadcrumbs">
+    <ol>
+      {items.map((item) => (
+        <li><a href={item.url}>{item.name}</a></li>
+      ))}
+    </ol>
+  </nav>
+</Container>

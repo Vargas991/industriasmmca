@@ -1,0 +1,41 @@
+---
+import Footer from "@/components/layout/Footer.astro";
+import Header from "@/components/layout/Header.astro";
+import MetaTags from "@/components/seo/MetaTags.astro";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import WhatsAppButton from "@/components/shared/WhatsAppButton.astro";
+import { buildDefaultSeo } from "@/lib/seo/metadata";
+import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo/schema";
+import "@/styles/tokens.css";
+import "@/styles/globals.css";
+import "@/styles/utilities.css";
+import "@/styles/components.css";
+import type { SeoData } from "@/types/seo";
+
+interface Props {
+  seo?: SeoData;
+}
+
+const { seo = buildDefaultSeo() } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <MetaTags seo={seo} />
+    <JsonLd data={buildOrganizationSchema()} />
+    <JsonLd data={buildWebSiteSchema()} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppButton />
+  </body>
+</html>

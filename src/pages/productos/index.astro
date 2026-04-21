@@ -1,0 +1,54 @@
+---
+import ProductCategoryGrid from "@/components/products/ProductCategoryGrid.astro";
+import ProductGrid from "@/components/products/ProductGrid.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Container from "@/components/ui/Container.astro";
+import { getPublishedProducts } from "@/lib/content/products";
+import { getProductCategoryMap, getProductCategorySections } from "@/lib/content/productCategories";
+import { buildPageSeo } from "@/lib/seo/metadata";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const [products, sections, categoryMap] = await Promise.all([
+  getPublishedProducts(),
+  getProductCategorySections(),
+  getProductCategoryMap(),
+]);
+const categoryLabels = Object.fromEntries(
+  Object.entries(categoryMap).map(([slug, category]) => [slug, category.data.title]),
+);
+---
+<PageLayout
+  title="Productos industriales"
+  intro="Catalogo organizado por categorias para navegar mejor cada linea de productos."
+  seo={buildPageSeo({
+    title: "Productos industriales | Industrias MM",
+    description: "Catalogo de productos metalicos para industria, comercio y logistica.",
+    canonical: "/productos",
+  })}
+  breadcrumbs={[{ name: "Productos", url: "/productos" }]}
+>
+  <section class="section-padding">
+    <Container>
+      <div class="flow">
+        <SectionHeading
+          eyebrow="Categorias"
+          title="Explora el catalogo por linea de producto"
+          description="Cada categoria agrupa soluciones relacionadas para hacer mas clara la navegacion y el mantenimiento del contenido."
+        />
+        <ProductCategoryGrid sections={sections} />
+      </div>
+    </Container>
+  </section>
+  <section class="section-padding section-alt">
+    <Container>
+      <div class="flow">
+        <SectionHeading
+          eyebrow="Todos los productos"
+          title="Vista general del catalogo"
+          description="Tambien puedes revisar el inventario completo de productos publicados."
+        />
+        <ProductGrid products={products} categoryLabels={categoryLabels} />
+      </div>
+    </Container>
+  </section>
+</PageLayout>

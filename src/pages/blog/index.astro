@@ -1,0 +1,31 @@
+---
+import Container from "@/components/ui/Container.astro";
+import { getPublishedPosts } from "@/lib/content/blog";
+import { buildPageSeo } from "@/lib/seo/metadata";
+import BlogLayout from "@/layouts/BlogLayout.astro";
+
+const posts = await getPublishedPosts();
+---
+<BlogLayout
+  title="Blog"
+  intro="Notas sobre mantenimiento, almacenamiento y proyectos metalicos."
+  seo={buildPageSeo({
+    title: "Blog | Industrias MM",
+    description: "Contenido editorial sobre soluciones industriales y metalmecanicas.",
+    canonical: "/blog",
+  })}
+>
+  <section class="section-padding">
+    <Container>
+      <div class="grid-cards">
+        {posts.map((post) => (
+          <article class="card flow">
+            <p class="eyebrow">{post.data.publishedAt}</p>
+            <h2><a href={`/blog/${post.slug}`}>{post.data.title}</a></h2>
+            <p>{post.data.excerpt}</p>
+          </article>
+        ))}
+      </div>
+    </Container>
+  </section>
+</BlogLayout>

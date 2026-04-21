@@ -1,0 +1,25 @@
+---
+import ServiceGrid from "@/components/services/ServiceGrid.astro";
+import Container from "@/components/ui/Container.astro";
+import { getPublishedServices } from "@/lib/content/services";
+import { buildPageSeo } from "@/lib/seo/metadata";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const services = await getPublishedServices();
+---
+<PageLayout
+  title="Servicios industriales"
+  intro="Fabricacion, instalacion y acompanamiento tecnico para proyectos metalicos."
+  seo={buildPageSeo({
+    title: "Servicios industriales | Industrias MM",
+    description: "Servicios de fabricacion metalica, instalacion y desarrollo a medida.",
+    canonical: "/servicios",
+  })}
+  breadcrumbs={[{ name: "Servicios", url: "/servicios" }]}
+>
+  <section class="section-padding">
+    <Container>
+      <ServiceGrid services={services} />
+    </Container>
+  </section>
+</PageLayout>

@@ -1,0 +1,21 @@
+---
+import ContactForm from "@/components/contact/ContactForm.astro";
+import ContactInfo from "@/components/contact/ContactInfo.astro";
+import Container from "@/components/ui/Container.astro";
+import { getPageBySlug } from "@/lib/content/pages";
+import { buildPageSeo } from "@/lib/seo/metadata";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const page = await getPageBySlug("contact");
+const seo = buildPageSeo(page?.data.seo);
+---
+<PageLayout title={page!.data.title} intro={page!.data.excerpt} seo={seo} breadcrumbs={[{ name: "Contacto", url: "/contacto" }]}>
+  <section class="section-padding">
+    <Container>
+      <div class="contact-grid">
+        <ContactForm />
+        <ContactInfo />
+      </div>
+    </Container>
+  </section>
+</PageLayout>

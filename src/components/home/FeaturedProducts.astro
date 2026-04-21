@@ -1,0 +1,22 @@
+---
+import ProductGrid from "@/components/products/ProductGrid.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Container from "@/components/ui/Container.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  products: CollectionEntry<"products">[];
+}
+
+const { products } = Astro.props;
+---
+<section class="section-padding">
+  <Container>
+    <SectionHeading
+      eyebrow="Productos"
+      title="Catalogo orientado a operacion real"
+      description="Soluciones para almacenamiento, exhibicion y orden industrial."
+    />
+    <ProductGrid products={products} />
+  </Container>
+</section>

@@ -1,0 +1,21 @@
+---
+import Card from "@/components/ui/Card.astro";
+import Image from "@/components/ui/Image.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+---
+<Card>
+  <a class="card-link flow" href={`/proyectos/${project.slug}`}>
+    <Image src={project.data.coverImage} alt={project.data.coverAlt} />
+    <div class="flow">
+      <p class="eyebrow">{project.data.sector}</p>
+      <h3>{project.data.title}</h3>
+      <p>{project.data.excerpt}</p>
+    </div>
+  </a>
+</Card>

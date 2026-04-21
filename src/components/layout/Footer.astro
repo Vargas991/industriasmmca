@@ -1,0 +1,30 @@
+---
+import Container from "@/components/ui/Container.astro";
+import { footerNavigation } from "@/config/navigation";
+import { siteConfig } from "@/config/site";
+import { formatPhoneForHref } from "@/lib/utils/format";
+---
+<footer class="site-footer">
+  <Container>
+    <div class="footer-grid">
+      <div class="flow">
+        <strong>{siteConfig.name}</strong>
+        <p>{siteConfig.tagline}</p>
+        <p>{siteConfig.address}</p>
+      </div>
+      <div class="flow">
+        <strong>Navegacion</strong>
+        <ul class="footer-links">
+          {footerNavigation.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div class="flow">
+        <strong>Contacto</strong>
+        <a href={`tel:${formatPhoneForHref(siteConfig.phone)}`}>{siteConfig.phone}</a>
+        <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+      </div>
+    </div>
+  </Container>
+</footer>

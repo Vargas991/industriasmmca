@@ -1,0 +1,25 @@
+---
+import ProjectGrid from "@/components/projects/ProjectGrid.astro";
+import Container from "@/components/ui/Container.astro";
+import { getPublishedProjects } from "@/lib/content/projects";
+import { buildPageSeo } from "@/lib/seo/metadata";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const projects = await getPublishedProjects();
+---
+<PageLayout
+  title="Proyectos realizados"
+  intro="Trabajos recientes en almacenamiento, instalacion y soluciones metalicas."
+  seo={buildPageSeo({
+    title: "Proyectos industriales | Industrias MM",
+    description: "Casos de exito en fabricacion, instalacion y desarrollo metalico.",
+    canonical: "/proyectos",
+  })}
+  breadcrumbs={[{ name: "Proyectos", url: "/proyectos" }]}
+>
+  <section class="section-padding">
+    <Container>
+      <ProjectGrid projects={projects} />
+    </Container>
+  </section>
+</PageLayout>

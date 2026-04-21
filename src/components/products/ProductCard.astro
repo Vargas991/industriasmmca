@@ -1,0 +1,22 @@
+---
+import Card from "@/components/ui/Card.astro";
+import Image from "@/components/ui/Image.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  product: CollectionEntry<"products">;
+  categoryLabel?: string;
+}
+
+const { product, categoryLabel } = Astro.props;
+---
+<Card>
+  <a class="card-link flow" href={`/productos/${product.slug}`}>
+    <Image src={product.data.coverImage} alt={product.data.coverAlt} />
+    <div class="flow">
+      {categoryLabel && <p class="eyebrow">{categoryLabel}</p>}
+      <h3>{product.data.title}</h3>
+      <p>{product.data.excerpt}</p>
+    </div>
+  </a>
+</Card>

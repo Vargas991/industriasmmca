@@ -1,0 +1,8 @@
+---
+import { socialLinks } from "@/data/social-links";
+---
+<ul class="social-links">
+  {socialLinks.map((link) => (
+    <li><a href={link.href} target="_blank" rel="noreferrer">{link.label}</a></li>
+  ))}
+</ul>

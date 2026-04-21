@@ -1,0 +1,12 @@
+---
+import { siteConfig } from "@/config/site";
+import SocialLinks from "@/components/shared/SocialLinks.astro";
+import { formatPhoneForHref } from "@/lib/utils/format";
+---
+<div class="flow">
+  <h2>Contacto directo</h2>
+  <p>{siteConfig.address}</p>
+  <a href={`tel:${formatPhoneForHref(siteConfig.phone)}`}>{siteConfig.phone}</a>
+  <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+  <SocialLinks />
+</div>

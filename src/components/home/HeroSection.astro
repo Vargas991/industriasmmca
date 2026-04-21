@@ -1,0 +1,23 @@
+---
+import Button from "@/components/ui/Button.astro";
+import Container from "@/components/ui/Container.astro";
+import { siteConfig } from "@/config/site";
+---
+<section class="hero-section">
+  <Container>
+    <div class="hero-grid">
+      <div class="flow">
+        <p class="eyebrow">Soluciones industriales</p>
+        <h1>{siteConfig.tagline}</h1>
+        <p>{siteConfig.description}</p>
+        <div class="hero-actions">
+          <Button href="/contacto">Solicitar cotizacion</Button>
+          <Button href="/productos" variant="secondary">Ver catalogo</Button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="/images/hero/industrial-grid.svg" alt="Ilustracion de soluciones metalicas" loading="eager" />
+      </div>
+    </div>
+  </Container>
+</section>

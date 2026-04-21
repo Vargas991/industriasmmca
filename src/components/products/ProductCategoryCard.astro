@@ -1,0 +1,22 @@
+---
+import Card from "@/components/ui/Card.astro";
+import Image from "@/components/ui/Image.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  category: CollectionEntry<"product-categories">;
+  productCount: number;
+}
+
+const { category, productCount } = Astro.props;
+---
+<Card>
+  <a class="card-link flow" href={`/productos/categoria/${category.slug}`}>
+    <Image src={category.data.coverImage} alt={category.data.coverAlt} />
+    <div class="flow">
+      <p class="eyebrow">{productCount} producto{productCount === 1 ? "" : "s"}</p>
+      <h3>{category.data.title}</h3>
+      <p>{category.data.excerpt}</p>
+    </div>
+  </a>
+</Card>

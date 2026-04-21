@@ -1,0 +1,10 @@
+---
+interface Props {
+  benefits: string[];
+}
+
+const { benefits } = Astro.props;
+---
+<ul class="feature-list">
+  {benefits.map((item) => <li>{item}</li>)}
+</ul>

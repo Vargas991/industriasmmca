@@ -1,0 +1,10 @@
+---
+import { mainNavigation } from "@/config/navigation";
+---
+<nav aria-label="Principal">
+  <ul class="nav-list">
+    {mainNavigation.map((item) => (
+      <li><a href={item.href}>{item.label}</a></li>
+    ))}
+  </ul>
+</nav>

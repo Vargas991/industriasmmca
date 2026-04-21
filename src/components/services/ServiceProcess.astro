@@ -1,0 +1,10 @@
+---
+interface Props {
+  steps: string[];
+}
+
+const { steps } = Astro.props;
+---
+<ol class="process-list">
+  {steps.map((step) => <li>{step}</li>)}
+</ol>

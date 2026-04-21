@@ -1,0 +1,13 @@
+---
+import Container from "@/components/ui/Container.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { companyHighlights } from "@/data/company";
+---
+<section class="section-padding">
+  <Container>
+    <SectionHeading eyebrow="Ventajas" title="Por que trabajar con Industrias MM" />
+    <ul class="feature-list">
+      {companyHighlights.map((item) => <li>{item}</li>)}
+    </ul>
+  </Container>
+</section>

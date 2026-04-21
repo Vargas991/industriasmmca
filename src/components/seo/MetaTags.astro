@@ -1,0 +1,28 @@
+---
+import CanonicalLink from "@/components/seo/CanonicalLink.astro";
+import { metadataDefaults } from "@/consts/metadata";
+import { toAbsoluteUrl } from "@/lib/utils/urls";
+import type { SeoData } from "@/types/seo";
+
+interface Props {
+  seo: SeoData;
+}
+
+const { seo } = Astro.props;
+const canonical = seo.canonical ? toAbsoluteUrl(seo.canonical) : undefined;
+const image = seo.image ? toAbsoluteUrl(seo.image) : undefined;
+---
+<title>{seo.title}</title>
+<meta name="description" content={seo.description} />
+<meta property="og:locale" content={metadataDefaults.locale} />
+<meta property="og:title" content={seo.title} />
+<meta property="og:description" content={seo.description} />
+<meta property="og:type" content={seo.type ?? "website"} />
+{canonical && <meta property="og:url" content={canonical} />}
+{image && <meta property="og:image" content={image} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={seo.title} />
+<meta name="twitter:description" content={seo.description} />
+{image && <meta name="twitter:image" content={image} />}
+{seo.noindex && <meta name="robots" content="noindex, nofollow" />}
+<CanonicalLink href={canonical} />

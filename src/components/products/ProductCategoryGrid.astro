@@ -1,0 +1,15 @@
+---
+import ProductCategoryCard from "@/components/products/ProductCategoryCard.astro";
+import type { ProductCategorySection } from "@/lib/content/productCategories";
+
+interface Props {
+  sections: ProductCategorySection[];
+}
+
+const { sections } = Astro.props;
+---
+<div class="grid-cards">
+  {sections.map((section) => (
+    <ProductCategoryCard category={section.category} productCount={section.products.length} />
+  ))}
+</div>

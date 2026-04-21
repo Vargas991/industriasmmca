@@ -1,0 +1,19 @@
+---
+import Container from "@/components/ui/Container.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { testimonials } from "@/data/testimonials";
+---
+<section class="section-padding">
+  <Container>
+    <SectionHeading eyebrow="Clientes" title="Confianza construida con resultados" />
+    <div class="testimonial-grid">
+      {testimonials.map((item) => (
+        <article class="card flow">
+          <p>"{item.quote}"</p>
+          <strong>{item.name}</strong>
+          <small>{item.role}, {item.company}</small>
+        </article>
+      ))}
+    </div>
+  </Container>
+</section>

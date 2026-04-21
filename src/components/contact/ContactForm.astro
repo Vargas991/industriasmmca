@@ -1,0 +1,12 @@
+---
+import Button from "@/components/ui/Button.astro";
+import Input from "@/components/ui/Input.astro";
+import Textarea from "@/components/ui/Textarea.astro";
+---
+<form class="contact-form flow" method="post" action="/api/contact">
+  <Input id="name" name="name" label="Nombre" required />
+  <Input id="email" name="email" label="Correo" type="email" required />
+  <Input id="phone" name="phone" label="Telefono" />
+  <Textarea id="message" name="message" label="Mensaje" required />
+  <Button>Enviar solicitud</Button>
+</form>

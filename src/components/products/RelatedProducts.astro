@@ -1,0 +1,16 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ProductGrid from "@/components/products/ProductGrid.astro";
+
+interface Props {
+  products: CollectionEntry<"products">[];
+}
+
+const { products } = Astro.props;
+---
+{products.length > 0 && (
+  <section class="section-padding">
+    <h2>Productos relacionados</h2>
+    <ProductGrid products={products} />
+  </section>
+)}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#22302d"/>
+  <circle cx="950" cy="140" r="180" fill="#c8a64b" opacity="0.3"/>
+  <text x="90" y="260" fill="#f6fbf9" font-family="Segoe UI, sans-serif" font-size="82" font-weight="700">
+    Industrias MM
+  </text>
+  <text x="90" y="350" fill="#dceee8" font-family="Verdana, sans-serif" font-size="34">
+    Soluciones metalmecanicas para industria y comercio
+  </text>
+</svg>

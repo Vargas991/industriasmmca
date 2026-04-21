@@ -1,0 +1,97 @@
+local_backend: true
+
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "product-categories"
+    label: "Categorias de productos"
+    label_singular: "Categoria"
+    folder: "src/content/product-categories"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "Titulo", name: "title", widget: "string" }
+      - { label: "Extracto", name: "excerpt", widget: "text" }
+      - { label: "Descripcion", name: "description", widget: "text" }
+      - { label: "Destacada", name: "featured", widget: "boolean", default: false }
+      - label: "Estado"
+        name: "status"
+        widget: "select"
+        default: "published"
+        options:
+          - { label: "Publicado", value: "published" }
+          - { label: "Borrador", value: "draft" }
+      - { label: "Orden", name: "order", widget: "number", default: 0, value_type: "int", min: 0 }
+      - { label: "Imagen de portada", name: "coverImage", widget: "image" }
+      - { label: "Alt de portada", name: "coverAlt", widget: "string" }
+      - label: "SEO"
+        name: "seo"
+        widget: "object"
+        fields:
+          - { label: "Title SEO", name: "title", widget: "string" }
+          - { label: "Description SEO", name: "description", widget: "text" }
+          - { label: "Canonical", name: "canonical", widget: "string", required: false }
+          - { label: "Imagen social", name: "image", widget: "image", required: false }
+      - { label: "Contenido", name: "body", widget: "markdown", required: false }
+
+  - name: "products"
+    label: "Productos"
+    label_singular: "Producto"
+    folder: "src/content/products"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "Titulo", name: "title", widget: "string" }
+      - label: "Categoria"
+        name: "category"
+        widget: "relation"
+        collection: "product-categories"
+        search_fields: ["title", "excerpt"]
+        value_field: "{{slug}}"
+        display_fields: ["{{title}}"]
+      - { label: "Extracto", name: "excerpt", widget: "text" }
+      - { label: "Descripcion corta", name: "description", widget: "text" }
+      - { label: "Destacado", name: "featured", widget: "boolean", default: false }
+      - label: "Estado"
+        name: "status"
+        widget: "select"
+        default: "published"
+        options:
+          - { label: "Publicado", value: "published" }
+          - { label: "Borrador", value: "draft" }
+      - { label: "Imagen de portada", name: "coverImage", widget: "image" }
+      - { label: "Alt de portada", name: "coverAlt", widget: "string" }
+      - label: "Galeria"
+        name: "gallery"
+        widget: "list"
+        required: false
+        field: { label: "Imagen", name: "image", widget: "image" }
+      - { label: "Ficha tecnica", name: "specSheet", widget: "file", required: false }
+      - label: "Beneficios"
+        name: "benefits"
+        widget: "list"
+        required: false
+        field: { label: "Beneficio", name: "benefit", widget: "string" }
+      - label: "Especificaciones"
+        name: "specs"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Etiqueta", name: "label", widget: "string" }
+          - { label: "Valor", name: "value", widget: "string" }
+      - label: "SEO"
+        name: "seo"
+        widget: "object"
+        fields:
+          - { label: "Title SEO", name: "title", widget: "string" }
+          - { label: "Description SEO", name: "description", widget: "text" }
+          - { label: "Canonical", name: "canonical", widget: "string", required: false }
+          - { label: "Imagen social", name: "image", widget: "image", required: false }
+      - { label: "Contenido", name: "body", widget: "markdown", required: false }

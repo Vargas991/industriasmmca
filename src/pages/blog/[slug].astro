@@ -1,0 +1,39 @@
+---
+import Container from "@/components/ui/Container.astro";
+import { getPostBySlug, getPublishedPosts } from "@/lib/content/blog";
+import { buildPageSeo } from "@/lib/seo/metadata";
+import BlogLayout from "@/layouts/BlogLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const post = await getPostBySlug(slug!);
+
+if (!post) {
+  throw new Error(`Post no encontrado: ${slug}`);
+}
+
+const { Content } = await post.render();
+---
+<BlogLayout
+  title={post.data.title}
+  intro={post.data.excerpt}
+  seo={buildPageSeo({
+    ...post.data.seo,
+    canonical: post.data.seo.canonical ?? `/blog/${post.slug}`,
+    type: "article",
+  })}
+>
+  <section class="section-padding">
+    <Container>
+      <article class="prose">
+        <Content />
+      </article>
+    </Container>
+  </section>
+</BlogLayout>

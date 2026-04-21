@@ -1,0 +1,61 @@
+---
+import Container from "@/components/ui/Container.astro";
+import QuoteCTA from "@/components/contact/QuoteCTA.astro";
+import RelatedServices from "@/components/services/RelatedServices.astro";
+import ServiceBenefits from "@/components/services/ServiceBenefits.astro";
+import ServiceProcess from "@/components/services/ServiceProcess.astro";
+import { getPublishedServices, getRelatedServices, getServiceBySlug } from "@/lib/content/services";
+import { buildServiceSeo } from "@/lib/seo/metadata";
+import ServiceLayout from "@/layouts/ServiceLayout.astro";
+
+export async function getStaticPaths() {
+  const services = await getPublishedServices();
+  return services.map((service) => ({
+    params: { slug: service.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const service = await getServiceBySlug(slug!);
+
+if (!service) {
+  throw new Error(`Servicio no encontrado: ${slug}`);
+}
+
+const relatedServices = await getRelatedServices(service.slug);
+const seo = buildServiceSeo(
+  service.data.seo.title,
+  service.data.seo.description,
+  service.data.seo.canonical ?? `/servicios/${service.slug}`,
+  service.data.seo.image ?? service.data.coverImage,
+);
+const { Content } = await service.render();
+---
+<ServiceLayout
+  title={service.data.title}
+  description={service.data.description}
+  seo={seo}
+  breadcrumbs={[
+    { name: "Servicios", url: "/servicios" },
+    { name: service.data.title, url: `/servicios/${service.slug}` },
+  ]}
+>
+  <section class="section-padding">
+    <Container>
+      <div class="detail-grid">
+        <article class="prose flow">
+          <Content />
+          <h2>Beneficios</h2>
+          <ServiceBenefits benefits={service.data.benefits} />
+          <h2>Proceso</h2>
+          <ServiceProcess steps={service.data.process} />
+        </article>
+        <aside class="flow">
+          <img src={service.data.coverImage} alt={service.data.coverAlt} />
+        </aside>
+      </div>
+      <QuoteCTA />
+      <RelatedServices services={relatedServices} />
+    </Container>
+  </section>
+</ServiceLayout>

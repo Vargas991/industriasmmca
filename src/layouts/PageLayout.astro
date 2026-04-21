@@ -1,0 +1,27 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
+import Container from "@/components/ui/Container.astro";
+import type { BreadcrumbItem, SeoData } from "@/types/seo";
+
+interface Props {
+  title: string;
+  intro?: string;
+  seo: SeoData;
+  breadcrumbs?: BreadcrumbItem[];
+}
+
+const { title, intro, seo, breadcrumbs = [] } = Astro.props;
+---
+<BaseLayout seo={seo}>
+  {breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} />}
+  <section class="page-hero">
+    <Container>
+      <div class="flow">
+        <h1>{title}</h1>
+        {intro && <p>{intro}</p>}
+      </div>
+    </Container>
+  </section>
+  <slot />
+</BaseLayout>

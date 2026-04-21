@@ -1,0 +1,18 @@
+---
+import ProjectGrid from "@/components/projects/ProjectGrid.astro";
+import Container from "@/components/ui/Container.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+
+const { projects } = Astro.props;
+---
+<section class="section-padding section-alt">
+  <Container>
+    <SectionHeading eyebrow="Proyectos" title="Casos reales de fabricacion e instalacion" />
+    <ProjectGrid projects={projects} />
+  </Container>
+</section>
