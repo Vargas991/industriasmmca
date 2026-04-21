@@ -283,6 +283,23 @@
   color: #fff;
 }
 
+.auth-shell {
+  max-width: 34rem;
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(184, 196, 191, 0.8);
+  border-radius: calc(var(--radius) + 0.25rem);
+  box-shadow: var(--shadow);
+}
+
+.identity-message[data-tone="error"] {
+  color: #9f2d2d;
+}
+
+.identity-message[data-tone="success"] {
+  color: var(--color-sage-deep);
+}
+
 .section-alt {
   background: linear-gradient(180deg, rgba(220, 238, 232, 0.42), rgba(255, 255, 255, 0.72));
 }
