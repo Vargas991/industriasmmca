@@ -38,14 +38,15 @@ const { seo = buildDefaultSeo() } = Astro.props;
     </main>
     <Footer />
     <WhatsAppButton />
+    <script>
+      import "@/scripts/netlify-identity-callback";
+    </script>
     <script is:inline>
       if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", (user) => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
-            });
-          }
+        window.netlifyIdentity.on("init", () => {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
         });
       }
     </script>

@@ -12,6 +12,7 @@
     "cms:proxy": "decap-server"
   },
   "dependencies": {
+    "@netlify/identity": "^1.0.0",
     "@astrojs/sitemap": "^3.2.1",
     "astro": "^5.7.4",
     "zod": "^3.24.3"
