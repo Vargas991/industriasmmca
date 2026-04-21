@@ -1,22 +1,65 @@
 ---
-import ProductGrid from "@/components/products/ProductGrid.astro";
+import Button from "@/components/ui/Button.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import Container from "@/components/ui/Container.astro";
 import type { CollectionEntry } from "astro:content";
+import { slugToTitle } from "@/lib/utils/strings";
 
 interface Props {
   products: CollectionEntry<"products">[];
 }
 
 const { products } = Astro.props;
+const paletteClasses = [
+  "product-showcase-card--mint",
+  "product-showcase-card--powder",
+  "product-showcase-card--lilac",
+  "product-showcase-card--sand",
+];
 ---
-<section class="section-padding">
+<section class="section-padding product-showcase-section">
   <Container>
-    <SectionHeading
-      eyebrow="Productos"
-      title="Catalogo orientado a operacion real"
-      description="Soluciones para almacenamiento, exhibicion y orden industrial."
-    />
-    <ProductGrid products={products} />
+    <div class="product-showcase-shell">
+      <div class="product-showcase-heading">
+        <SectionHeading
+          eyebrow="Productos"
+          title="Productos destacados"
+          description="Una seleccion de soluciones listas para almacenamiento, retail y operacion comercial."
+        />
+      </div>
+
+      <div class="product-showcase-stage">
+        <div class="product-showcase-visual" aria-hidden="true"></div>
+
+        <div class="product-showcase-grid">
+          {products.map((product, index) => (
+            <article class={`product-showcase-card ${paletteClasses[index % paletteClasses.length]}`}>
+              <a class="product-showcase-link" href={`/productos/${product.slug}`}>
+                <img
+                  class="product-showcase-image"
+                  src={product.data.coverImage}
+                  alt={product.data.coverAlt}
+                  loading="lazy"
+                />
+                <div class="flow">
+                  <p class="eyebrow">{slugToTitle(product.data.category)}</p>
+                  <h3>{product.data.title}</h3>
+                  <p>{product.data.excerpt}</p>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div class="product-showcase-footer">
+        <div class="product-showcase-rail">
+          <span class="product-showcase-rail-fill"></span>
+          <span class="product-showcase-dot product-showcase-dot--active"></span>
+          <span class="product-showcase-dot"></span>
+        </div>
+        <Button href="/productos">Explorar catalogo</Button>
+      </div>
+    </div>
   </Container>
 </section>

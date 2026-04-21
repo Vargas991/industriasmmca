@@ -1,1 +1,1 @@
-export const defaultSeoImage = "/images/brand/social-card-industria.svg";
+export const defaultSeoImage = "/images/brand/logo.webp";

@@ -24,7 +24,9 @@ const { seo = buildDefaultSeo() } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/webp" href="/images/brand/logo.webp" />
+    <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/images/brand/logo.webp" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <MetaTags seo={seo} />

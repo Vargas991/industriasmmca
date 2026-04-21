@@ -5,8 +5,22 @@ import Navbar from "@/components/layout/Navbar.astro";
 <header class="site-header">
   <Container>
     <div class="header-inner">
-      <a class="brand" href="/">Industrias MM</a>
-      <Navbar />
+      <a class="brand" href="/" aria-label="Ir al inicio de Industrias MM">
+        <img class="brand-logo" src="/images/brand/logo.webp" alt="Industrias MM" />
+      </a>
+      <div class="desktop-nav">
+        <Navbar />
+      </div>
+      <details class="mobile-nav">
+        <summary aria-label="Abrir menu de navegacion">
+          <span></span>
+          <span></span>
+          <span></span>
+        </summary>
+        <div class="mobile-nav-panel">
+          <Navbar />
+        </div>
+      </details>
     </div>
   </Container>
 </header>

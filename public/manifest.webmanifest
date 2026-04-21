@@ -3,13 +3,19 @@
   "short_name": "Industrias MM",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f4ea",
-  "theme_color": "#0d3b66",
+  "background_color": "#f6fbf9",
+  "theme_color": "#46645f",
   "icons": [
+    {
+      "src": "/images/brand/logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    },
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }

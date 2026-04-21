@@ -5,15 +5,30 @@ import { testimonials } from "@/data/testimonials";
 ---
 <section class="section-padding">
   <Container>
-    <SectionHeading eyebrow="Clientes" title="Confianza construida con resultados" />
-    <div class="testimonial-grid">
-      {testimonials.map((item) => (
-        <article class="card flow">
-          <p>"{item.quote}"</p>
-          <strong>{item.name}</strong>
-          <small>{item.role}, {item.company}</small>
-        </article>
-      ))}
+    <div class="testimonials-shell">
+      <div class="testimonials-copy flow">
+        <SectionHeading
+          eyebrow="Clientes"
+          title="Confianza construida con resultados"
+          description="Experiencias de clientes que necesitaban soluciones claras, ejecucion confiable y acompanamiento tecnico real."
+        />
+      </div>
+
+      <div class="testimonial-grid">
+        {testimonials.map((item, index) => (
+          <article class={`testimonial-card ${index === 0 ? "testimonial-card--featured" : ""}`}>
+            <div class="testimonial-mark" aria-hidden="true">“</div>
+            <div class="testimonial-content flow">
+              <p class="testimonial-quote">{item.quote}</p>
+              <div class="testimonial-meta flow">
+                <strong>{item.name}</strong>
+                <p>{item.role}</p>
+                <small>{item.company}</small>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   </Container>
 </section>
