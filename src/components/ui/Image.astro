@@ -1,10 +1,28 @@
 ---
-interface Props {
-  src: string;
-  alt: string;
-  loading?: "lazy" | "eager";
-}
+import { getCloudinarySrcSet, getOptimizedCloudinaryImage } from "@/lib/utils/cloudinaryImages";
 
-const { src, alt, loading = "lazy" } = Astro.props;
+const {
+  src,
+  alt,
+  loading = "lazy",
+  sizes = "100vw",
+  widths = [480, 720, 960],
+  width,
+  height,
+} = Astro.props;
+
+const optimizedSrc = getOptimizedCloudinaryImage(src, {
+  width,
+  height,
+  fit: "limit",
+});
+const srcset = getCloudinarySrcSet(src, widths, { height, fit: "limit" });
 ---
-<img src={src} alt={alt} loading={loading} />
+<img
+  src={optimizedSrc}
+  srcset={srcset}
+  sizes={srcset ? sizes : undefined}
+  alt={alt}
+  loading={loading}
+  decoding="async"
+/>

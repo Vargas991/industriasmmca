@@ -2,10 +2,10 @@
 title: "Adecuacion de Bodega Logistica"
 slug: "proyecto-bodega-x"
 client: "Bodega Central"
-sector: "Logistica"
+sector: "Logística"
 location: "Valencia, Venezuela"
-excerpt: "Fabricacion e instalacion de sistema de almacenamiento para ampliar capacidad operativa."
-description: "Proyecto integral de reorganizacion y crecimiento del area de almacenamiento."
+excerpt: "Fabricación e instalación de sistema de almacenamiento para ampliar capacidad operativa."
+description: "Proyecto integral de reorganización y crecimiento del área de almacenamiento."
 year: "2025"
 status: "published"
 featured: true
@@ -16,8 +16,8 @@ gallery:
   - "/images/projects/proyecto-bodega-x/02.svg"
 seo:
   title: "Proyecto Bodega Logistica | Industrias MM"
-  description: "Caso real de fabricacion e instalacion para una operacion logistica en crecimiento."
+  description: "Caso real de fabricación e instalación para una operación logística en crecimiento."
   canonical: "/proyectos/proyecto-bodega-x"
 ---
 
-El proyecto incluyo levantamiento tecnico, fabricacion y montaje de estructuras para mejorar capacidad, flujo y orden interno de la operacion.
+El proyecto incluyó levantamiento técnico, fabricación y montaje de estructuras para mejorar capacidad, flujo y orden interno de la operación.

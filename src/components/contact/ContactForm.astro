@@ -1,9 +1,13 @@
 ---
 import Button from "@/components/ui/Button.astro";
+import { siteConfig } from "@/config/site";
 import Input from "@/components/ui/Input.astro";
 import Textarea from "@/components/ui/Textarea.astro";
 ---
 <form class="contact-form flow" method="post" action="/api/contact">
+  <p>
+    Tambien puedes escribirnos a <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>.
+  </p>
   <Input id="name" name="name" label="Nombre" required />
   <Input id="email" name="email" label="Correo" type="email" required />
   <Input id="phone" name="phone" label="Telefono" />

@@ -1,9 +1,9 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import ProductCard from "@/components/products/ProductCard.astro";
+import type { ProductEntry } from "@/types/product";
 
 interface Props {
-  products: CollectionEntry<"products">[];
+  products: ProductEntry[];
   categoryLabels?: Record<string, string>;
 }
 

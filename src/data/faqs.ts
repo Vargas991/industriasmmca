@@ -1,12 +1,12 @@
 export const faqs = [
   {
-    question: "Trabajan proyectos a medida?",
+    question: "¿Trabajan proyectos a medida?",
     answer:
-      "Si. Podemos adaptar materiales, dimensiones, acabados y tiempos segun el contexto operativo del cliente.",
+      "Sí. Podemos adaptar materiales, dimensiones, acabados y tiempos según el contexto operativo del cliente.",
   },
   {
-    question: "Ofrecen instalacion?",
+    question: "¿Ofrecen instalación?",
     answer:
-      "Si. Coordinamos fabricacion, entrega e instalacion para proyectos nuevos o ampliaciones.",
+      "Sí. Coordinamos fabricación, entrega e instalación para proyectos nuevos o ampliaciones.",
   },
 ];

@@ -1,0 +1,108 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { isAdminAuthenticated } from "@/lib/admin/auth";
+import { isCloudinaryConfigured } from "@/lib/cloudinary";
+
+export const prerender = false;
+
+const authenticated = isAdminAuthenticated(Astro.cookies);
+---
+<AdminLayout title="Admin | Medios" section="media" authenticated={authenticated}>
+  <section class="hero-strip hero-strip--single">
+    <div class="hero-panel">
+      <p class="eyebrow-badge">Medios</p>
+      <h1 class="hero-title">Subida de archivos</h1>
+      <p class="hero-copy">
+        Módulo independiente para manejar imágenes y documentos en Cloudinary. Puedes usarlo solo para obtener URLs o como apoyo desde
+        productos y categorías.
+      </p>
+      <div class="hero-actions">
+        <a class="button button--secondary" href="/admin/productos">Volver a productos</a>
+        <a class="button button--secondary" href="/admin/categorias">Volver a categorías</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel-card">
+    <div class="inner">
+      <div class="media-grid">
+        <section class="upload-card">
+          <h3>Subir archivo</h3>
+          <p class="muted">
+            {isCloudinaryConfigured()
+              ? "Cloudinary está conectado. Puedes subir imágenes o documentos."
+              : "Cloudinary no está configurado correctamente en el servidor."}
+          </p>
+          <p class="feedback muted" id="upload-feedback"></p>
+          <form class="stack" id="upload-form">
+            <div class="field">
+              <label for="uploadKind">Tipo de archivo</label>
+              <select id="uploadKind" name="uploadKind">
+                <option value="image">Imagen</option>
+                <option value="raw">Documento / ficha técnica</option>
+                <option value="auto">Automático</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="uploadFile">Archivo</label>
+              <input id="uploadFile" name="uploadFile" type="file" />
+            </div>
+            <button class="button button--primary" type="submit" disabled={!isCloudinaryConfigured()}>Subir a Cloudinary</button>
+          </form>
+        </section>
+
+        <section class="upload-card">
+          <h3>Resultado</h3>
+          <div class="empty-note" id="upload-result">La URL subida aparecerá aquí.</div>
+        </section>
+
+        <section class="upload-card">
+          <h3>Vista previa</h3>
+          <div class="preview-media" id="upload-preview"></div>
+          <p class="muted" style="margin-top: 0.75rem;">Las imágenes se muestran aquí; los PDFs y otros archivos quedan disponibles por URL.</p>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const uploadForm = document.getElementById("upload-form");
+    const uploadFeedback = document.getElementById("upload-feedback");
+    const uploadResult = document.getElementById("upload-result");
+    const uploadPreview = document.getElementById("upload-preview");
+
+    if (uploadForm) {
+      uploadForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const fileInput = document.getElementById("uploadFile");
+        const kindSelect = document.getElementById("uploadKind");
+        if (!fileInput.files?.length) {
+          uploadFeedback.textContent = "Selecciona un archivo para subir.";
+          uploadFeedback.dataset.tone = "error";
+          return;
+        }
+
+        const data = new FormData();
+        data.append("file", fileInput.files[0]);
+        data.append("kind", kindSelect.value);
+
+        uploadFeedback.textContent = "Subiendo archivo...";
+        uploadFeedback.dataset.tone = "info";
+
+        const response = await fetch("/api/admin/uploads", { method: "POST", body: data });
+        const result = await response.json();
+        if (!response.ok) {
+          uploadFeedback.textContent = result.message ?? "No fue posible subir el archivo.";
+          uploadFeedback.dataset.tone = "error";
+          return;
+        }
+
+        uploadResult.textContent = result.url;
+        uploadPreview.style.backgroundImage = kindSelect.value === "image" ? `url('${result.url.replace(/'/g, "%27")}')` : "";
+        uploadFeedback.textContent = "Archivo subido correctamente.";
+        uploadFeedback.dataset.tone = "info";
+        fileInput.value = "";
+      });
+    }
+  </script>
+</AdminLayout>

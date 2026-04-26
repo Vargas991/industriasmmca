@@ -1,0 +1,357 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { isAdminAuthenticated } from "@/lib/admin/auth";
+import { getAllProductCategories } from "@/lib/content/productCategories";
+import { isCloudinaryConfigured } from "@/lib/cloudinary";
+
+export const prerender = false;
+
+const authenticated = isAdminAuthenticated(Astro.cookies);
+const categories = authenticated ? await getAllProductCategories() : [];
+
+const payload = {
+  categories,
+  cloudinaryConfigured: isCloudinaryConfigured(),
+};
+---
+<AdminLayout title="Admin | Categorías" section="categories" authenticated={authenticated}>
+  <section class="hero-strip hero-strip--single">
+    <div class="hero-panel">
+      <p class="eyebrow-badge">Categorías</p>
+      <h1 class="hero-title">Gestión de categorías</h1>
+      <p class="hero-copy">Módulo dedicado para crear, editar, destacar y reordenar categorías sin mezclarlo con el resto del panel.</p>
+      <div class="hero-actions">
+        <button class="button button--primary" id="new-category-button" type="button">Nueva categoría</button>
+        <a class="button button--secondary" href="/admin/productos">Ir a productos</a>
+        <a class="button button--secondary" href="/admin/medios">Ir a medios</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel-card">
+    <div class="inner">
+      <div class="workspace-grid">
+        <aside class="subgrid">
+          <div class="section-box">
+            <label for="category-search">Buscar categoría</label>
+            <input class="search-bar" id="category-search" type="search" placeholder="Nombre o slug" />
+            <p class="muted" id="category-count-note" style="margin: 0.75rem 0 0;"></p>
+          </div>
+
+          <div class="list-shell">
+            <div class="list-head list-head--categories">
+              <span>Imagen</span>
+              <span>Nombre</span>
+              <span>Orden</span>
+              <span>Estado</span>
+            </div>
+            <div class="record-list" id="category-list"></div>
+          </div>
+        </aside>
+
+        <section class="subgrid">
+          <div class="section-heading">
+            <div>
+              <h3 id="category-editor-title">Nueva categoría</h3>
+              <p class="muted">Editor simple para la identidad y estructura de cada categoría.</p>
+            </div>
+          </div>
+          <p class="feedback muted" id="category-feedback"></p>
+
+          <form class="stack editor-shell" id="category-form">
+            <input id="category-id" name="categoryId" type="hidden" />
+
+            <div class="editor-sections">
+              <section class="section-box">
+                <h3>Información general</h3>
+                <div class="field-grid">
+                  <div class="field"><label for="categoryTitle">Nombre de categoría</label><input id="categoryTitle" name="categoryTitle" required /></div>
+                  <div class="field"><label for="categorySlug">Slug</label><input id="categorySlug" name="categorySlug" placeholder="Se genera si lo dejas vacío" /></div>
+                  <div class="field"><label for="categoryStatus">Estado</label><select id="categoryStatus" name="categoryStatus"><option value="draft">Borrador</option><option value="published">Publicado</option></select></div>
+                  <div class="field"><label for="categoryOrder">Orden</label><input id="categoryOrder" name="categoryOrder" type="number" min="0" step="1" value="0" /></div>
+                  <div class="field field--full"><label for="categoryDescription">Descripción corta</label><textarea id="categoryDescription" name="categoryDescription" required></textarea></div>
+                  <div class="field field--full"><label for="categoryExcerpt">Extracto</label><textarea id="categoryExcerpt" name="categoryExcerpt" required></textarea></div>
+                </div>
+              </section>
+
+              <section class="section-box">
+                <h3>Imagen e identidad visual</h3>
+                <div class="field-grid">
+                  <div class="field field--full"><label for="categoryCoverImage">Imagen o ícono</label><input id="categoryCoverImage" name="categoryCoverImage" readonly /></div>
+                  <div class="field field--full"><label for="categoryCoverAlt">Texto ALT</label><input id="categoryCoverAlt" name="categoryCoverAlt" required /></div>
+                  <div class="field"><label for="category-image-file">Subir imagen</label><input id="category-image-file" type="file" accept="image/*" /></div>
+                  <div class="field"><label>&nbsp;</label><button class="button button--secondary" id="upload-category-image-button" type="button">Subir imagen</button></div>
+                  <div class="field field--full"><div class="preview-media" id="category-preview-media"></div></div>
+                  <div class="field field--full"><label><input id="categoryFeatured" name="categoryFeatured" type="checkbox" /> Destacar categoría</label></div>
+                </div>
+              </section>
+
+              <section class="section-box">
+                <h3>SEO y publicación</h3>
+                <div class="field-grid">
+                  <div class="field"><label for="categorySeoTitle">Título SEO</label><input id="categorySeoTitle" name="categorySeoTitle" required /></div>
+                  <div class="field"><label for="categorySeoCanonical">Canonical</label><input id="categorySeoCanonical" name="categorySeoCanonical" /></div>
+                  <div class="field field--full"><label for="categorySeoDescription">Descripción SEO</label><textarea id="categorySeoDescription" name="categorySeoDescription" required></textarea></div>
+                  <div class="field field--full"><label for="categorySeoImage">Imagen social</label><input id="categorySeoImage" name="categorySeoImage" /></div>
+                </div>
+              </section>
+
+              <section class="section-box">
+                <h3>Contenido</h3>
+                <div class="field">
+                  <label for="categoryBody">Texto principal</label>
+                  <textarea id="categoryBody" name="categoryBody" style="min-height: 12rem;" placeholder="Markdown opcional"></textarea>
+                </div>
+              </section>
+            </div>
+
+            <div class="button-row">
+              <button class="button button--primary" id="save-category-button" type="submit">Guardar categoría</button>
+              <button class="button button--secondary" id="reset-category-button" type="button">Restaurar editor</button>
+              <button class="button button--danger" id="delete-category-button" type="button">Eliminar categoría</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/json" id="categories-bootstrap" set:html={JSON.stringify(payload)}></script>
+  <script is:inline>
+    const bootstrapNode = document.getElementById("categories-bootstrap");
+    if (bootstrapNode) {
+      const bootstrap = JSON.parse(bootstrapNode.textContent || "{\"categories\":[],\"cloudinaryConfigured\":false}");
+      let categories = [...(bootstrap.categories || [])];
+      let selectedCategoryId = categories[0]?.id ?? null;
+      let categoryQuery = "";
+
+      const categoryList = document.getElementById("category-list");
+      const categoryCountNote = document.getElementById("category-count-note");
+      const categoryFeedback = document.getElementById("category-feedback");
+      const categoryForm = document.getElementById("category-form");
+      const categorySearch = document.getElementById("category-search");
+      const categoryEditorTitle = document.getElementById("category-editor-title");
+      const deleteCategoryButton = document.getElementById("delete-category-button");
+      const categoryPreviewMedia = document.getElementById("category-preview-media");
+
+      const categoryBaseState = {
+        categoryId: "", categoryTitle: "", categorySlug: "", categoryExcerpt: "", categoryDescription: "",
+        categoryStatus: "draft", categoryOrder: "0", categoryCoverImage: "", categoryCoverAlt: "",
+        categoryFeatured: false, categorySeoTitle: "", categorySeoCanonical: "", categorySeoDescription: "",
+        categorySeoImage: "", categoryBody: "",
+      };
+
+      function setFeedback(node, message, tone = "info") {
+        node.textContent = message;
+        node.dataset.tone = tone;
+      }
+
+      function setFormValue(form, name, value) {
+        const field = form.elements.namedItem(name);
+        if (!field) return;
+        if (field instanceof HTMLInputElement && field.type === "checkbox") {
+          field.checked = Boolean(value);
+          return;
+        }
+        field.value = value ?? "";
+      }
+
+      function buildCategoryState(category) {
+        if (!category) return { ...categoryBaseState };
+        return {
+          categoryId: String(category.id),
+          categoryTitle: category.data.title ?? "",
+          categorySlug: category.slug ?? "",
+          categoryExcerpt: category.data.excerpt ?? "",
+          categoryDescription: category.data.description ?? "",
+          categoryStatus: category.data.status ?? "draft",
+          categoryOrder: String(category.data.order ?? 0),
+          categoryCoverImage: category.data.coverImage ?? "",
+          categoryCoverAlt: category.data.coverAlt ?? "",
+          categoryFeatured: Boolean(category.data.featured),
+          categorySeoTitle: category.data.seo?.title ?? "",
+          categorySeoCanonical: category.data.seo?.canonical ?? "",
+          categorySeoDescription: category.data.seo?.description ?? "",
+          categorySeoImage: category.data.seo?.image ?? "",
+          categoryBody: category.body ?? "",
+        };
+      }
+
+      function setPreviewBackground(url) {
+        categoryPreviewMedia.style.backgroundImage = url ? `url('${String(url).replace(/'/g, "%27")}')` : "";
+      }
+
+      function getFilteredCategories() {
+        const query = categoryQuery.trim().toLowerCase();
+        if (!query) return categories;
+        return categories.filter((category) => [category.data.title, category.slug, category.data.status].join(" ").toLowerCase().includes(query));
+      }
+
+      function renderCategoryList() {
+        const filtered = getFilteredCategories();
+        categoryCountNote.textContent = filtered.length === categories.length
+          ? `${categories.length} categoría(s) en SQLite.`
+          : `${filtered.length} resultado(s) de ${categories.length} categoría(s).`;
+
+        if (filtered.length === 0) {
+          categoryList.innerHTML = '<div class="empty-note">No hay categorías que coincidan con la búsqueda.</div>';
+          return;
+        }
+
+        categoryList.innerHTML = "";
+        filtered.forEach((category) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `record-card record-card--category${category.id === selectedCategoryId ? " is-active" : ""}`;
+          const image = category.data.coverImage ? `style="background-image:url('${category.data.coverImage.replace(/'/g, "%27")}')"` : "";
+          button.innerHTML = `
+            <div class="record-thumb" ${image}></div>
+            <div class="record-main">
+              <strong>${category.data.title}</strong>
+              <small>${category.slug}</small>
+            </div>
+            <div class="record-side">
+              <strong>Orden ${category.data.order}</strong>
+              <small>${category.data.featured ? "Destacada" : "Normal"}</small>
+            </div>
+            <div>
+              <span class="status-pill ${category.data.status === "published" ? "status-pill--published" : "status-pill--draft"}">${category.data.status === "published" ? "Publicado" : "Borrador"}</span>
+            </div>
+          `;
+          button.addEventListener("click", () => {
+            selectedCategoryId = category.id;
+            hydrateCategoryEditor();
+          });
+          categoryList.appendChild(button);
+        });
+      }
+
+      function hydrateCategoryEditor() {
+        const selected = categories.find((item) => item.id === selectedCategoryId);
+        const state = buildCategoryState(selected);
+        Object.entries(state).forEach(([name, value]) => setFormValue(categoryForm, name, value));
+        categoryEditorTitle.textContent = selected ? `Editar categoría: ${selected.data.title}` : "Nueva categoría";
+        deleteCategoryButton.disabled = !selected;
+        renderCategoryList();
+        setPreviewBackground(selected?.data?.coverImage ?? "");
+      }
+
+      function getCategoryPayload() {
+        const formData = new FormData(categoryForm);
+        return {
+          slug: String(formData.get("categorySlug") ?? ""),
+          title: String(formData.get("categoryTitle") ?? ""),
+          excerpt: String(formData.get("categoryExcerpt") ?? ""),
+          description: String(formData.get("categoryDescription") ?? ""),
+          status: String(formData.get("categoryStatus") ?? "draft"),
+          order: Number(formData.get("categoryOrder") ?? 0),
+          featured: formData.get("categoryFeatured") === "on",
+          coverImage: String(formData.get("categoryCoverImage") ?? ""),
+          coverAlt: String(formData.get("categoryCoverAlt") ?? ""),
+          seo: {
+            title: String(formData.get("categorySeoTitle") ?? ""),
+            canonical: String(formData.get("categorySeoCanonical") ?? ""),
+            description: String(formData.get("categorySeoDescription") ?? ""),
+            image: String(formData.get("categorySeoImage") ?? ""),
+          },
+          body: String(formData.get("categoryBody") ?? ""),
+        };
+      }
+
+      async function syncCategories() {
+        const response = await fetch("/api/admin/categories");
+        const result = await response.json();
+        if (response.ok) {
+          categories = result.categories ?? [];
+        }
+      }
+
+      async function uploadImage(file) {
+        const data = new FormData();
+        data.append("file", file);
+        data.append("kind", "image");
+        const response = await fetch("/api/admin/uploads", { method: "POST", body: data });
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message ?? "No fue posible subir la imagen.");
+        }
+        return result.url;
+      }
+
+      hydrateCategoryEditor();
+
+      categorySearch.addEventListener("input", () => {
+        categoryQuery = categorySearch.value;
+        renderCategoryList();
+      });
+
+      document.getElementById("new-category-button").addEventListener("click", () => {
+        selectedCategoryId = null;
+        hydrateCategoryEditor();
+        setFeedback(categoryFeedback, "Formulario listo para una categoría nueva.");
+      });
+
+      document.getElementById("reset-category-button").addEventListener("click", () => {
+        hydrateCategoryEditor();
+        setFeedback(categoryFeedback, "Se restauraron los datos visibles del editor.");
+      });
+
+      document.getElementById("upload-category-image-button").addEventListener("click", async () => {
+        const input = document.getElementById("category-image-file");
+        if (!bootstrap.cloudinaryConfigured) return setFeedback(categoryFeedback, "Cloudinary no está configurado.", "error");
+        if (!input.files?.length) return setFeedback(categoryFeedback, "Selecciona una imagen.", "error");
+        setFeedback(categoryFeedback, "Subiendo imagen...");
+        try {
+          const url = await uploadImage(input.files[0]);
+          categoryForm.elements.namedItem("categoryCoverImage").value = url;
+          setPreviewBackground(url);
+          setFeedback(categoryFeedback, "Imagen subida correctamente.");
+          input.value = "";
+        } catch (error) {
+          setFeedback(categoryFeedback, error.message, "error");
+        }
+      });
+
+      categoryForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const saveButton = document.getElementById("save-category-button");
+        saveButton.disabled = true;
+        setFeedback(categoryFeedback, "Guardando categoría...");
+        const id = Number(categoryForm.elements.namedItem("categoryId")?.value || 0);
+        const isEditing = Number.isInteger(id) && id > 0;
+        const response = await fetch(isEditing ? `/api/admin/categories/${id}` : "/api/admin/categories", {
+          method: isEditing ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(getCategoryPayload()),
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          saveButton.disabled = false;
+          setFeedback(categoryFeedback, result.message ?? "No fue posible guardar la categoría.", "error");
+          return;
+        }
+        await syncCategories();
+        selectedCategoryId = result.category?.id ?? selectedCategoryId;
+        hydrateCategoryEditor();
+        setFeedback(categoryFeedback, "Categoría guardada correctamente.");
+        saveButton.disabled = false;
+      });
+
+      deleteCategoryButton.addEventListener("click", async () => {
+        const id = Number(categoryForm.elements.namedItem("categoryId")?.value || 0);
+        if (!id || !window.confirm("¿Seguro que quieres eliminar esta categoría?")) return;
+        setFeedback(categoryFeedback, "Eliminando categoría...");
+        const response = await fetch(`/api/admin/categories/${id}`, { method: "DELETE" });
+        const result = await response.json();
+        if (!response.ok) {
+          setFeedback(categoryFeedback, result.message ?? "No fue posible eliminar la categoría.", "error");
+          return;
+        }
+        await syncCategories();
+        selectedCategoryId = categories[0]?.id ?? null;
+        hydrateCategoryEditor();
+        setFeedback(categoryFeedback, "Categoría eliminada.");
+      });
+    }
+  </script>
+</AdminLayout>

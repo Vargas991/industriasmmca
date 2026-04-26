@@ -1,11 +1,11 @@
 ---
-title: "Contacto y cotizacion"
+title: "Contacto y cotización"
 slug: "contact"
-excerpt: "Cuéntanos tu requerimiento y te ayudamos a definir la mejor solucion."
+excerpt: "Cuéntanos tu requerimiento y te ayudamos a definir la mejor solución."
 seo:
   title: "Contacto | Industrias MM"
-  description: "Solicita informacion o cotizacion para productos, servicios y proyectos industriales."
+  description: "Solicita información o cotización para productos, servicios y proyectos industriales."
   canonical: "/contacto"
 ---
 
-Canal directo para solicitar informacion, cotizacion o coordinar una visita tecnica.
+Canal directo para solicitar información, cotización o coordinar una visita técnica.

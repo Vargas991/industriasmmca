@@ -44,6 +44,20 @@ const products = defineCollection({
         }),
       )
       .default([]),
+    measurements: z
+      .array(
+        z.object({
+          name: z.string(),
+          width: z.string().optional(),
+          height: z.string().optional(),
+          depth: z.string().optional(),
+          length: z.string().optional(),
+          capacity: z.string().optional(),
+          unit: z.string().optional(),
+          order: z.number().default(0),
+        }),
+      )
+      .default([]),
     seo: seoSchema,
   }),
 });

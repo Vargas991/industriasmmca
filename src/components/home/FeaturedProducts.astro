@@ -2,11 +2,11 @@
 import Button from "@/components/ui/Button.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import Container from "@/components/ui/Container.astro";
-import type { CollectionEntry } from "astro:content";
 import { slugToTitle } from "@/lib/utils/strings";
+import type { ProductEntry } from "@/types/product";
 
 interface Props {
-  products: CollectionEntry<"products">[];
+  products: ProductEntry[];
 }
 
 const { products } = Astro.props;
@@ -24,16 +24,17 @@ const paletteClasses = [
         <SectionHeading
           eyebrow="Productos"
           title="Productos destacados"
-          description="Una seleccion de soluciones listas para almacenamiento, retail y operacion comercial."
+          description="Una selección de soluciones listas para almacenamiento, retail y operación comercial."
         />
       </div>
 
       <div class="product-showcase-stage">
         <div class="product-showcase-visual" aria-hidden="true"></div>
 
-        <div class="product-showcase-grid">
+        <div class="product-showcase-slider" data-product-slider>
+          <div class="product-showcase-track" data-product-track>
           {products.map((product, index) => (
-            <article class={`product-showcase-card ${paletteClasses[index % paletteClasses.length]}`}>
+              <article class={`product-showcase-card ${paletteClasses[index % paletteClasses.length]}`}>
               <a class="product-showcase-link" href={`/productos/${product.slug}`}>
                 <img
                   class="product-showcase-image"
@@ -49,17 +50,19 @@ const paletteClasses = [
               </a>
             </article>
           ))}
+          </div>
         </div>
       </div>
 
       <div class="product-showcase-footer">
-        <div class="product-showcase-rail">
-          <span class="product-showcase-rail-fill"></span>
-          <span class="product-showcase-dot product-showcase-dot--active"></span>
-          <span class="product-showcase-dot"></span>
+        <div class="product-showcase-rail" data-product-progress>
+          <span class="product-showcase-rail-fill" data-product-progress-fill></span>
         </div>
-        <Button href="/productos">Explorar catalogo</Button>
+        <Button href="/productos">Explorar catálogo</Button>
       </div>
     </div>
   </Container>
+  <script>
+    import "@/scripts/product-showcase-slider";
+  </script>
 </section>

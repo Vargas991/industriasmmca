@@ -1,0 +1,33 @@
+---
+// ProductForm.astro
+// Componente reutilizable para crear o editar productos
+const { product, categories, onSave, onCancel, isNew } = Astro.props;
+---
+<form class="stack editor-shell" id="product-form">
+  <input id="product-id" name="productId" type="hidden" value={product?.id || ''} />
+  <div class="editor-tabs" data-editor-tabs>
+    <a class="editor-tab is-active" href="#product-general">Información</a>
+    <a class="editor-tab" href="#product-images">Imágenes</a>
+    <a class="editor-tab" href="#product-tech">Técnica</a>
+    <a class="editor-tab" href="#product-body">Contenido</a>
+    <a class="editor-tab" href="#product-seo">SEO</a>
+  </div>
+  <div class="editor-sections">
+    <section class="section-box" id="product-general">
+      <h3>Información general</h3>
+      <div class="field-grid">
+        <div class="field"><label for="title">Nombre del producto</label><input id="title" name="title" required value={product?.title || ''} /></div>
+        <div class="field"><label for="slug">Slug</label><input id="slug" name="slug" placeholder="Se genera si lo dejas vacío" value={product?.slug || ''} /></div>
+        <div class="field"><label for="category">Categoría</label><select id="category" name="category" required>{categories.map(cat => <option value={cat.slug} selected={cat.slug === product?.category}>{cat.data.title}</option>)}</select></div>
+        <div class="field"><label for="status">Estado</label><select id="status" name="status"><option value="draft" selected={product?.status !== 'published'}>Borrador</option><option value="published" selected={product?.status === 'published'}>Publicado</option></select></div>
+        <div class="field field--full"><label for="description">Descripción corta</label><textarea id="description" name="description" required>{product?.description || ''}</textarea></div>
+        <div class="field field--full"><label for="excerpt">Descripción principal / extracto</label><textarea id="excerpt" name="excerpt" required>{product?.excerpt || ''}</textarea></div>
+      </div>
+    </section>
+    <!-- Puedes seguir agregando las demás secciones igual que en el form original -->
+  </div>
+  <div class="button-row">
+    <button class="button button--primary" type="submit">{isNew ? 'Crear producto' : 'Guardar cambios'}</button>
+    <button class="button button--secondary" type="button" on:click={onCancel}>Cancelar</button>
+  </div>
+</form>

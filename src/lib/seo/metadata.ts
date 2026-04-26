@@ -5,7 +5,7 @@ import type { SeoData } from "@/types/seo";
 
 export function buildDefaultSeo(): SeoData {
   return {
-    title: `${siteConfig.name} | Soluciones metalmecanicas`,
+    title: `${siteConfig.name} | Soluciones metalmecánicas`,
     description: siteConfig.description,
     canonical: "/",
     image: defaultSeoImage,

@@ -1,13 +1,43 @@
 ---
-import Image from "@/components/ui/Image.astro";
-
 interface Props {
   images: string[];
   alt: string;
+  title?: string;
 }
 
-const { images, alt } = Astro.props;
+const { images, alt, title = "Vista del producto" } = Astro.props;
+const galleryId = `product-gallery-${Math.random().toString(36).slice(2, 10)}`;
 ---
-<div class="gallery-grid">
-  {images.map((image) => <Image src={image} alt={alt} />)}
+<div class="product-gallery-shell" data-product-gallery={galleryId}>
+  <div class="product-gallery-main">
+    <img
+      data-product-gallery-main
+      src={images[0]}
+      alt={alt}
+      loading="eager"
+    />
+  </div>
+
+  {images.length > 1 && (
+    <div class="product-gallery-thumbnails" role="tablist" aria-label={`Galería de ${title}`}>
+      {images.map((image, index) => (
+        <button
+          class={`product-gallery-thumb ${index === 0 ? "is-active" : ""}`}
+          type="button"
+          role="tab"
+          aria-selected={index === 0 ? "true" : "false"}
+          aria-label={`Ver imagen ${index + 1} de ${images.length}`}
+          data-product-gallery-thumb
+          data-image={image}
+          data-alt={alt}
+        >
+          <img src={image} alt="" loading="lazy" />
+        </button>
+      ))}
+    </div>
+  )}
+
+  <script>
+    import "@/scripts/product-gallery";
+  </script>
 </div>

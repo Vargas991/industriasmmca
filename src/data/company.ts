@@ -1,6 +1,6 @@
 export const companyHighlights = [
-  "Fabricacion metalica a medida",
-  "Instalacion en sitio",
-  "Acompanamiento tecnico",
-  "Respuesta para industria y comercio",
+  "Fabricación metálica a medida.",
+  "Instalación en sitio.",
+  "Acompañamiento técnico.",
+  "Respuesta para industria y comercio.",
 ];

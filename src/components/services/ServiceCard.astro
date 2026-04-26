@@ -5,16 +5,33 @@ import type { CollectionEntry } from "astro:content";
 
 interface Props {
   service: CollectionEntry<"services">;
+  variant?: "default" | "showcase";
+  paletteClass?: string;
 }
 
-const { service } = Astro.props;
+const { service, variant = "default", paletteClass = "" } = Astro.props;
 ---
-<Card>
-  <a class="card-link flow" href={`/servicios/${service.slug}`}>
-    <Image src={service.data.coverImage} alt={service.data.coverAlt} />
-    <div class="flow">
-      <h3>{service.data.title}</h3>
-      <p>{service.data.excerpt}</p>
-    </div>
-  </a>
-</Card>
+{
+  variant === "showcase" ? (
+    <article class={`service-showcase-card ${paletteClass}`}>
+      <a class="service-showcase-link" href={`/servicios/${service.slug}`}>
+        <Image src={service.data.coverImage} alt={service.data.coverAlt} />
+        <div class="flow">
+          <p class="eyebrow">Servicio</p>
+          <h3>{service.data.title}</h3>
+          <p>{service.data.excerpt}</p>
+        </div>
+      </a>
+    </article>
+  ) : (
+    <Card>
+      <a class="card-link flow" href={`/servicios/${service.slug}`}>
+        <Image src={service.data.coverImage} alt={service.data.coverAlt} />
+        <div class="flow">
+          <h3>{service.data.title}</h3>
+          <p>{service.data.excerpt}</p>
+        </div>
+      </a>
+    </Card>
+  )
+}

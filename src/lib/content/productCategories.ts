@@ -1,22 +1,25 @@
-import { getCollection, type CollectionEntry } from "astro:content";
-import { isPublished } from "@/lib/utils/guards";
+import {
+  getProductCategoryBySlugFromDb,
+  listProductCategories,
+} from "@/lib/db/categories";
 import { getPublishedProducts } from "@/lib/content/products";
+import type { ProductCategoryEntry } from "@/types/productCategory";
+import type { ProductEntry } from "@/types/product";
+
+export async function getAllProductCategories() {
+  return listProductCategories({ includeDrafts: true });
+}
 
 export async function getPublishedProductCategories() {
-  const categories = await getCollection("product-categories");
-  return categories
-    .filter((item) => isPublished(item.data.status))
-    .sort((left, right) => left.data.order - right.data.order || left.data.title.localeCompare(right.data.title));
+  return listProductCategories();
 }
 
 export async function getFeaturedProductCategories() {
-  const categories = await getPublishedProductCategories();
-  return categories.filter((item) => item.data.featured);
+  return listProductCategories({ featuredOnly: true });
 }
 
 export async function getProductCategoryBySlug(slug: string) {
-  const categories = await getPublishedProductCategories();
-  return categories.find((item) => item.slug === slug);
+  return getProductCategoryBySlugFromDb(slug);
 }
 
 export async function getProductCategoryMap() {
@@ -25,8 +28,8 @@ export async function getProductCategoryMap() {
 }
 
 export interface ProductCategorySection {
-  category: CollectionEntry<"product-categories">;
-  products: CollectionEntry<"products">[];
+  category: ProductCategoryEntry;
+  products: ProductEntry[];
 }
 
 export async function getProductCategorySections(): Promise<ProductCategorySection[]> {

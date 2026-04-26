@@ -1,9 +1,9 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import ProductGrid from "@/components/products/ProductGrid.astro";
+import type { ProductEntry } from "@/types/product";
 
 interface Props {
-  products: CollectionEntry<"products">[];
+  products: ProductEntry[];
 }
 
 const { products } = Astro.props;

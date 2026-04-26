@@ -1,32 +1,71 @@
 ---
 import Container from "@/components/ui/Container.astro";
-import { footerNavigation } from "@/config/navigation";
+import { footerNavigation, mainNavigation } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
+import { socialLinks } from "@/data/social-links";
 import { formatPhoneForHref } from "@/lib/utils/format";
+import type { SocialLink } from "@/types/common";
+
+const footerGroups = [
+  {
+    title: "Navegacion",
+    links: mainNavigation.filter((item) => item.href !== "/"),
+  },
+  {
+    title: "Catalogo",
+    links: footerNavigation,
+  },
+  {
+    title: "Contacto",
+    links: [
+      { label: siteConfig.phone, href: `tel:${formatPhoneForHref(siteConfig.phone)}` },
+      { label: siteConfig.email, href: `mailto:${siteConfig.email}` },
+      { label: siteConfig.address, href: "/contacto" },
+    ],
+  },
+];
+
+const iconMap: Record<SocialLink["label"], string> = {
+  Instagram:
+    "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2.2A2.8 2.8 0 0 0 4.2 7v10A2.8 2.8 0 0 0 7 19.8h10a2.8 2.8 0 0 0 2.8-2.8V7A2.8 2.8 0 0 0 17 4.2H7zm10.9 1.5a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2.2A2.8 2.8 0 1 0 12 14.8 2.8 2.8 0 0 0 12 9.2z",
+  LinkedIn:
+    "M5.2 8.7H2.6V21h2.6V8.7zM3.9 2A1.9 1.9 0 1 0 4 5.8 1.9 1.9 0 0 0 3.9 2zM21 13.4c0-3.6-1.9-5.2-4.5-5.2a3.9 3.9 0 0 0-3.5 1.9V8.7h-2.6V21H13v-6.8c0-1.8.3-3.5 2.5-3.5s2.2 2 2.2 3.6V21H21z",
+  WhatsApp:
+    "M20.5 3.5A11.4 11.4 0 0 0 2.9 17.2L2 22l4.9-1.3a11.4 11.4 0 0 0 5.1 1.2h.1A11.4 11.4 0 0 0 20.5 3.5zm-8.4 16.3h-.1a9.3 9.3 0 0 1-4.7-1.3l-.3-.2-2.9.8.8-2.8-.2-.3a9.3 9.3 0 1 1 7.4 3.8zm5.1-6.9c-.3-.1-1.9-.9-2.2-1s-.5-.1-.7.1-.8 1-.9 1.1-.4.2-.7.1a7.5 7.5 0 0 1-3.7-3.2c-.2-.3 0-.5.1-.7s.3-.4.5-.6a2 2 0 0 0 .3-.6.6.6 0 0 0 0-.6c-.1-.1-.7-1.7-.9-2.3s-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.8 5.8 0 0 0 1.2 3.1 13.1 13.1 0 0 0 5 4.4 17 17 0 0 0 1.7.6 4 4 0 0 0 1.9.1 3.1 3.1 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3z",
+};
 ---
 <footer class="site-footer">
   <Container>
-    <div class="footer-grid">
-      <div class="flow">
+    <div class="footer-grid footer-grid--rich">
+      <div class="flow footer-brand-column">
         <a class="brand brand--footer" href="/" aria-label="Ir al inicio de Industrias MM">
           <img class="brand-logo brand-logo--footer" src="/images/brand/logo.webp" alt="Industrias MM" />
         </a>
         <p>{siteConfig.tagline}</p>
         <p>{siteConfig.address}</p>
-      </div>
-      <div class="flow">
-        <strong>Navegacion</strong>
-        <ul class="footer-links">
-          {footerNavigation.map((item) => (
-            <li><a href={item.href}>{item.label}</a></li>
+        <ul class="footer-socials">
+          {socialLinks.map((link) => (
+            <li>
+              <a href={link.href} target="_blank" rel="noreferrer" aria-label={link.label}>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d={iconMap[link.label]}></path>
+                </svg>
+              </a>
+            </li>
           ))}
         </ul>
       </div>
-      <div class="flow">
-        <strong>Contacto</strong>
-        <a href={`tel:${formatPhoneForHref(siteConfig.phone)}`}>{siteConfig.phone}</a>
-        <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-      </div>
+      {footerGroups.map((group) => (
+        <div class="flow footer-link-group">
+          <strong>{group.title}</strong>
+          <ul class="footer-links footer-links--stacked">
+            {group.links.map((item) => (
+              <li><a href={item.href}>{item.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
+    <p class="footer-copyright">Copyright {new Date().getFullYear()} {siteConfig.legalName}. Todos los derechos reservados.</p>
   </Container>
 </footer>

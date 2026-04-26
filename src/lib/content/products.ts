@@ -1,28 +1,26 @@
-import { getCollection } from "astro:content";
-import { isPublished } from "@/lib/utils/guards";
+import {
+  getProductBySlugFromDb,
+  listProducts,
+} from "@/lib/db/products";
 
 export async function getAllProducts() {
-  return getCollection("products");
+  return listProducts({ includeDrafts: true });
 }
 
 export async function getPublishedProducts() {
-  const products = await getCollection("products");
-  return products.filter((item) => isPublished(item.data.status));
+  return listProducts();
 }
 
 export async function getFeaturedProducts() {
-  const products = await getPublishedProducts();
-  return products.filter((item) => item.data.featured);
+  return listProducts({ featuredOnly: true });
 }
 
 export async function getProductBySlug(slug: string) {
-  const products = await getPublishedProducts();
-  return products.find((item) => item.slug === slug);
+  return getProductBySlugFromDb(slug);
 }
 
 export async function getProductsByCategory(category: string) {
-  const products = await getPublishedProducts();
-  return products.filter((item) => item.data.category === category);
+  return listProducts({ category });
 }
 
 export async function getRelatedProducts(slug: string, category: string) {

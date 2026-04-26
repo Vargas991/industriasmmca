@@ -1,9 +1,14 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
+import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: "https://www.industriasmm.com",
+  site: process.env.PUBLIC_SITE_URL ?? "https://www.industriasmm.com",
+  output: "server",
+  adapter: node({
+    mode: "standalone",
+  }),
   integrations: [sitemap()],
   vite: {
     resolve: {

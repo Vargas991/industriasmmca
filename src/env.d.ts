@@ -1,1 +1,19 @@
 /// <reference types="astro/client" />
+
+interface ImportMetaEnv {
+  readonly PUBLIC_SITE_URL?: string;
+  readonly PUBLIC_WHATSAPP_NUMBER?: string;
+  readonly CONTACT_EMAIL?: string;
+  readonly CONTACT_FORM_RECIPIENT?: string;
+  readonly CONTENT_DB_PATH?: string;
+  readonly ADMIN_USERNAME?: string;
+  readonly ADMIN_PASSWORD?: string;
+  readonly ADMIN_SESSION_SECRET?: string;
+  readonly CLOUDINARY_CLOUD_NAME?: string;
+  readonly CLOUDINARY_API_KEY?: string;
+  readonly CLOUDINARY_API_SECRET?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}

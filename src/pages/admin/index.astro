@@ -1,0 +1,131 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { isAdminAuthenticated } from "@/lib/admin/auth";
+import { getAllProductCategories } from "@/lib/content/productCategories";
+import { getAllProducts } from "@/lib/content/products";
+
+export const prerender = false;
+
+const authenticated = isAdminAuthenticated(Astro.cookies);
+const [products, categories] = authenticated
+  ? await Promise.all([getAllProducts(), getAllProductCategories()])
+  : [[], []];
+
+const latestProducts = [...products].sort((a, b) => b.id - a.id).slice(0, 4);
+const latestCategories = [...categories].sort((a, b) => b.id - a.id).slice(0, 4);
+---
+<AdminLayout title="Admin | Dashboard" section="dashboard" authenticated={authenticated}>
+  <section class="hero-strip">
+    <div class="hero-panel">
+      <p class="eyebrow-badge">Panel principal</p>
+      <h1 class="hero-title">Dashboard del panel admin</h1>
+      <p class="hero-copy">
+        Ahora el panel está separado por páginas para que el flujo sea más claro. Desde aquí puedes ver el estado general y saltar al módulo
+        que necesites.
+      </p>
+      <div class="hero-actions">
+        <a class="button button--primary" href="/admin/productos">Ir a productos</a>
+        <a class="button button--secondary" href="/admin/categorias">Ir a categorías</a>
+        <a class="button button--secondary" href="/admin/medios">Ir a medios</a>
+        <button class="button button--secondary" type="button" data-admin-logout>Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="spotlight-card">
+        <p>Estado actual</p>
+        <strong>Catálogo preparado para crecer con una navegación más ordenada</strong>
+      </div>
+      <div class="utility-row">
+        <div class="utility-pill">{products.length} productos</div>
+        <div class="utility-pill">{categories.length} categorías</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel-card">
+    <div class="inner">
+      <div class="section-heading">
+        <div>
+          <h2>Resumen general</h2>
+          <p class="muted">Vista rápida del contenido actual en SQLite.</p>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span>Productos</span>
+          <strong>{products.length}</strong>
+          <div class="stat-foot">Catálogo principal</div>
+        </article>
+        <article class="stat-card">
+          <span>Categorías</span>
+          <strong>{categories.length}</strong>
+          <div class="stat-foot">Organización</div>
+        </article>
+        <article class="stat-card">
+          <span>Servicios</span>
+          <strong>Próximo</strong>
+          <div class="stat-foot">Siguiente fase</div>
+        </article>
+        <article class="stat-card">
+          <span>Medios</span>
+          <strong>Cloudinary</strong>
+          <div class="stat-foot">Activo</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel-card">
+    <div class="inner">
+      <div class="dashboard-grid">
+        <div class="mini-list">
+          <div class="section-heading">
+            <div>
+              <h3>Últimos productos</h3>
+              <p class="muted">Referencias recientes para retomar ediciones rápido.</p>
+            </div>
+          </div>
+          {latestProducts.length === 0 ? (
+            <div class="empty-note">Todavía no hay productos cargados.</div>
+          ) : latestProducts.map((item) => (
+            <article class="mini-item">
+              <strong>{item.data.title}</strong>
+              <p class="muted" style="margin:0.35rem 0 0;">{item.slug} · {item.data.category}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="mini-list">
+          <div class="section-heading">
+            <div>
+              <h3>Últimas categorías</h3>
+              <p class="muted">Grupos disponibles para organizar productos.</p>
+            </div>
+          </div>
+          {latestCategories.length === 0 ? (
+            <div class="empty-note">Todavía no hay categorías cargadas.</div>
+          ) : latestCategories.map((item) => (
+            <article class="mini-item">
+              <strong>{item.data.title}</strong>
+              <p class="muted" style="margin:0.35rem 0 0;">{item.slug} · orden {item.data.order}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="nav-card-list">
+          <article class="mini-item">
+            <strong>Accesos rápidos</strong>
+            <p class="muted">Entradas directas a los módulos principales del admin.</p>
+            <div class="button-row">
+              <a class="button button--primary" href="/admin/productos">Productos</a>
+              <a class="button button--secondary" href="/admin/categorias">Categorías</a>
+              <a class="button button--secondary" href="/admin/medios">Medios</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+</AdminLayout>

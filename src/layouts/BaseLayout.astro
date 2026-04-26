@@ -28,7 +28,6 @@ const { seo = buildDefaultSeo() } = Astro.props;
     <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/images/brand/logo.webp" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <MetaTags seo={seo} />
     <JsonLd data={buildOrganizationSchema()} />
     <JsonLd data={buildWebSiteSchema()} />
@@ -40,17 +39,5 @@ const { seo = buildDefaultSeo() } = Astro.props;
     </main>
     <Footer />
     <WhatsAppButton />
-    <script>
-      import "@/scripts/netlify-identity-callback";
-    </script>
-    <script is:inline>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", () => {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        });
-      }
-    </script>
   </body>
 </html>

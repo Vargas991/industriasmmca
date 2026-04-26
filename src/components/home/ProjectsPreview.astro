@@ -1,5 +1,4 @@
 ---
-import ProjectGrid from "@/components/projects/ProjectGrid.astro";
 import Container from "@/components/ui/Container.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import type { CollectionEntry } from "astro:content";
@@ -12,7 +11,64 @@ const { projects } = Astro.props;
 ---
 <section class="section-padding section-alt">
   <Container>
-    <SectionHeading eyebrow="Proyectos" title="Casos reales de fabricacion e instalacion" />
-    <ProjectGrid projects={projects} />
+    <div class="projects-showcase-shell">
+      <div class="projects-showcase-heading">
+        <SectionHeading
+          eyebrow="Proyectos"
+          title="Casos reales de fabricación e instalación."
+          description="Selecciona un proyecto para ver su enfoque, resultado y contexto operativo."
+        />
+      </div>
+
+      {projects[0] && (
+        <div class="projects-showcase" data-project-showcase>
+          <article class="projects-showcase-main">
+            <div class="projects-showcase-media">
+              <img
+                data-project-image
+                src={projects[0].data.coverImage}
+                alt={projects[0].data.coverAlt}
+                loading="lazy"
+              />
+            </div>
+            <div class="projects-showcase-summary flow">
+              <h3 data-project-title>{projects[0].data.title}</h3>
+              <p class="eyebrow" data-project-sector>{projects[0].data.sector}</p>
+              <p data-project-description>{projects[0].data.description}</p>
+              <a class="button button--primary" data-project-link href={`/proyectos/${projects[0].slug}`}>
+                Ver proyecto
+              </a>
+            </div>
+          </article>
+
+          <div class="projects-showcase-list" role="tablist" aria-label="Proyectos destacados">
+            {projects.map((project, index) => (
+              <button
+                class={`project-option ${index === 0 ? "is-active" : ""}`}
+                type="button"
+                role="tab"
+                aria-selected={index === 0 ? "true" : "false"}
+                data-project-option
+                data-project-title={project.data.title}
+                data-project-sector={project.data.sector}
+                data-project-description={project.data.description}
+                data-project-image={project.data.coverImage}
+                data-project-alt={project.data.coverAlt}
+                data-project-link={`/proyectos/${project.slug}`}
+              >
+                <img src={project.data.coverImage} alt="" loading="lazy" />
+                <span class="project-option-copy">
+                  <strong>{project.data.title}</strong>
+                  <small>{project.data.sector}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   </Container>
+  <script>
+    import "@/scripts/project-showcase";
+  </script>
 </section>

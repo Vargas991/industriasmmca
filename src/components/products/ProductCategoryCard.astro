@@ -1,10 +1,10 @@
 ---
 import Card from "@/components/ui/Card.astro";
 import Image from "@/components/ui/Image.astro";
-import type { CollectionEntry } from "astro:content";
+import type { ProductCategoryEntry } from "@/types/productCategory";
 
 interface Props {
-  category: CollectionEntry<"product-categories">;
+  category: ProductCategoryEntry;
   productCount: number;
 }
 

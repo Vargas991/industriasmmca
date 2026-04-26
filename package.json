@@ -8,18 +8,20 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check",
-    "cms:proxy": "decap-server"
+    "check": "astro check"
   },
   "dependencies": {
-    "@netlify/identity": "^1.0.0",
+    "@astrojs/node": "^9.5.5",
     "@astrojs/sitemap": "^3.2.1",
     "astro": "^5.7.4",
+    "better-sqlite3": "^12.9.0",
+    "cloudinary": "^2.10.0",
+    "marked": "^18.0.2",
     "zod": "^3.24.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
-    "decap-server": "^3.7.0",
+    "@types/better-sqlite3": "^7.6.13",
     "typescript": "^5.9.3"
   }
 }

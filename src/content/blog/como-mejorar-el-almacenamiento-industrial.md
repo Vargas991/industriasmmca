@@ -1,11 +1,11 @@
 ---
-title: "Como mejorar el almacenamiento industrial"
+title: "Cómo mejorar el almacenamiento industrial"
 slug: "como-mejorar-el-almacenamiento-industrial"
-excerpt: "Cinco decisiones practicas para ordenar mejor una operacion sin sobredisenar."
+excerpt: "Cinco decisiones prácticas para ordenar mejor una operación sin sobrediseñar."
 publishedAt: "2026-04-20"
 seo:
-  title: "Como mejorar el almacenamiento industrial | Industrias MM"
-  description: "Recomendaciones practicas para mejorar capacidad, orden y seguridad en un area de almacenamiento."
+  title: "Cómo mejorar el almacenamiento industrial | Industrias MM"
+  description: "Recomendaciones prácticas para mejorar capacidad, orden y seguridad en un área de almacenamiento."
   canonical: "/blog/como-mejorar-el-almacenamiento-industrial"
 ---
 

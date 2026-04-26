@@ -4,10 +4,23 @@ import ServiceCard from "@/components/services/ServiceCard.astro";
 
 interface Props {
   services: CollectionEntry<"services">[];
+  variant?: "default" | "showcase";
 }
 
-const { services } = Astro.props;
+const { services, variant = "default" } = Astro.props;
+const paletteClasses = [
+  "service-showcase-card--mint",
+  "service-showcase-card--powder",
+  "service-showcase-card--lilac",
+  "service-showcase-card--sand",
+];
 ---
-<div class="grid-cards">
-  {services.map((service) => <ServiceCard service={service} />)}
+<div class={variant === "showcase" ? "service-showcase-grid" : "grid-cards"}>
+  {services.map((service, index) => (
+    <ServiceCard
+      service={service}
+      variant={variant}
+      paletteClass={paletteClasses[index % paletteClasses.length]}
+    />
+  ))}
 </div>

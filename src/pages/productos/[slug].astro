@@ -5,16 +5,9 @@ import ProductGallery from "@/components/products/ProductGallery.astro";
 import ProductSpecs from "@/components/products/ProductSpecs.astro";
 import RelatedProducts from "@/components/products/RelatedProducts.astro";
 import { getProductCategoryBySlug } from "@/lib/content/productCategories";
-import { getProductBySlug, getPublishedProducts, getRelatedProducts } from "@/lib/content/products";
+import { getProductBySlug, getRelatedProducts } from "@/lib/content/products";
 import { buildProductSeo } from "@/lib/seo/metadata";
 import ProductLayout from "@/layouts/ProductLayout.astro";
-
-export async function getStaticPaths() {
-  const products = await getPublishedProducts();
-  return products.map((product) => ({
-    params: { slug: product.slug },
-  }));
-}
 
 const { slug } = Astro.params;
 const product = await getProductBySlug(slug!);
@@ -31,7 +24,7 @@ const seo = buildProductSeo(
   product.data.seo.canonical ?? `/productos/${product.slug}`,
   product.data.seo.image ?? product.data.coverImage,
 );
-const { Content } = await product.render();
+const galleryImages = Array.from(new Set([product.data.coverImage, ...product.data.gallery]));
 ---
 <ProductLayout
   title={product.data.title}
@@ -45,23 +38,56 @@ const { Content } = await product.render();
     { name: product.data.title, url: `/productos/${product.slug}` },
   ]}
 >
-  <section class="section-padding">
+  <section class="product-detail-page">
     <Container>
-      <div class="detail-grid">
-        <article class="prose flow">
-          <Content />
-          <ul class="feature-list">
-            {product.data.benefits.map((benefit) => <li>{benefit}</li>)}
-          </ul>
-        </article>
-        <aside class="flow">
-          <ProductGallery images={[product.data.coverImage, ...product.data.gallery]} alt={product.data.coverAlt} />
-          <ProductSpecs specs={product.data.specs} />
-          {product.data.specSheet && <a href={product.data.specSheet}>Descargar ficha tecnica</a>}
-        </aside>
+      <div class="product-detail-shell">
+        <div class="product-detail-hero">
+          <div class="product-detail-header flow">
+            {category && <p class="eyebrow product-detail-category">{category.data.title}</p>}
+            <h1>{product.data.title}</h1>
+          </div>
+
+          <div class="product-detail-gallery-column">
+            <ProductGallery
+              images={galleryImages}
+              alt={product.data.coverAlt}
+              title={product.data.title}
+            />
+          </div>
+
+          <div class="product-detail-meta flow">
+            <p class="product-detail-summary">{product.data.description}</p>
+
+            {product.data.benefits.length > 0 && (
+              <ul class="product-benefit-list" aria-label="Beneficios del producto">
+                {product.data.benefits.map((benefit) => <li>{benefit}</li>)}
+              </ul>
+            )}
+
+            <div class="product-detail-actions">
+              <a class="button button--primary product-detail-primary-cta" href="/contacto">
+                Solicitar cotización
+              </a>
+            </div>
+
+            <ProductSpecs
+              specs={product.data.specs}
+              measurements={product.data.measurements}
+              specSheet={product.data.specSheet}
+            />
+          </div>
+        </div>
+
+        <div class="product-detail-story">
+          <article class="product-detail-copy prose flow" set:html={product.bodyHtml} />
+
+          <aside class="product-detail-sidebar">
+            <ProductCTA />
+          </aside>
+        </div>
+
+        <RelatedProducts products={relatedProducts} />
       </div>
-      <ProductCTA />
-      <RelatedProducts products={relatedProducts} />
     </Container>
   </section>
 </ProductLayout>

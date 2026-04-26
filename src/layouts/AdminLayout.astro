@@ -1,0 +1,760 @@
+---
+import { getAdminUsername } from "@/lib/admin/auth";
+
+interface Props {
+  title: string;
+  section: "dashboard" | "categories" | "products" | "media";
+  authenticated: boolean;
+}
+
+const { title, section, authenticated } = Astro.props;
+
+const navItems = [
+  { id: "dashboard", href: "/admin", label: "Dashboard", copy: "Resumen general" },
+  { id: "categories", href: "/admin/categorias", label: "Categorías", copy: "Organización del catálogo" },
+  { id: "products", href: "/admin/productos", label: "Productos", copy: "Catálogo y edición" },
+  { id: "media", href: "/admin/medios", label: "Medios", copy: "Cloudinary y archivos" },
+];
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title}</title>
+    <style is:global>
+      :root {
+        color-scheme: light;
+        --bg: #f5f8f7;
+        --sidebar: #203b35;
+        --surface: #ffffff;
+        --surface-soft: #f8fbfa;
+        --line: #dde7e4;
+        --ink: #102a2a;
+        --muted: #667975;
+        --accent: #2f5d50;
+        --accent-strong: #254a41;
+        --gold: #d99a2b;
+        --gold-soft: rgba(217, 154, 43, 0.14);
+        --danger: #a13636;
+        --radius: 22px;
+        --radius-sm: 16px;
+        --shadow: 0 18px 42px rgba(16, 42, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Verdana, Geneva, sans-serif;
+        line-height: 1.5;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top right, rgba(217, 154, 43, 0.12), transparent 20%),
+          linear-gradient(180deg, #fbfcfc, var(--bg));
+      }
+
+      a,
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      .admin-login-shell {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+      }
+
+      .admin-login-card,
+      .panel-card,
+      .hero-panel,
+      .spotlight-card {
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(221, 231, 228, 0.95);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .admin-login-card {
+        width: min(30rem, 100%);
+        padding: 2rem;
+      }
+
+      .eyebrow-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.38rem 0.78rem;
+        border-radius: 999px;
+        background: var(--gold-soft);
+        color: #92600e;
+        font-weight: 700;
+        font-size: 0.82rem;
+      }
+
+      .login-form,
+      .stack,
+      .subgrid,
+      .editor-sections,
+      .preview-list,
+      .content-stack,
+      .record-list,
+      .mini-list,
+      .nav-card-list {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .field label {
+        display: block;
+        margin-bottom: 0.45rem;
+        font-weight: 700;
+      }
+
+      .field input,
+      .field textarea,
+      .field select,
+      .search-bar {
+        width: 100%;
+        padding: 0.88rem 0.95rem;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 0.95rem;
+        color: var(--ink);
+        transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+      }
+
+      .field input:focus,
+      .field textarea:focus,
+      .field select:focus,
+      .search-bar:focus {
+        outline: none;
+        border-color: rgba(47, 93, 80, 0.55);
+        box-shadow: 0 0 0 4px rgba(47, 93, 80, 0.08);
+      }
+
+      .field input[readonly],
+      .field textarea[readonly] {
+        background: #f4f8f6;
+        color: #506562;
+      }
+
+      .field textarea {
+        min-height: 7rem;
+        resize: vertical;
+      }
+
+      .field input[type="file"] {
+        padding: 0.75rem 0.85rem;
+        background: #f9fcfb;
+        border-style: dashed;
+      }
+
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .field--full {
+        grid-column: 1 / -1;
+      }
+
+      .button-row,
+      .hero-actions,
+      .utility-row,
+      .editor-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.9rem;
+        padding: 0.82rem 1.2rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 700;
+        transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease;
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .button--primary {
+        color: #fff;
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      }
+
+      .button--secondary {
+        color: var(--accent-strong);
+        background: #fff;
+        border-color: rgba(221, 231, 228, 0.95);
+      }
+
+      .button--danger {
+        color: var(--danger);
+        background: rgba(161, 54, 54, 0.08);
+        border-color: rgba(161, 54, 54, 0.24);
+      }
+
+      .button[disabled] {
+        opacity: 0.6;
+        cursor: wait;
+      }
+
+      .feedback,
+      .muted {
+        color: var(--muted);
+      }
+
+      .feedback[data-tone="error"] {
+        color: var(--danger);
+      }
+
+      .admin-app {
+        display: grid;
+        grid-template-columns: 18.5rem minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      .admin-sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 1.25rem;
+        background:
+          radial-gradient(circle at top right, rgba(217, 154, 43, 0.16), transparent 24%),
+          linear-gradient(180deg, #24443d, var(--sidebar));
+        color: rgba(255, 255, 255, 0.94);
+        box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.06);
+      }
+
+      .sidebar-shell {
+        display: grid;
+        grid-template-rows: auto auto 1fr auto;
+        gap: 1.2rem;
+        height: 100%;
+      }
+
+      .brand-block strong {
+        display: block;
+        font-size: 1.05rem;
+      }
+
+      .brand-block p,
+      .sidebar-footer,
+      .sidebar-nav span {
+        color: rgba(255, 255, 255, 0.68);
+      }
+
+      .sidebar-status {
+        padding: 0.95rem 1rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 1rem;
+      }
+
+      .sidebar-nav {
+        display: grid;
+        gap: 0.35rem;
+        align-content: start;
+      }
+
+      .sidebar-nav a {
+        display: grid;
+        gap: 0.15rem;
+        padding: 0.82rem 0.95rem;
+        color: inherit;
+        text-decoration: none;
+        border-radius: 1rem;
+      }
+
+      .sidebar-nav a.is-active,
+      .sidebar-nav a:hover,
+      .sidebar-nav a:focus-visible {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .admin-main {
+        padding: 1.35rem 1.35rem 2rem;
+      }
+
+      .hero-strip {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.7fr);
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .hero-strip--single {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-panel {
+        padding: 1.35rem;
+        background:
+          radial-gradient(circle at top right, rgba(217, 154, 43, 0.14), transparent 30%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 251, 249, 0.98));
+      }
+
+      .hero-title {
+        font-size: clamp(2rem, 3.8vw, 3rem);
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+        margin-bottom: 0.45rem;
+      }
+
+      .hero-copy {
+        max-width: 46rem;
+        color: var(--muted);
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .spotlight-card {
+        padding: 1.1rem;
+        background: linear-gradient(180deg, #24443d, #1f3934);
+        color: #fff;
+        border: 0;
+      }
+
+      .spotlight-card p {
+        color: rgba(255, 255, 255, 0.76);
+      }
+
+      .utility-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.7rem 0.95rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-weight: 700;
+      }
+
+      .utility-pill::before {
+        content: "";
+        width: 0.6rem;
+        height: 0.6rem;
+        border-radius: 999px;
+        background: var(--gold);
+      }
+
+      .panel-card {
+        overflow: hidden;
+      }
+
+      .panel-card > .inner {
+        padding: 1.25rem;
+      }
+
+      .section-heading {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      .dashboard-grid,
+      .upload-grid,
+      .media-grid,
+      .roadmap-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-card,
+      .mini-item,
+      .section-box,
+      .preview-card,
+      .upload-card,
+      .target-card {
+        padding: 1rem;
+        background: linear-gradient(180deg, #ffffff, #f7fbf9);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+      }
+
+      .section-box h3,
+      .upload-card h3,
+      .mini-item strong,
+      .spotlight-card strong {
+        margin-bottom: 0.45rem;
+      }
+
+      .stat-card strong {
+        display: block;
+        margin-top: 0.35rem;
+        font-size: 1.9rem;
+      }
+
+      .stat-foot,
+      .status-pill {
+        display: inline-flex;
+        padding: 0.32rem 0.58rem;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.76rem;
+      }
+
+      .stat-foot {
+        margin-top: 0.65rem;
+        background: var(--gold-soft);
+        color: #8f5d10;
+      }
+
+      .status-pill--published {
+        color: #206948;
+        background: rgba(63, 165, 109, 0.14);
+      }
+
+      .status-pill--draft {
+        color: #8b6013;
+        background: rgba(217, 154, 43, 0.18);
+      }
+
+      .workspace-grid {
+        display: block;
+        /* grid-template-columns: minmax(21rem, 24rem) minmax(0, 1fr);
+        gap: 1rem; */
+        align-items: start;
+      }
+
+      .list-shell,
+      .editor-shell {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+      }
+
+      .list-head {
+        display: grid;
+        grid-template-columns: 4.25rem 1.35fr 1fr auto;
+        gap: 0.8rem;
+        padding: 0.9rem 1rem;
+        background: #f7fbf9;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .list-head--categories {
+        grid-template-columns: 4.25rem 1.4fr 0.8fr auto;
+      }
+
+      .record-list {
+        max-height: 42rem;
+        overflow: auto;
+        padding: 0.2rem;
+        background: linear-gradient(180deg, #fff, #fbfdfc);
+      }
+
+      .record-card {
+        display: grid;
+        grid-template-columns: 4.25rem 1.35fr 1fr auto;
+        gap: 0.8rem;
+        align-items: center;
+        width: 100%;
+        padding: 0.78rem;
+        text-align: left;
+        border: 1px solid transparent;
+        border-radius: 1rem;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .record-card--category {
+        grid-template-columns: 4.25rem 1.4fr 0.8fr auto;
+      }
+
+      .record-card:hover,
+      .record-card.is-active {
+        background: rgba(220, 238, 232, 0.9);
+        border-color: rgba(47, 93, 80, 0.2);
+      }
+
+      .record-thumb,
+      .preview-media,
+      .gallery-thumb {
+        background: #dfe9e5 center center / cover no-repeat;
+        border: 1px solid rgba(221, 231, 228, 0.92);
+        border-radius: 0.9rem;
+      }
+
+      .record-thumb {
+        aspect-ratio: 1;
+      }
+
+      .preview-media {
+        aspect-ratio: 4 / 3;
+        width: 50%;
+      }
+
+      .record-main strong,
+      .record-side strong,
+      .record-main small,
+      .record-side small {
+        display: block;
+      }
+
+      .record-main small,
+      .record-side small {
+        color: var(--muted);
+      }
+
+      .editor-shell {
+        padding: 1.1rem;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      }
+
+      .editor-tabs {
+        margin-bottom: 1rem;
+      }
+
+      .editor-tab {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.68rem 0.88rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .editor-tab.is-active {
+        color: #fff;
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .preview-card {
+        margin-top: 1rem;
+      }
+
+      .preview-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding-bottom: 0.65rem;
+        border-bottom: 1px solid rgba(221, 231, 228, 0.72);
+      }
+
+      .preview-line:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .preview-line span:first-child {
+        color: var(--muted);
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+        gap: 0.75rem;
+      }
+
+      .gallery-thumb {
+        aspect-ratio: 1;
+      }
+
+      .gallery-grid > .empty-note {
+        grid-column: 1 / -1;
+      }
+
+      .empty-note {
+        padding: 1rem;
+        border: 1px dashed var(--line);
+        border-radius: var(--radius-sm);
+        color: var(--muted);
+      }
+
+      @media (max-width: 1180px) {
+        .hero-strip,
+        .workspace-grid,
+        .dashboard-grid,
+        .stats-grid,
+        .upload-grid,
+        .media-grid,
+        .roadmap-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .admin-app {
+          grid-template-columns: 1fr;
+        }
+
+        .admin-sidebar {
+          position: static;
+          height: auto;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .admin-main {
+          padding: 1rem;
+        }
+
+        .field-grid,
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .list-head {
+          display: none;
+        }
+
+        .record-card,
+        .record-card--category {
+          grid-template-columns: 1fr;
+        }
+
+        .record-thumb {
+          aspect-ratio: 16 / 9;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    {!authenticated ? (
+      <div class="admin-login-shell">
+        <section class="admin-login-card">
+          <p class="eyebrow-badge">Panel propio</p>
+          <h1>Entrar al panel</h1>
+          <p class="muted">
+            Inicia sesión con el usuario configurado en `ADMIN_USERNAME`. Si no lo cambiaste todavía, el valor por defecto es
+            <strong> {getAdminUsername()}</strong>.
+          </p>
+          <form class="login-form" id="login-form">
+            <div class="field">
+              <label for="username">Usuario</label>
+              <input id="username" name="username" type="text" autocomplete="username" required />
+            </div>
+            <div class="field">
+              <label for="password">Contraseña</label>
+              <input id="password" name="password" type="password" autocomplete="current-password" required />
+            </div>
+            <button class="button button--primary" type="submit">Entrar al panel</button>
+            <p class="feedback muted" id="login-feedback"></p>
+          </form>
+        </section>
+      </div>
+    ) : (
+      <div class="admin-app">
+        <aside class="admin-sidebar">
+          <div class="sidebar-shell">
+            <div class="brand-block">
+              <p class="eyebrow-badge">Industrias MM</p>
+              <strong>Admin de catálogo</strong>
+              <p>Panel dividido por páginas para trabajar productos, categorías y medios con más claridad.</p>
+            </div>
+
+            <div class="sidebar-status">
+              <strong>Base actual</strong>
+              <p style="margin: 0.4rem 0 0;">Astro + SQLite + Cloudinary</p>
+            </div>
+
+            <nav class="sidebar-nav" aria-label="Módulos del panel">
+              {navItems.map((item) => (
+                <a href={item.href} class:list={[section === item.id && "is-active"]}>
+                  <strong>{item.label}</strong>
+                  <span>{item.copy}</span>
+                </a>
+              ))}
+            </nav>
+
+            <div class="sidebar-footer">Estructura preparada para sumar servicios, proyectos y configuración general.</div>
+          </div>
+        </aside>
+
+        <main class="admin-main">
+          <slot />
+        </main>
+      </div>
+    )}
+
+    <script is:inline>
+      const loginForm = document.getElementById("login-form");
+      const loginFeedback = document.getElementById("login-feedback");
+      const logoutButtons = [...document.querySelectorAll("[data-admin-logout]")];
+
+      if (loginForm) {
+        loginForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const formData = new FormData(loginForm);
+          loginFeedback.textContent = "Validando acceso...";
+          loginFeedback.dataset.tone = "info";
+
+          const response = await fetch("/api/admin/session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: String(formData.get("username") ?? ""),
+              password: String(formData.get("password") ?? ""),
+            }),
+          });
+
+          const result = await response.json();
+          if (!response.ok) {
+            loginFeedback.textContent = result.message ?? "No fue posible iniciar sesión.";
+            loginFeedback.dataset.tone = "error";
+            return;
+          }
+
+          window.location.reload();
+        });
+      }
+
+      logoutButtons.forEach((button) => {
+        button.addEventListener("click", async () => {
+          await fetch("/api/admin/session", { method: "DELETE" });
+          window.location.reload();
+        });
+      });
+    </script>
+  </body>
+</html>

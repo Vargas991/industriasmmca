@@ -1,26 +1,26 @@
 ---
-title: "Fabricacion Metalica"
+title: "Fabricación Metálica"
 slug: "fabricacion-metalica"
-excerpt: "Desarrollo y fabricacion de soluciones metalicas a medida."
-description: "Servicio de fabricacion para estructuras, mobiliario y soluciones industriales."
+excerpt: "Desarrollo y fabricación de soluciones metálicas a medida."
+description: "Servicio de fabricación para estructuras, mobiliario y soluciones industriales."
 featured: true
 status: "published"
 coverImage: "/images/services/fabricacion-metalica/cover.svg"
-coverAlt: "Proceso de fabricacion metalica"
+coverAlt: "Proceso de fabricación metálica"
 gallery:
   - "/images/services/fabricacion-metalica/01.svg"
 benefits:
-  - "Diseno a medida"
-  - "Produccion confiable"
-  - "Acompanamiento tecnico"
+  - "Diseño a medida."
+  - "Producción confiable."
+  - "Acompañamiento técnico."
 process:
-  - "Levantamiento de requerimiento"
-  - "Diseno"
-  - "Fabricacion"
-  - "Entrega e instalacion"
+  - "Levantamiento de requerimiento."
+  - "Diseño."
+  - "Fabricación."
+  - "Entrega e instalación."
 seo:
-  title: "Fabricacion Metalica | Industrias MM"
-  description: "Servicio de fabricacion metalica personalizada para industria y comercio."
+  title: "Fabricación Metálica | Industrias MM"
+  description: "Servicio de fabricación metálica personalizada para industria y comercio."
   canonical: "/servicios/fabricacion-metalica"
 ---
 

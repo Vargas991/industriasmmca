@@ -4,13 +4,13 @@ export const testimonials = [
     role: "Jefe de Operaciones",
     company: "Bodega Central",
     quote:
-      "El equipo entrego una solucion de almacenamiento robusta y bien instalada, con tiempos claros desde el primer dia.",
+      "El equipo entregó una solución de almacenamiento robusta y bien instalada, con tiempos claros desde el primer día.",
   },
   {
     name: "Mariana Silva",
     role: "Gerente de Compras",
     company: "Logistica Andina",
     quote:
-      "Necesitabamos una fabricacion especial y nos ayudaron a resolver diseno, produccion y montaje sin friccion.",
+      "Necesitábamos una fabricación especial y nos ayudaron a resolver diseño, producción y montaje sin fricción.",
   },
 ];

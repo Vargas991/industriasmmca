@@ -19,10 +19,10 @@ const categoryLabels = Object.fromEntries(
 ---
 <PageLayout
   title="Productos industriales"
-  intro="Catalogo organizado por categorias para navegar mejor cada linea de productos."
+  intro="Catálogo organizado por categorías para navegar mejor cada línea de productos."
   seo={buildPageSeo({
     title: "Productos industriales | Industrias MM",
-    description: "Catalogo de productos metalicos para industria, comercio y logistica.",
+    description: "Catálogo de productos metálicos para industria, comercio y logística.",
     canonical: "/productos",
   })}
   breadcrumbs={[{ name: "Productos", url: "/productos" }]}
@@ -32,8 +32,8 @@ const categoryLabels = Object.fromEntries(
       <div class="flow">
         <SectionHeading
           eyebrow="Categorias"
-          title="Explora el catalogo por linea de producto"
-          description="Cada categoria agrupa soluciones relacionadas para hacer mas clara la navegacion y el mantenimiento del contenido."
+          title="Explora el catálogo por línea de producto"
+          description="Cada categoría agrupa soluciones relacionadas para hacer más clara la navegación y el mantenimiento del contenido."
         />
         <ProductCategoryGrid sections={sections} />
       </div>
@@ -44,8 +44,8 @@ const categoryLabels = Object.fromEntries(
       <div class="flow">
         <SectionHeading
           eyebrow="Todos los productos"
-          title="Vista general del catalogo"
-          description="Tambien puedes revisar el inventario completo de productos publicados."
+          title="Vista general del catálogo"
+          description="También puedes revisar el inventario completo de productos publicados."
         />
         <ProductGrid products={products} categoryLabels={categoryLabels} />
       </div>
