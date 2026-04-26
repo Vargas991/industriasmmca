@@ -190,7 +190,7 @@ const payload = {
       function renderCategoryList() {
         const filtered = getFilteredCategories();
         categoryCountNote.textContent = filtered.length === categories.length
-          ? `${categories.length} categoría(s) en SQLite.`
+          ? `${categories.length} categoría(s) en Postgres.`
           : `${filtered.length} resultado(s) de ${categories.length} categoría(s).`;
 
         if (filtered.length === 0) {

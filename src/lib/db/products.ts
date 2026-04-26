@@ -1,6 +1,6 @@
-import Database from "better-sqlite3";
 import { getCollection } from "astro:content";
 import { marked } from "marked";
+import type { Sql } from "postgres";
 import type { ProductEntry, ProductInput, ProductMeasurement, ProductSpec, ProductStatus } from "@/types/product";
 import { getDb } from "@/lib/db/core";
 
@@ -11,7 +11,7 @@ interface ProductRow {
   category: string;
   excerpt: string;
   description: string;
-  featured: number;
+  featured: boolean;
   status: ProductStatus;
   cover_image: string;
   cover_alt: string;
@@ -72,18 +72,18 @@ function mapMeasurementRow(row: ProductMeasurementRow): ProductMeasurement {
   };
 }
 
-function getMeasurementsByProductId(instance: Database.Database, productId: number): ProductMeasurement[] {
-  const rows = instance.prepare(`
+async function getMeasurementsByProductId(instance: Sql, productId: number): Promise<ProductMeasurement[]> {
+  const rows = await instance<ProductMeasurementRow[]>`
     SELECT id, product_id, name, width, height, depth, length, capacity, unit, sort_order
     FROM product_measurements
-    WHERE product_id = ?
+    WHERE product_id = ${productId}
     ORDER BY sort_order ASC, id ASC
-  `).all(productId) as ProductMeasurementRow[];
+  `;
 
   return rows.map(mapMeasurementRow);
 }
 
-function mapProductRow(instance: Database.Database, row: ProductRow): ProductEntry {
+async function mapProductRow(instance: Sql, row: ProductRow): Promise<ProductEntry> {
   return {
     id: row.id,
     slug: row.slug,
@@ -94,7 +94,7 @@ function mapProductRow(instance: Database.Database, row: ProductRow): ProductEnt
       category: row.category,
       excerpt: row.excerpt,
       description: row.description,
-      featured: Boolean(row.featured),
+      featured: row.featured,
       status: row.status,
       coverImage: row.cover_image,
       coverAlt: row.cover_alt,
@@ -102,7 +102,7 @@ function mapProductRow(instance: Database.Database, row: ProductRow): ProductEnt
       specSheet: row.spec_sheet ?? undefined,
       benefits: parseJsonArray<string>(row.benefits_json, []),
       specs: parseJsonArray<ProductSpec>(row.specs_json, []),
-      measurements: getMeasurementsByProductId(instance, row.id),
+      measurements: await getMeasurementsByProductId(instance, row.id),
       seo: {
         title: row.seo_title,
         description: row.seo_description,
@@ -113,83 +113,58 @@ function mapProductRow(instance: Database.Database, row: ProductRow): ProductEnt
   };
 }
 
-async function importMarkdownProducts(instance: Database.Database) {
+async function importMarkdownProducts(instance: Sql) {
   const entries = await getCollection("products");
-  const insert = instance.prepare(`
-    INSERT INTO products (
-      slug, title, category, excerpt, description, featured, status,
-      cover_image, cover_alt, gallery_json, spec_sheet, benefits_json,
-      specs_json, seo_title, seo_description, seo_canonical, seo_image,
-      body_markdown, body_html
-    ) VALUES (
-      @slug, @title, @category, @excerpt, @description, @featured, @status,
-      @coverImage, @coverAlt, @galleryJson, @specSheet, @benefitsJson,
-      @specsJson, @seoTitle, @seoDescription, @seoCanonical, @seoImage,
-      @bodyMarkdown, @bodyHtml
-    )
-  `);
-  const insertMeasurement = instance.prepare(`
-    INSERT INTO product_measurements (
-      product_id, name, width, height, depth, length, capacity, unit, sort_order
-    ) VALUES (
-      @productId, @name, @width, @height, @depth, @length, @capacity, @unit, @sortOrder
-    )
-  `);
 
   for (const entry of entries) {
     const bodyMarkdown = typeof (entry as { body?: string }).body === "string" ? (entry as { body?: string }).body ?? "" : "";
     const bodyHtml = await marked.parse(bodyMarkdown);
 
-    const result = insert.run({
-      slug: entry.slug,
-      title: entry.data.title,
-      category: entry.data.category,
-      excerpt: entry.data.excerpt,
-      description: entry.data.description,
-      featured: entry.data.featured ? 1 : 0,
-      status: entry.data.status,
-      coverImage: entry.data.coverImage,
-      coverAlt: entry.data.coverAlt,
-      galleryJson: JSON.stringify(entry.data.gallery ?? []),
-      specSheet: entry.data.specSheet ?? null,
-      benefitsJson: JSON.stringify(entry.data.benefits ?? []),
-      specsJson: JSON.stringify(entry.data.specs ?? []),
-      seoTitle: entry.data.seo.title,
-      seoDescription: entry.data.seo.description,
-      seoCanonical: entry.data.seo.canonical ?? null,
-      seoImage: entry.data.seo.image ?? null,
-      bodyMarkdown,
-      bodyHtml,
-    });
+    const rows = await instance<{ id: number }[]>`
+      INSERT INTO products (
+        slug, title, category, excerpt, description, featured, status,
+        cover_image, cover_alt, gallery_json, spec_sheet, benefits_json,
+        specs_json, seo_title, seo_description, seo_canonical, seo_image,
+        body_markdown, body_html
+      ) VALUES (
+        ${entry.slug}, ${entry.data.title}, ${entry.data.category}, ${entry.data.excerpt}, ${entry.data.description},
+        ${entry.data.featured}, ${entry.data.status}, ${entry.data.coverImage}, ${entry.data.coverAlt},
+        ${JSON.stringify(entry.data.gallery ?? [])}, ${entry.data.specSheet ?? null}, ${JSON.stringify(entry.data.benefits ?? [])},
+        ${JSON.stringify(entry.data.specs ?? [])}, ${entry.data.seo.title}, ${entry.data.seo.description},
+        ${entry.data.seo.canonical ?? null}, ${entry.data.seo.image ?? null}, ${bodyMarkdown}, ${bodyHtml}
+      )
+      ON CONFLICT (slug) DO NOTHING
+      RETURNING id::int AS id
+    `;
 
-    const productId = Number(result.lastInsertRowid);
+    const productId = rows[0]?.id;
+    if (!productId) continue;
+
     const measurements = (entry.data as { measurements?: ProductMeasurement[] }).measurements ?? [];
-    measurements.forEach((measurement, index) => {
-      insertMeasurement.run({
-        productId,
-        name: measurement.name,
-        width: measurement.width ?? null,
-        height: measurement.height ?? null,
-        depth: measurement.depth ?? null,
-        length: measurement.length ?? null,
-        capacity: measurement.capacity ?? null,
-        unit: measurement.unit ?? null,
-        sortOrder: measurement.order ?? index,
-      });
-    });
+    for (const [index, measurement] of measurements.entries()) {
+      await instance`
+        INSERT INTO product_measurements (
+          product_id, name, width, height, depth, length, capacity, unit, sort_order
+        ) VALUES (
+          ${productId}, ${measurement.name}, ${measurement.width ?? null}, ${measurement.height ?? null},
+          ${measurement.depth ?? null}, ${measurement.length ?? null}, ${measurement.capacity ?? null},
+          ${measurement.unit ?? null}, ${measurement.order ?? index}
+        )
+      `;
+    }
   }
 }
 
-export async function ensureProductTables(instance: Database.Database) {
-  instance.exec(`
+export async function ensureProductTables(instance: Sql) {
+  await instance`
     CREATE TABLE IF NOT EXISTS products (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id BIGSERIAL PRIMARY KEY,
       slug TEXT NOT NULL UNIQUE,
       title TEXT NOT NULL,
       category TEXT NOT NULL,
       excerpt TEXT NOT NULL,
       description TEXT NOT NULL,
-      featured INTEGER NOT NULL DEFAULT 0,
+      featured BOOLEAN NOT NULL DEFAULT FALSE,
       status TEXT NOT NULL CHECK (status IN ('draft', 'published')),
       cover_image TEXT NOT NULL,
       cover_alt TEXT NOT NULL,
@@ -203,13 +178,15 @@ export async function ensureProductTables(instance: Database.Database) {
       seo_image TEXT,
       body_markdown TEXT NOT NULL DEFAULT '',
       body_html TEXT NOT NULL DEFAULT '',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
 
+  await instance`
     CREATE TABLE IF NOT EXISTS product_measurements (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      product_id INTEGER NOT NULL,
+      id BIGSERIAL PRIMARY KEY,
+      product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
       name TEXT NOT NULL,
       width TEXT,
       height TEXT,
@@ -217,13 +194,12 @@ export async function ensureProductTables(instance: Database.Database) {
       length TEXT,
       capacity TEXT,
       unit TEXT,
-      sort_order INTEGER NOT NULL DEFAULT 0,
-      FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
-    );
-  `);
+      sort_order INTEGER NOT NULL DEFAULT 0
+    )
+  `;
 
-  const countRow = instance.prepare("SELECT COUNT(*) AS count FROM products").get() as { count: number };
-  if (countRow.count === 0) {
+  const countRows = await instance<{ count: number }[]>`SELECT COUNT(*)::int AS count FROM products`;
+  if (countRows[0]?.count === 0) {
     await importMarkdownProducts(instance);
   }
 }
@@ -232,66 +208,56 @@ async function getDatabase() {
   return getDb();
 }
 
-function replaceMeasurements(instance: Database.Database, productId: number, measurements: ProductMeasurement[]) {
-  const remove = instance.prepare("DELETE FROM product_measurements WHERE product_id = ?");
-  const insert = instance.prepare(`
-    INSERT INTO product_measurements (
-      product_id, name, width, height, depth, length, capacity, unit, sort_order
-    ) VALUES (
-      @productId, @name, @width, @height, @depth, @length, @capacity, @unit, @sortOrder
-    )
-  `);
+async function replaceMeasurements(instance: Sql, productId: number, measurements: ProductMeasurement[]) {
+  await instance.begin(async (tx) => {
+    await tx`DELETE FROM product_measurements WHERE product_id = ${productId}`;
 
-  const transaction = instance.transaction((items: ProductMeasurement[]) => {
-    remove.run(productId);
-    items.forEach((measurement, index) => {
-      insert.run({
-        productId,
-        name: measurement.name,
-        width: measurement.width ?? null,
-        height: measurement.height ?? null,
-        depth: measurement.depth ?? null,
-        length: measurement.length ?? null,
-        capacity: measurement.capacity ?? null,
-        unit: measurement.unit ?? null,
-        sortOrder: measurement.order ?? index,
-      });
-    });
+    for (const [index, measurement] of measurements.entries()) {
+      await tx`
+        INSERT INTO product_measurements (
+          product_id, name, width, height, depth, length, capacity, unit, sort_order
+        ) VALUES (
+          ${productId}, ${measurement.name}, ${measurement.width ?? null}, ${measurement.height ?? null},
+          ${measurement.depth ?? null}, ${measurement.length ?? null}, ${measurement.capacity ?? null},
+          ${measurement.unit ?? null}, ${measurement.order ?? index}
+        )
+      `;
+    }
   });
-
-  transaction(measurements);
 }
 
 export async function listProducts(options: ProductListOptions = {}): Promise<ProductEntry[]> {
   const instance = await getDatabase();
   const conditions: string[] = [];
-  const params: Record<string, string | number> = {};
+  const params: Array<string> = [];
 
   if (!options.includeDrafts) {
-    conditions.push("status = @status");
-    params.status = "published";
+    params.push("published");
+    conditions.push(`status = $${params.length}`);
   }
 
   if (options.featuredOnly) {
-    conditions.push("featured = 1");
+    conditions.push("featured = TRUE");
   }
 
   if (options.category) {
-    conditions.push("category = @category");
-    params.category = options.category;
+    params.push(options.category);
+    conditions.push(`category = $${params.length}`);
   }
 
   const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-  const rows = instance
-    .prepare(`SELECT * FROM products ${whereClause} ORDER BY featured DESC, title COLLATE NOCASE ASC`)
-    .all(params) as ProductRow[];
+  const rows = await instance.unsafe<ProductRow[]>(
+    `SELECT * FROM products ${whereClause} ORDER BY featured DESC, LOWER(title) ASC`,
+    params,
+  );
 
-  return rows.map((row) => mapProductRow(instance, row));
+  return Promise.all(rows.map((row) => mapProductRow(instance, row)));
 }
 
 export async function getProductBySlugFromDb(slug: string, options: ProductListOptions = {}): Promise<ProductEntry | undefined> {
   const instance = await getDatabase();
-  const row = instance.prepare("SELECT * FROM products WHERE slug = ? LIMIT 1").get(slug) as ProductRow | undefined;
+  const rows = await instance<ProductRow[]>`SELECT * FROM products WHERE slug = ${slug} LIMIT 1`;
+  const row = rows[0];
   if (!row) return undefined;
   if (!options.includeDrafts && row.status !== "published") return undefined;
   return mapProductRow(instance, row);
@@ -299,7 +265,8 @@ export async function getProductBySlugFromDb(slug: string, options: ProductListO
 
 export async function getProductById(id: number): Promise<ProductEntry | undefined> {
   const instance = await getDatabase();
-  const row = instance.prepare("SELECT * FROM products WHERE id = ? LIMIT 1").get(id) as ProductRow | undefined;
+  const rows = await instance<ProductRow[]>`SELECT * FROM products WHERE id = ${id} LIMIT 1`;
+  const row = rows[0];
   return row ? mapProductRow(instance, row) : undefined;
 }
 
@@ -311,7 +278,7 @@ async function toStoredProduct(input: ProductInput) {
     category: input.category,
     excerpt: input.excerpt,
     description: input.description,
-    featured: input.featured ? 1 : 0,
+    featured: input.featured,
     status: input.status,
     coverImage: input.coverImage,
     coverAlt: input.coverAlt,
@@ -332,61 +299,63 @@ async function toStoredProduct(input: ProductInput) {
 export async function createProduct(input: ProductInput): Promise<ProductEntry> {
   const instance = await getDatabase();
   const stored = await toStoredProduct(input);
-  const result = instance.prepare(`
+  const rows = await instance<{ id: number }[]>`
     INSERT INTO products (
       slug, title, category, excerpt, description, featured, status,
       cover_image, cover_alt, gallery_json, spec_sheet, benefits_json,
       specs_json, seo_title, seo_description, seo_canonical, seo_image,
       body_markdown, body_html, updated_at
     ) VALUES (
-      @slug, @title, @category, @excerpt, @description, @featured, @status,
-      @coverImage, @coverAlt, @galleryJson, @specSheet, @benefitsJson,
-      @specsJson, @seoTitle, @seoDescription, @seoCanonical, @seoImage,
-      @bodyMarkdown, @bodyHtml, CURRENT_TIMESTAMP
+      ${stored.slug}, ${stored.title}, ${stored.category}, ${stored.excerpt}, ${stored.description},
+      ${stored.featured}, ${stored.status}, ${stored.coverImage}, ${stored.coverAlt}, ${stored.galleryJson},
+      ${stored.specSheet}, ${stored.benefitsJson}, ${stored.specsJson}, ${stored.seoTitle},
+      ${stored.seoDescription}, ${stored.seoCanonical}, ${stored.seoImage}, ${stored.bodyMarkdown},
+      ${stored.bodyHtml}, NOW()
     )
-  `).run(stored);
+    RETURNING id::int AS id
+  `;
 
-  replaceMeasurements(instance, Number(result.lastInsertRowid), stored.measurements);
-
-  return (await getProductById(Number(result.lastInsertRowid))) as ProductEntry;
+  await replaceMeasurements(instance, rows[0].id, stored.measurements);
+  return (await getProductById(rows[0].id)) as ProductEntry;
 }
 
 export async function updateProduct(id: number, input: ProductInput): Promise<ProductEntry | undefined> {
   const instance = await getDatabase();
   const stored = await toStoredProduct(input);
-  const result = instance.prepare(`
+  const rows = await instance<{ id: number }[]>`
     UPDATE products
     SET
-      slug = @slug,
-      title = @title,
-      category = @category,
-      excerpt = @excerpt,
-      description = @description,
-      featured = @featured,
-      status = @status,
-      cover_image = @coverImage,
-      cover_alt = @coverAlt,
-      gallery_json = @galleryJson,
-      spec_sheet = @specSheet,
-      benefits_json = @benefitsJson,
-      specs_json = @specsJson,
-      seo_title = @seoTitle,
-      seo_description = @seoDescription,
-      seo_canonical = @seoCanonical,
-      seo_image = @seoImage,
-      body_markdown = @bodyMarkdown,
-      body_html = @bodyHtml,
-      updated_at = CURRENT_TIMESTAMP
-    WHERE id = @id
-  `).run({ id, ...stored });
+      slug = ${stored.slug},
+      title = ${stored.title},
+      category = ${stored.category},
+      excerpt = ${stored.excerpt},
+      description = ${stored.description},
+      featured = ${stored.featured},
+      status = ${stored.status},
+      cover_image = ${stored.coverImage},
+      cover_alt = ${stored.coverAlt},
+      gallery_json = ${stored.galleryJson},
+      spec_sheet = ${stored.specSheet},
+      benefits_json = ${stored.benefitsJson},
+      specs_json = ${stored.specsJson},
+      seo_title = ${stored.seoTitle},
+      seo_description = ${stored.seoDescription},
+      seo_canonical = ${stored.seoCanonical},
+      seo_image = ${stored.seoImage},
+      body_markdown = ${stored.bodyMarkdown},
+      body_html = ${stored.bodyHtml},
+      updated_at = NOW()
+    WHERE id = ${id}
+    RETURNING id::int AS id
+  `;
 
-  if (result.changes === 0) return undefined;
-  replaceMeasurements(instance, id, stored.measurements);
+  if (rows.length === 0) return undefined;
+  await replaceMeasurements(instance, id, stored.measurements);
   return getProductById(id);
 }
 
 export async function deleteProduct(id: number): Promise<boolean> {
   const instance = await getDatabase();
-  const result = instance.prepare("DELETE FROM products WHERE id = ?").run(id);
-  return result.changes > 0;
+  const rows = await instance<{ id: number }[]>`DELETE FROM products WHERE id = ${id} RETURNING id::int AS id`;
+  return rows.length > 0;
 }

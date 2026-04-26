@@ -386,7 +386,7 @@ const payload = {
       function renderProductList() {
         const filtered = getFilteredProducts();
         productCountNote.textContent = filtered.length === products.length
-          ? `${products.length} producto(s) en SQLite.`
+          ? `${products.length} producto(s) en Postgres.`
           : `${filtered.length} resultado(s) de ${products.length} producto(s).`;
 
         if (filtered.length === 0) {

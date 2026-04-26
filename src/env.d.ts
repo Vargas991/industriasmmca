@@ -5,7 +5,12 @@ interface ImportMetaEnv {
   readonly PUBLIC_WHATSAPP_NUMBER?: string;
   readonly CONTACT_EMAIL?: string;
   readonly CONTACT_FORM_RECIPIENT?: string;
-  readonly CONTENT_DB_PATH?: string;
+  readonly DATABASE_URL?: string;
+  readonly PGHOST?: string;
+  readonly PGPORT?: string;
+  readonly PGUSER?: string;
+  readonly PGPASSWORD?: string;
+  readonly PGDATABASE?: string;
   readonly ADMIN_USERNAME?: string;
   readonly ADMIN_PASSWORD?: string;
   readonly ADMIN_SESSION_SECRET?: string;
