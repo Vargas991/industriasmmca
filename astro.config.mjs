@@ -4,8 +4,11 @@ import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: process.env.PUBLIC_SITE_URL ?? "https://www.industriasmm.com",
+  site: process.env.PUBLIC_SITE_URL ?? "https://industriasmmca.onrender.com",
   output: "server",
+  security: {
+    checkOrigin: false,
+  },
   adapter: node({
     mode: "standalone",
   }),
