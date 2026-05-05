@@ -55,8 +55,16 @@ const paletteClasses = [
       </div>
 
       <div class="product-showcase-footer">
-        <div class="product-showcase-rail" data-product-progress>
-          <span class="product-showcase-rail-fill" data-product-progress-fill></span>
+        <div class="product-showcase-controls" aria-label="Controles de productos destacados">
+          <button class="product-showcase-control" type="button" data-product-prev aria-label="Producto anterior">
+            <span aria-hidden="true">&lsaquo;</span>
+          </button>
+          <div class="product-showcase-rail" data-product-progress>
+            <span class="product-showcase-rail-fill" data-product-progress-fill></span>
+          </div>
+          <button class="product-showcase-control" type="button" data-product-next aria-label="Producto siguiente">
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
         </div>
         <Button href="/productos">Explorar catálogo</Button>
       </div>

@@ -53,7 +53,9 @@
   height: 2px;
   background: var(--color-sage-deep);
   border-radius: 999px;
-  transition: transform 180ms ease, opacity 180ms ease;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
 }
 
 .mobile-nav[open] summary span:nth-child(1) {
@@ -150,7 +152,11 @@
   height: 2px;
   transform: scaleX(0);
   transform-origin: left;
-  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-light));
+  background: linear-gradient(
+    90deg,
+    var(--color-gold),
+    var(--color-gold-light)
+  );
   transition: transform 180ms ease;
 }
 
@@ -163,9 +169,22 @@
   position: relative;
   padding: 4rem 0;
   background:
-    linear-gradient(90deg, rgba(246, 251, 249, 0.88) 0%, rgba(246, 251, 249, 0.64) 34%, rgba(34, 48, 45, 0.24) 100%),
-    radial-gradient(circle at top right, rgba(200, 166, 75, 0.24), transparent 28%),
-    radial-gradient(circle at 18% 20%, rgba(109, 139, 134, 0.12), transparent 30%),
+    linear-gradient(
+      90deg,
+      rgba(246, 251, 249, 0.88) 0%,
+      rgba(246, 251, 249, 0.64) 34%,
+      rgba(34, 48, 45, 0.24) 100%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(200, 166, 75, 0.24),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 18% 20%,
+      rgba(109, 139, 134, 0.12),
+      transparent 30%
+    ),
     url("/images/hero/hero.webp") center right / cover no-repeat,
     linear-gradient(135deg, var(--color-ice), var(--color-mint));
 }
@@ -204,10 +223,11 @@
   bottom: -13rem;
   width: 40rem;
   aspect-ratio: 16/9;
-  
+
   pointer-events: none;
   opacity: 0.95;
-  background: url("/images/products/profuct-fondo.webp") center center / contain no-repeat;
+  background: url("/images/products/profuct-fondo.webp") center center / contain
+    no-repeat;
   /* border-radius: 2rem; */
   filter: drop-shadow(0 28px 40px rgba(34, 48, 45, 0.18));
 }
@@ -227,6 +247,7 @@
   position: relative;
   z-index: 1;
   overflow: hidden;
+  padding-top: 1rem;
   margin-left: 5rem;
 }
 
@@ -243,7 +264,9 @@
   border-radius: 0.45rem;
   box-shadow: 0 18px 32px rgba(34, 48, 45, 0.08);
   overflow: hidden;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .product-showcase-card:hover,
@@ -298,6 +321,51 @@
   margin-top: 1.4rem;
 }
 
+.product-showcase-controls {
+  display: grid;
+  grid-template-columns: auto minmax(10rem, 44rem) auto;
+  align-items: center;
+  gap: 0.8rem;
+  width: min(52rem, 100%);
+}
+
+.product-showcase-control {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(70, 100, 95, 0.22);
+  border-radius: 999px;
+  background: var(--color-white);
+  color: var(--color-sage-deep);
+  box-shadow: 0 12px 24px rgba(34, 48, 45, 0.1);
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    opacity 160ms ease;
+}
+
+.product-showcase-control:hover,
+.product-showcase-control:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(70, 100, 95, 0.48);
+  color: var(--color-ink);
+}
+
+.product-showcase-control:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+  transform: none;
+}
+
+.product-showcase-control span {
+  font-size: 1.8rem;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
 .service-showcase-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -309,7 +377,9 @@
   border-radius: 0.55rem;
   box-shadow: 0 18px 32px rgba(34, 48, 45, 0.08);
   overflow: hidden;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .service-showcase-card:hover,
@@ -351,7 +421,7 @@
 
 .product-showcase-rail {
   position: relative;
-  width: min(44rem, calc(100% - 3rem));
+  width: 100%;
   height: 0.45rem;
   border-radius: 999px;
   background: rgba(70, 100, 95, 0.16);
@@ -427,7 +497,10 @@
   text-align: left;
   box-shadow: var(--shadow-soft);
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
 }
 
 .project-option:hover,
@@ -458,8 +531,11 @@
 
 .site-footer {
   padding: var(--space-5) 0 2rem;
-  background:
-    linear-gradient(180deg, rgba(220, 238, 232, 0.74), rgba(246, 251, 249, 0.96));
+  background: linear-gradient(
+    180deg,
+    rgba(220, 238, 232, 0.74),
+    rgba(246, 251, 249, 0.96)
+  );
   margin-top: var(--space-5);
   border-top: 1px solid rgba(184, 196, 191, 0.72);
 }
@@ -564,7 +640,11 @@
 
 .hero-visual {
   padding: var(--space-3);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(238, 246, 243, 0.92));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(238, 246, 243, 0.92)
+  );
   border: 1px solid rgba(184, 196, 191, 0.9);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -586,7 +666,11 @@
 }
 
 .button--primary {
-  background: linear-gradient(135deg, var(--color-sage-deep), var(--color-sage));
+  background: linear-gradient(
+    135deg,
+    var(--color-sage-deep),
+    var(--color-sage)
+  );
   color: #fff;
 }
 
@@ -645,7 +729,11 @@
 .testimonial-card--featured {
   background:
     linear-gradient(135deg, rgba(200, 166, 75, 0.12), transparent 48%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(220, 238, 232, 0.86));
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.98),
+      rgba(220, 238, 232, 0.86)
+    );
 }
 
 .testimonial-mark {
@@ -697,7 +785,10 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 }
 
 .card:hover,
@@ -806,7 +897,11 @@
   bottom: 1.25rem;
   padding: 0.9rem 1.1rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  background: linear-gradient(
+    135deg,
+    var(--color-gold),
+    var(--color-gold-light)
+  );
   color: var(--color-ink);
   border: 1px solid rgba(155, 122, 46, 0.4);
   color: #fff;
@@ -816,7 +911,11 @@
 
 .whatsapp-button:hover,
 .whatsapp-button:focus-visible {
-  background: linear-gradient(135deg, var(--color-gold-deep), var(--color-gold));
+  background: linear-gradient(
+    135deg,
+    var(--color-gold-deep),
+    var(--color-gold)
+  );
   color: #fff;
 }
 
@@ -845,7 +944,11 @@
 }
 
 .section-alt {
-  background: linear-gradient(180deg, rgba(220, 238, 232, 0.42), rgba(255, 255, 255, 0.72));
+  background: linear-gradient(
+    180deg,
+    rgba(220, 238, 232, 0.42),
+    rgba(255, 255, 255, 0.72)
+  );
 }
 
 .eyebrow {
@@ -904,8 +1007,16 @@
   height: clamp(25rem, 42vw, 32rem);
   padding: clamp(1.2rem, 2vw, 2rem);
   background:
-    radial-gradient(circle at top right, rgba(200, 166, 75, 0.18), transparent 26%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(220, 238, 232, 0.84));
+    radial-gradient(
+      circle at top right,
+      rgba(200, 166, 75, 0.18),
+      transparent 26%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.98),
+      rgba(220, 238, 232, 0.84)
+    );
   border: 1px solid rgba(184, 196, 191, 0.72);
   border-radius: 1.6rem;
   box-shadow: var(--shadow);
@@ -936,7 +1047,11 @@
   border-radius: 1rem;
   /* box-shadow: var(--shadow-soft); */
   cursor: pointer;
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
 }
 
 .product-gallery-thumb:hover,
@@ -1147,7 +1262,11 @@
   width: 9rem;
   aspect-ratio: 1;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(200, 166, 75, 0.34), transparent 72%);
+  background: radial-gradient(
+    circle,
+    rgba(200, 166, 75, 0.34),
+    transparent 72%
+  );
   pointer-events: none;
 }
 
@@ -1166,6 +1285,12 @@
 
 .product-detail-shell .section-padding {
   padding: 0;
+}
+
+@media (max-width: 1200px) {
+  .product-showcase-card {
+    flex-basis: calc((100% - 0.9rem) / 2);
+  }
 }
 
 @media (max-width: 900px) {
@@ -1270,7 +1395,11 @@
 
   .hero-section {
     background:
-      linear-gradient(180deg, rgba(246, 251, 249, 0.96), rgba(246, 251, 249, 0.88)),
+      linear-gradient(
+        180deg,
+        rgba(246, 251, 249, 0.96),
+        rgba(246, 251, 249, 0.88)
+      ),
       url("/images/hero/hero.webp") center center / cover no-repeat;
   }
 

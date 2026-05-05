@@ -82,29 +82,6 @@ async function importMarkdownCategories(instance: Sql) {
 }
 
 export async function ensureCategoryTables(instance: Sql) {
-  await instance`
-    CREATE TABLE IF NOT EXISTS product_categories (
-      id BIGSERIAL PRIMARY KEY,
-      slug TEXT NOT NULL UNIQUE,
-      title TEXT NOT NULL,
-      excerpt TEXT NOT NULL,
-      description TEXT NOT NULL,
-      featured BOOLEAN NOT NULL DEFAULT FALSE,
-      status TEXT NOT NULL CHECK (status IN ('draft', 'published')),
-      sort_order INTEGER NOT NULL DEFAULT 0,
-      cover_image TEXT NOT NULL,
-      cover_alt TEXT NOT NULL,
-      seo_title TEXT NOT NULL,
-      seo_description TEXT NOT NULL,
-      seo_canonical TEXT,
-      seo_image TEXT,
-      body_markdown TEXT NOT NULL DEFAULT '',
-      body_html TEXT NOT NULL DEFAULT '',
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `;
-
   const countRows = await instance<{ count: number }[]>`SELECT COUNT(*)::int AS count FROM product_categories`;
   if (countRows[0]?.count === 0) {
     await importMarkdownCategories(instance);
