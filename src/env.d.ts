@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly CONTACT_EMAIL?: string;
   readonly CONTACT_FORM_RECIPIENT?: string;
   readonly DATABASE_URL?: string;
+  readonly AUTO_RUN_MIGRATIONS?: string;
   readonly PGHOST?: string;
   readonly PGPORT?: string;
   readonly PGUSER?: string;

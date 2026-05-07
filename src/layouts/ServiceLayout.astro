@@ -11,15 +11,19 @@ interface Props {
   description: string;
   seo: SeoData;
   breadcrumbs: BreadcrumbItem[];
+  coverImage?: string;
 }
 
-const { title, description, seo, breadcrumbs } = Astro.props;
+const { title, description, seo, breadcrumbs, coverImage } = Astro.props;
 ---
 <BaseLayout seo={seo}>
   <Breadcrumbs items={breadcrumbs} />
   <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
   <JsonLd data={buildThingSchema("Service", seo, description)} />
-  <section class="page-hero">
+  <section
+    class="page-hero service-hero"
+    style={coverImage ? `--service-hero-image: url('${coverImage}')` : undefined}
+  >
     <Container>
       <div class="flow">
         <h1>{title}</h1>

@@ -17,6 +17,9 @@ const { product, categoryLabel } = Astro.props;
       {categoryLabel && <p class="eyebrow">{categoryLabel}</p>}
       <h3>{product.data.title}</h3>
       <p>{product.data.excerpt}</p>
+      {product.data.show_price && typeof product.data.price === 'number' && (
+        <p class="product-card-price">{product.data.price}</p>
+      )}
     </div>
   </a>
 </Card>

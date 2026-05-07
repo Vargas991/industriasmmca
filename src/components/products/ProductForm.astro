@@ -1,7 +1,27 @@
 ---
 // ProductForm.astro
 // Componente reutilizable para crear o editar productos
-const { product, categories, onSave, onCancel, isNew } = Astro.props;
+import type { ProductCategoryEntry } from "@/types/productCategory";
+
+interface ProductFormValue {
+  id?: number;
+  title?: string;
+  slug?: string;
+  category?: string;
+  status?: string;
+  description?: string;
+  excerpt?: string;
+  price?: number;
+  show_price?: boolean;
+}
+
+interface Props {
+  product?: ProductFormValue;
+  categories: ProductCategoryEntry[];
+  isNew?: boolean;
+}
+
+const { product, categories, isNew = false } = Astro.props;
 ---
 <form class="stack editor-shell" id="product-form">
   <input id="product-id" name="productId" type="hidden" value={product?.id || ''} />
@@ -18,8 +38,10 @@ const { product, categories, onSave, onCancel, isNew } = Astro.props;
       <div class="field-grid">
         <div class="field"><label for="title">Nombre del producto</label><input id="title" name="title" required value={product?.title || ''} /></div>
         <div class="field"><label for="slug">Slug</label><input id="slug" name="slug" placeholder="Se genera si lo dejas vacío" value={product?.slug || ''} /></div>
-        <div class="field"><label for="category">Categoría</label><select id="category" name="category" required>{categories.map(cat => <option value={cat.slug} selected={cat.slug === product?.category}>{cat.data.title}</option>)}</select></div>
+        <div class="field"><label for="category">Categoría</label><select id="category" name="category" required>{categories.map((cat) => <option value={cat.slug} selected={cat.slug === product?.category}>{cat.data.title}</option>)}</select></div>
         <div class="field"><label for="status">Estado</label><select id="status" name="status"><option value="draft" selected={product?.status !== 'published'}>Borrador</option><option value="published" selected={product?.status === 'published'}>Publicado</option></select></div>
+        <div class="field"><label for="price">Precio</label><input id="price" name="price" type="number" step="0.01" min="0" value={product?.price ?? ''} /></div>
+        <div class="field"><label for="show_price"><input id="show_price" name="show_price" type="checkbox" checked={product?.show_price ?? false} /> Mostrar precio</label></div>
         <div class="field field--full"><label for="description">Descripción corta</label><textarea id="description" name="description" required>{product?.description || ''}</textarea></div>
         <div class="field field--full"><label for="excerpt">Descripción principal / extracto</label><textarea id="excerpt" name="excerpt" required>{product?.excerpt || ''}</textarea></div>
       </div>
@@ -28,6 +50,6 @@ const { product, categories, onSave, onCancel, isNew } = Astro.props;
   </div>
   <div class="button-row">
     <button class="button button--primary" type="submit">{isNew ? 'Crear producto' : 'Guardar cambios'}</button>
-    <button class="button button--secondary" type="button" on:click={onCancel}>Cancelar</button>
+    <button class="button button--secondary" type="reset">Cancelar</button>
   </div>
 </form>

@@ -1,0 +1,106 @@
+---
+interface Props {
+  service: any;
+}
+
+const { service } = Astro.props;
+
+const embedUrl = (url: string) => {
+  if (!url) return "";
+  if (url.includes("watch?v=")) return url.replace("watch?v=", "embed/");
+  if (url.includes("youtu.be/")) return url.replace("youtu.be/", "www.youtube.com/embed/");
+  return url;
+};
+---
+<div class="laser-section">
+  <div class="laser-inner">
+    <div class="laser-copy-panel flow">
+      <span class="laser-eyebrow">Industrial Manufacturing</span>
+      <h2>PRECISION LASER CUTTING</h2>
+      <p class="laser-intro">High precision CNC laser cutting solutions for industrial, commercial, and custom manufacturing projects.</p>
+
+      <div class="laser-feature-grid">
+        <div class="laser-feature-card">
+          <span class="laser-feature-tag">±0.1mm</span>
+          <p>precision</p>
+        </div>
+        <div class="laser-feature-card">
+          <span class="laser-feature-tag">High-speed</span>
+          <p>production</p>
+        </div>
+        <div class="laser-feature-card">
+          <span class="laser-feature-tag">Clean</span>
+          <p>finishing</p>
+        </div>
+        <div class="laser-feature-card">
+          <span class="laser-feature-tag">Material</span>
+          <p>Stainless steel / aluminum / carbon steel</p>
+        </div>
+      </div>
+
+      <div class="laser-actions">
+        <a class="button button--primary laser-button-primary" href="/contacto">Request Quote</a>
+        <a class="button button--secondary laser-button-secondary" href="/contacto#upload">Upload Design</a>
+      </div>
+    </div>
+
+    <div class="laser-visual-panel">
+      <div class="laser-media-shell">
+        <div class="laser-grid-overlay"></div>
+        <div class="laser-spark-grid"></div>
+        {service.data.youtubeUrl ? (
+          <iframe
+            class="laser-media-frame"
+            src={embedUrl(service.data.youtubeUrl)}
+            title={service.data.title}
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        ) : (
+          <img
+            class="laser-media-frame"
+            src={service.data.coverImage}
+            alt={service.data.coverAlt}
+          />
+        )}
+
+        <div class="laser-floating-cards">
+          <div class="laser-floating-card laser-floating-card--one">
+            <span>Precision</span>
+            <strong>±0.1mm</strong>
+          </div>
+          <div class="laser-floating-card laser-floating-card--two">
+            <span>Delivery</span>
+            <strong>24-72h</strong>
+          </div>
+          <div class="laser-floating-card laser-floating-card--three">
+            <span>Materials</span>
+            <strong>Steel / Aluminum</strong>
+          </div>
+          <div class="laser-floating-card laser-floating-card--four">
+            <span>Grade</span>
+            <strong>Industrial</strong>
+          </div>
+        </div>
+
+        <div class="laser-media-label">LASER CUTTING</div>
+      </div>
+
+      <div class="laser-metrics-panel">
+        <div class="laser-metric-card">
+          <span>Throughput</span>
+          <strong>1200+ pcs / week</strong>
+        </div>
+        <div class="laser-metric-card">
+          <span>Accuracy</span>
+          <strong>0.05mm tolerance</strong>
+        </div>
+        <div class="laser-metric-card laser-metric-card--accent">
+          <span>Plant</span>
+          <strong>24/7 CNC cell</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

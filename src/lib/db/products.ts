@@ -25,6 +25,8 @@ interface ProductRow {
   seo_image: string | null;
   body_markdown: string;
   body_html: string;
+  price: number | string | null;
+  show_price: boolean | null;
 }
 
 interface ProductMeasurementRow {
@@ -57,6 +59,15 @@ function parseJsonArray<T>(value: string, fallback: T[]): T[] {
 
 function cleanOptional(value: string | null) {
   return value ?? undefined;
+}
+
+function parseOptionalNumber(value: number | string | null): number | undefined {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
 }
 
 function mapMeasurementRow(row: ProductMeasurementRow): ProductMeasurement {
@@ -109,6 +120,8 @@ async function mapProductRow(instance: Sql, row: ProductRow): Promise<ProductEnt
         canonical: row.seo_canonical ?? undefined,
         image: row.seo_image ?? undefined,
       },
+      price: parseOptionalNumber(row.price),
+      show_price: typeof row.show_price === 'boolean' ? row.show_price : false,
     },
   };
 }
@@ -156,48 +169,6 @@ async function importMarkdownProducts(instance: Sql) {
 }
 
 export async function ensureProductTables(instance: Sql) {
-  await instance`
-    CREATE TABLE IF NOT EXISTS products (
-      id BIGSERIAL PRIMARY KEY,
-      slug TEXT NOT NULL UNIQUE,
-      title TEXT NOT NULL,
-      category TEXT NOT NULL,
-      excerpt TEXT NOT NULL,
-      description TEXT NOT NULL,
-      featured BOOLEAN NOT NULL DEFAULT FALSE,
-      status TEXT NOT NULL CHECK (status IN ('draft', 'published')),
-      cover_image TEXT NOT NULL,
-      cover_alt TEXT NOT NULL,
-      gallery_json TEXT NOT NULL DEFAULT '[]',
-      spec_sheet TEXT,
-      benefits_json TEXT NOT NULL DEFAULT '[]',
-      specs_json TEXT NOT NULL DEFAULT '[]',
-      seo_title TEXT NOT NULL,
-      seo_description TEXT NOT NULL,
-      seo_canonical TEXT,
-      seo_image TEXT,
-      body_markdown TEXT NOT NULL DEFAULT '',
-      body_html TEXT NOT NULL DEFAULT '',
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `;
-
-  await instance`
-    CREATE TABLE IF NOT EXISTS product_measurements (
-      id BIGSERIAL PRIMARY KEY,
-      product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-      name TEXT NOT NULL,
-      width TEXT,
-      height TEXT,
-      depth TEXT,
-      length TEXT,
-      capacity TEXT,
-      unit TEXT,
-      sort_order INTEGER NOT NULL DEFAULT 0
-    )
-  `;
-
   const countRows = await instance<{ count: number }[]>`SELECT COUNT(*)::int AS count FROM products`;
   if (countRows[0]?.count === 0) {
     await importMarkdownProducts(instance);
@@ -293,6 +264,8 @@ async function toStoredProduct(input: ProductInput) {
     seoImage: input.seo.image ?? null,
     bodyMarkdown: body,
     bodyHtml: await marked.parse(body),
+    price: typeof input.price === 'number' ? input.price : null,
+    show_price: typeof input.show_price === 'boolean' ? input.show_price : false,
   };
 }
 
@@ -304,13 +277,13 @@ export async function createProduct(input: ProductInput): Promise<ProductEntry> 
       slug, title, category, excerpt, description, featured, status,
       cover_image, cover_alt, gallery_json, spec_sheet, benefits_json,
       specs_json, seo_title, seo_description, seo_canonical, seo_image,
-      body_markdown, body_html, updated_at
+      body_markdown, body_html, price, show_price, updated_at
     ) VALUES (
       ${stored.slug}, ${stored.title}, ${stored.category}, ${stored.excerpt}, ${stored.description},
       ${stored.featured}, ${stored.status}, ${stored.coverImage}, ${stored.coverAlt}, ${stored.galleryJson},
       ${stored.specSheet}, ${stored.benefitsJson}, ${stored.specsJson}, ${stored.seoTitle},
       ${stored.seoDescription}, ${stored.seoCanonical}, ${stored.seoImage}, ${stored.bodyMarkdown},
-      ${stored.bodyHtml}, NOW()
+      ${stored.bodyHtml}, ${stored.price}, ${stored.show_price}, NOW()
     )
     RETURNING id::int AS id
   `;
@@ -344,6 +317,8 @@ export async function updateProduct(id: number, input: ProductInput): Promise<Pr
       seo_image = ${stored.seoImage},
       body_markdown = ${stored.bodyMarkdown},
       body_html = ${stored.bodyHtml},
+      price = ${stored.price},
+      show_price = ${stored.show_price},
       updated_at = NOW()
     WHERE id = ${id}
     RETURNING id::int AS id

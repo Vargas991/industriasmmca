@@ -18,6 +18,7 @@ export interface ProductMeasurement {
   order: number;
 }
 
+
 export interface ProductData {
   title: string;
   category: string;
@@ -33,6 +34,8 @@ export interface ProductData {
   specs: ProductSpec[];
   measurements: ProductMeasurement[];
   seo: SeoData;
+  price?: number;
+  show_price?: boolean;
 }
 
 export interface ProductEntry {

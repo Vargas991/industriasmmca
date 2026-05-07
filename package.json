@@ -8,7 +8,8 @@
     "start": "node dist/server/entry.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "db:migrate": "esbuild src/scripts/db-migrate.ts --bundle --platform=node --format=esm --outfile=.astro/db-migrate.mjs && node .astro/db-migrate.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^9.5.5",

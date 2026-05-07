@@ -1,5 +1,6 @@
 import postgres, { type Sql } from "postgres";
 import { ensureCategoryTables } from "@/lib/db/categories";
+import { runMigrations } from "@/lib/db/migrations";
 import { ensureProductTables } from "@/lib/db/products";
 
 function buildDatabaseUrl() {
@@ -13,6 +14,7 @@ function buildDatabaseUrl() {
 }
 
 const databaseUrl = import.meta.env.DATABASE_URL ?? buildDatabaseUrl();
+const autoRunMigrations = import.meta.env.AUTO_RUN_MIGRATIONS === "true";
 
 let database: Sql | undefined;
 let databasePromise: Promise<Sql> | undefined;
@@ -26,6 +28,10 @@ function openDatabase() {
 }
 
 async function initializeDatabase(instance: Sql) {
+  if (autoRunMigrations) {
+    await runMigrations(instance);
+  }
+
   await ensureCategoryTables(instance);
   await ensureProductTables(instance);
 }

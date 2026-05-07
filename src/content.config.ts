@@ -72,9 +72,11 @@ const services = defineCollection({
 		status: z.enum(["draft", "published"]).default("published"),
 		coverImage: z.string(),
 		coverAlt: z.string(),
+		youtubeUrl: z.string().optional(),
 		gallery: z.array(z.string()).default([]),
 		benefits: z.array(z.string()).default([]),
 		process: z.array(z.string()).default([]),
+		materials: z.array(z.string()).default([]),
 		seo: seoSchema,
 	}),
 });
