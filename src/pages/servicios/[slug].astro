@@ -1,11 +1,14 @@
-export const prerender = true;
 ---
 import Container from "@/components/ui/Container.astro";
 import QuoteCTA from "@/components/contact/QuoteCTA.astro";
 import RelatedServices from "@/components/services/RelatedServices.astro";
 import ServiceBenefits from "@/components/services/ServiceBenefits.astro";
 import ServiceProcess from "@/components/services/ServiceProcess.astro";
-import { getPublishedServices, getRelatedServices, getServiceBySlug } from "@/lib/content/services";
+import {
+  getPublishedServices,
+  getRelatedServices,
+  getServiceBySlug,
+} from "@/lib/content/services";
 import { buildServiceSeo } from "@/lib/seo/metadata";
 import ServiceLayout from "@/layouts/ServiceLayout.astro";
 
@@ -24,37 +27,138 @@ if (!service) {
 }
 
 const relatedServices = await getRelatedServices(service.slug);
+const getYoutubeEmbedUrl = (url: string) => {
+  if (url.includes("watch?v=")) {
+    return url.replace("watch?v=", "embed/");
+  }
+  if (url.includes("youtu.be/")) {
+    return url.replace("youtu.be/", "www.youtube.com/embed/");
+  }
+  return url;
+};
+
 const seo = buildServiceSeo(
   service.data.seo.title,
   service.data.seo.description,
   service.data.seo.canonical ?? `/servicios/${service.slug}`,
-  service.data.seo.image ?? service.data.coverImage,
+  service.data.seo.image ?? service.data.coverImage
 );
 const { Content } = await service.render();
 ---
+
 <ServiceLayout
   title={service.data.title}
   description={service.data.description}
   seo={seo}
+  coverImage={service.data.coverImage}
   breadcrumbs={[
     { name: "Servicios", url: "/servicios" },
     { name: service.data.title, url: `/servicios/${service.slug}` },
   ]}
 >
-  <section class="section-padding">
+  <section class="section-padding service-detail-section">
     <Container>
-      <div class="detail-grid">
-        <article class="prose flow">
-          <Content />
+      <div class="service-detail-grid">
+        <article class="service-detail-copy flow">
+          <section class="service-detail-summary">
+            <div class="service-detail-summary-header">
+              <p class="eyebrow">Servicio especializado</p>
+              <p class="service-detail-excerpt">{service.data.excerpt}</p>
+            </div>
+
+
+
+
+            <div class="service-detail-summary-body">
+              <div class="service-detail-summary-column">
+                <h2 class="eyebrow">Descripción</h2>
+              <article class="prose flow service-detail-body">
+                <Content />
+              </article>
+              </div>
+
+              <!-- <div class="service-detail-summary-column">
+                <h2>Beneficios clave</h2>
+                <ul class="service-detail-summary-list"></ul>
+              </div> -->
+            </div>
+          </section>
+        </article>
+      </div>
+
+      <section class="service-detail-media">
+        <div class="service-detail-media-card">
+          {
+            service.data.youtubeUrl ? (
+              <iframe
+                class="service-detail-frame"
+                src={getYoutubeEmbedUrl(service.data.youtubeUrl)}
+                title={service.data.title}
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              />
+            ) : (
+              <img
+                class="service-detail-frame"
+                src={service.data.coverImage}
+                alt={service.data.coverAlt}
+              />
+            )
+          }
+
+          <div class="service-detail-meta">
+            <p class="eyebrow">Información del servicio</p>
+            <dl>
+              <div>
+                <dt>Título</dt>
+                <dd>{service.data.title}</dd>
+              </div>
+              <div>
+                <!-- <dt>Estado</dt>
+                <dd>{service.data.status}</dd> -->
+              </div>
+              <div>
+                <dt>Materiales</dt>
+                <dd>{service.data.materials?.length ? service.data.materials.join(", ") : "Ver materiales"}</dd>
+              </div>
+              <div>
+                <dt>Beneficios</dt>
+
+                      <dd>{service.data.benefits?.length ? service.data.benefits.join(", ") : "Ver beneficios"}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      
+
+      <!-- <div class="service-detail-panels">
+        <section class="card service-detail-panel">
           <h2>Beneficios</h2>
           <ServiceBenefits benefits={service.data.benefits} />
+        </section>
+
+        <section class="card service-detail-panel">
           <h2>Proceso</h2>
           <ServiceProcess steps={service.data.process} />
-        </article>
-        <aside class="flow">
-          <img src={service.data.coverImage} alt={service.data.coverAlt} />
-        </aside>
-      </div>
+        </section>
+      </div> -->
+
+      {
+        service.data.gallery?.length ? (
+          <section class="card service-detail-gallery">
+            <h2>Galería</h2>
+            <div class="gallery-grid">
+              {service.data.gallery.map((item) => (
+                <img src={item} alt={service.data.title} />
+              ))}
+            </div>
+          </section>
+        ) : null
+      }
+
       <QuoteCTA />
       <RelatedServices services={relatedServices} />
     </Container>

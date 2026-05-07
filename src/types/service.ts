@@ -9,8 +9,10 @@ export interface Service {
   status: "draft" | "published";
   coverImage: string;
   coverAlt: string;
+  youtubeUrl?: string;
   gallery: string[];
   benefits: string[];
   process: string[];
+  materials: string[];
   seo: SeoData;
 }

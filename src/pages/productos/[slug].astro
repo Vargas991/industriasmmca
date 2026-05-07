@@ -58,6 +58,10 @@ const galleryImages = Array.from(new Set([product.data.coverImage, ...product.da
           <div class="product-detail-meta flow">
             <p class="product-detail-summary">{product.data.description}</p>
 
+            {product.data.show_price && typeof product.data.price === 'number' && (
+              <p class="product-detail-price"><strong>Precio:</strong> ${product.data.price}</p>
+            )}
+
             {product.data.benefits.length > 0 && (
               <ul class="product-benefit-list" aria-label="Beneficios del producto">
                 {product.data.benefits.map((benefit) => <li>{benefit}</li>)}

@@ -66,6 +66,7 @@ const payload = {
               <span>Imagen</span>
               <span>Producto</span>
               <span>Categoría</span>
+              <span>Precio</span>
               <span>Estado</span>
             </div>
             <div class="record-list" id="product-list"></div>
@@ -100,6 +101,8 @@ const payload = {
                   <div class="field"><label for="slug">Slug</label><input id="slug" name="slug" placeholder="Se genera si lo dejas vacío" /></div>
                   <div class="field"><label for="category">Categoría</label><select id="category" name="category" required></select></div>
                   <div class="field"><label for="status">Estado</label><select id="status" name="status"><option value="draft">Borrador</option><option value="published">Publicado</option></select></div>
+                  <div class="field"><label for="price">Precio</label><input id="price" name="price" type="number" step="0.01" min="0" /></div>
+                  <div class="field"><label for="show_price"><input id="show_price" name="show_price" type="checkbox" /> Mostrar precio</label></div>
                   <div class="field field--full"><label for="description">Descripción corta</label><textarea id="description" name="description" required></textarea></div>
                   <div class="field field--full"><label for="excerpt">Descripción principal / extracto</label><textarea id="excerpt" name="excerpt" required></textarea></div>
                 </div>
@@ -244,6 +247,7 @@ const payload = {
       const productBaseState = {
         productId: "", title: "", slug: "", category: "", excerpt: "", description: "",
         status: "draft", coverImage: "", coverAlt: "", specSheet: "", featured: false,
+        price: "", show_price: false,
         gallery: "", benefits: "", measurements: "", specs: "", seoTitle: "", seoCanonical: "",
         seoDescription: "", seoImage: "", body: "",
       };
@@ -320,6 +324,8 @@ const payload = {
           coverAlt: product.data.coverAlt ?? "",
           specSheet: product.data.specSheet ?? "",
           featured: Boolean(product.data.featured),
+          price: product.data.price ?? "",
+          show_price: Boolean(product.data.show_price),
           gallery: joinLines(product.data.gallery),
           benefits: joinLines(product.data.benefits),
           measurements: measurementsToLines(product.data.measurements),
@@ -410,6 +416,9 @@ const payload = {
               <strong>${product.data.category}</strong>
               <small>${product.data.featured ? "Destacado" : "Estándar"}</small>
             </div>
+            <div class="record-price">
+              ${typeof product.data.price === 'number' ? product.data.price : '-'}
+            </div>
             <div>
               <span class="status-pill ${product.data.status === "published" ? "status-pill--published" : "status-pill--draft"}">${product.data.status === "published" ? "Publicado" : "Borrador"}</span>
             </div>
@@ -458,6 +467,8 @@ const payload = {
           description: String(formData.get("description") ?? ""),
           status: String(formData.get("status") ?? "draft"),
           featured: formData.get("featured") === "on",
+          price: formData.get("price") ? Number(formData.get("price")) : undefined,
+          show_price: formData.get("show_price") === "on",
           coverImage: String(formData.get("coverImage") ?? ""),
           coverAlt: String(formData.get("coverAlt") ?? ""),
           specSheet: String(formData.get("specSheet") ?? ""),

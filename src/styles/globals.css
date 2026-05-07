@@ -12,9 +12,7 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at top left, rgba(200, 166, 75, 0.08), transparent 24%),
-    linear-gradient(180deg, var(--color-ice), #f2f8f5);
+  background:#fff;
 }
 
 img {

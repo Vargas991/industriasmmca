@@ -75,6 +75,17 @@ const migrations: Migration[] = [
           sort_order INTEGER NOT NULL DEFAULT 0
         )
       `;
+
+    },
+  },
+  {
+    id: "002_add_product_price",
+    run: async (instance) => {
+      await instance`
+        ALTER TABLE products
+        ADD COLUMN IF NOT EXISTS price DECIMAL(12,2),
+        ADD COLUMN IF NOT EXISTS show_price BOOLEAN NOT NULL DEFAULT FALSE
+      `;
     },
   },
 ];

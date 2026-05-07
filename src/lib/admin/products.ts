@@ -44,6 +44,8 @@ const productSchema = z.object({
   measurements: z.array(measurementSchema).default([]),
   seo: seoSchema,
   body: z.string().default(""),
+  price: z.preprocess((v) => v === '' ? undefined : v, z.number().nonnegative().optional()),
+  show_price: z.boolean().optional(),
 });
 
 export type AdminProductPayload = ProductInput;
@@ -102,5 +104,7 @@ export function parseAdminProductPayload(payload: unknown): AdminProductPayload 
       image: cleanOptional(parsed.seo.image),
     },
     body: parsed.body,
+    price: parsed.price,
+    show_price: parsed.show_price ?? false,
   };
 }

@@ -1,25 +1,137 @@
 ---
-import ServiceGrid from "@/components/services/ServiceGrid.astro";
 import Container from "@/components/ui/Container.astro";
 import { getPublishedServices } from "@/lib/content/services";
 import { buildPageSeo } from "@/lib/seo/metadata";
 import PageLayout from "@/layouts/PageLayout.astro";
 
 const services = await getPublishedServices();
+const heroService = services.find((service) => service.data.featured) ?? services[0];
+const featuredImage = heroService?.data.coverImage ?? "/images/services/fabricacion-metalica/cover.svg";
 ---
 <PageLayout
   title="Servicios industriales"
-  intro="Fabricación, instalación y acompañamiento técnico para proyectos metálicos."
+  intro="Soluciones de fabricación y mecanizado con alto estándar técnico para proyectos industriales y comerciales."
   seo={buildPageSeo({
     title: "Servicios industriales | Industrias MM",
-    description: "Servicios de fabricación metálica, instalación y desarrollo a medida.",
+    description: "Servicios industriales especializados en corte láser, punzonado CNC y mecanizado de vidrio y madera.",
     canonical: "/servicios",
   })}
   breadcrumbs={[{ name: "Servicios", url: "/servicios" }]}
 >
-  <section class="section-padding">
+  <section class="section-padding services-page-hero">
     <Container>
-      <ServiceGrid services={services} />
+      <div class="services-hero-grid">
+        <div class="services-hero-copy flow">
+          <span class="eyebrow services-hero-eyebrow">Nuestros servicios</span>
+          <h1>Tecnología, precisión y calidad en cada proyecto</h1>
+          <p class="services-hero-description">
+            Contamos con maquinaria CNC de última generación para ofrecer soluciones industriales de alta precisión en diversos materiales.
+          </p>
+
+          <div class="services-hero-values">
+            <div class="services-hero-value">
+              <span class="services-value-icon">
+                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="32" cy="32" r="24"/>
+                  <circle cx="32" cy="32" r="8"/>
+                  <g opacity="0.6">
+                    <path d="M32 4v6M32 54v6M60 32h6M2 32h6"/>
+                    <path d="M50 14l4-4M14 50l4-4M50 50l4 4M14 14l4 4"/>
+                  </g>
+                </svg>
+              </span>
+              <div>
+                <strong>Tecnología</strong>
+                <p>CNC avanzada</p>
+              </div>
+            </div>
+            <div class="services-hero-value">
+              <span class="services-value-icon">
+                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="32" cy="32" r="26"/>
+                  <circle cx="32" cy="32" r="18"/>
+                  <circle cx="32" cy="32" r="4" fill="currentColor"/>
+                  <path d="M32 14v4" stroke-linecap="round"/>
+                  <path d="M32 46v4" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <div>
+                <strong>Precisión</strong>
+                <p>Milimétrica</p>
+              </div>
+            </div>
+            <div class="services-hero-value">
+              <span class="services-value-icon">
+                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 32l10 10L52 16"/>
+                </svg>
+              </span>
+              <div>
+                <strong>Calidad</strong>
+                <p>Garantizada</p>
+              </div>
+            </div>
+            <div class="services-hero-value">
+              <span class="services-value-icon">
+                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 40v8c0 2 2 4 4 4h32c2 0 4-2 4-4v-8"/>
+                  <path d="M10 38h44"/>
+                  <rect x="8" y="28" width="48" height="10" rx="2"/>
+                  <circle cx="16" cy="48" r="2" fill="currentColor"/>
+                  <circle cx="48" cy="48" r="2" fill="currentColor"/>
+                  <path d="M20 28V20c0-2 2-4 4-4h16c2 0 4 2 4 4v8"/>
+                </svg>
+              </span>
+              <div>
+                <strong>Entrega</strong>
+                <p>A tiempo</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="services-hero-visual">
+          <div class="services-hero-card">
+            <img src={featuredImage} alt="Servicio industrial" />
+            <div class="services-hero-label">
+              <span>Equipamiento</span>
+              <strong>FIBER LASER</strong>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </Container>
+  </section>
+
+  <section class="section-padding services-list-section">
+    <Container>
+      <div class="services-list-header">
+        <span class="eyebrow">Servicios disponibles</span>
+        <h2>Catálogo técnico de manufactura</h2>
+      </div>
+
+      <div class="services-cards-grid">
+        {services.map((service, index) => (
+          <article class={`services-card ${index === 0 ? "services-card-highlight" : ""}`}>
+            {/* {index === 0 ? <span class="services-card-badge">Destacado</span> : null} */}
+            <a class="services-card-link" href={`/servicios/${service.slug}`}>
+              <div class="services-card-image">
+                <img src={service.data.coverImage} alt={service.data.coverAlt} />
+              </div>
+              <div class="services-card-body">
+                <h3>{service.data.title}</h3>
+                <p>{service.data.excerpt}</p>
+                <ul class="services-card-features">
+                  {service.data.benefits.slice(0, 3).map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+                <span class="services-card-link-text">Ver más</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
     </Container>
   </section>
 </PageLayout>
