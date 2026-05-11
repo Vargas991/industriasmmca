@@ -31,11 +31,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   const kind = String(formData.get("kind") ?? "auto");
+  const folder = String(formData.get("folder") ?? "industriasmm");
   const resourceType = kind === "image" || kind === "raw" ? kind : "auto";
   const buffer = Buffer.from(await file.arrayBuffer());
 
   try {
-    const uploaded = await uploadBufferToCloudinary(buffer, file.name, resourceType);
+    const uploaded = await uploadBufferToCloudinary(buffer, file.name, resourceType, folder);
     return new Response(JSON.stringify({ ok: true, url: uploaded.secure_url, publicId: uploaded.public_id }), {
       headers: { "Content-Type": "application/json" },
     });

@@ -9,6 +9,48 @@ const seo = buildPageSeo(page?.data.seo);
 const { Content } = await page!.render();
 ---
 <PageLayout title={page!.data.title} intro={page!.data.excerpt} seo={seo} breadcrumbs={[{ name: "Nosotros", url: "/nosotros" }]}>
+  {page!.data.headerImage && (
+    <section class="hero-section">
+      <div class="hero-image">
+        <img src={page!.data.headerImage} alt="Industrias MM" />
+      </div>
+    </section>
+  )}
+
+  {page!.data.video && (
+    <section class="section-padding">
+      <Container>
+        <div class="video-container">
+          <video controls preload="metadata" poster="">
+            <source src={page!.data.video} type="video/mp4" />
+            Tu navegador no soporta el elemento de video.
+          </video>
+        </div>
+      </Container>
+    </section>
+  )}
+
+  {(page!.data.mision || page!.data.vision) && (
+    <section class="section-padding">
+      <Container>
+        <div class="mission-vision-grid">
+          {page!.data.mision && (
+            <div class="mission-vision-card">
+              <h2>Misión</h2>
+              <p>{page!.data.mision}</p>
+            </div>
+          )}
+          {page!.data.vision && (
+            <div class="mission-vision-card">
+              <h2>Visión</h2>
+              <p>{page!.data.vision}</p>
+            </div>
+          )}
+        </div>
+      </Container>
+    </section>
+  )}
+
   <section class="section-padding">
     <Container>
       <article class="prose">

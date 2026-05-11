@@ -22,6 +22,7 @@ export async function uploadBufferToCloudinary(
   buffer: Buffer,
   filename: string,
   resourceType: "image" | "raw" | "auto" = "auto",
+  folder: string = "industriasmm",
 ) {
   if (!configured) {
     throw new Error("Cloudinary no está configurado.");
@@ -31,7 +32,7 @@ export async function uploadBufferToCloudinary(
     const stream = cloudinary.uploader.upload_stream(
       {
         resource_type: resourceType,
-        folder: "industriasmm",
+        folder: folder,
         use_filename: true,
         unique_filename: true,
         filename_override: filename,
@@ -50,5 +51,54 @@ export async function uploadBufferToCloudinary(
     );
 
     stream.end(buffer);
+  });
+}
+
+export async function getCloudinaryResources(options: {
+  resource_type?: "image" | "raw" | "auto";
+  folder?: string;
+  max_results?: number;
+} = {}) {
+  if (!configured) {
+    throw new Error("Cloudinary no está configurado.");
+  }
+
+  return new Promise<any>((resolve, reject) => {
+    cloudinary.api.resources(
+      {
+        resource_type: options.resource_type || "image",
+        folder: options.folder || "industriasmm",
+        max_results: options.max_results || 100,
+        type: "upload",
+      },
+      (error, result) => {
+        if (error || !result) {
+          reject(error ?? new Error("No se pudo obtener la lista de recursos."));
+          return;
+        }
+        resolve(result);
+      },
+    );
+  });
+}
+
+export async function getCloudinaryFolders(options: {
+  folder?: string;
+} = {}) {
+  if (!configured) {
+    throw new Error("Cloudinary no está configurado.");
+  }
+
+  return new Promise<any>((resolve, reject) => {
+    cloudinary.api.sub_folders(
+      options.folder || "industriasmm",
+      (error, result) => {
+        if (error || !result) {
+          reject(error ?? new Error("No se pudo obtener la lista de carpetas."));
+          return;
+        }
+        resolve(result);
+      },
+    );
   });
 }

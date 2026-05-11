@@ -53,8 +53,23 @@ export function verifyAdminSessionToken(token?: string | null) {
   }
 }
 
-export function isAdminAuthenticated(cookies: AstroCookies) {
-  return verifyAdminSessionToken(cookies.get(SESSION_COOKIE)?.value);
+function parseCookieHeader(cookieHeader: string | null, name: string) {
+  if (!cookieHeader) return undefined;
+  return cookieHeader
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${name}=`))
+    ?.split("=")
+    .slice(1)
+    .join("=");
+}
+
+export function isAdminAuthenticated(cookiesOrRequest: AstroCookies | Request) {
+  const token =
+    typeof (cookiesOrRequest as AstroCookies).get === "function"
+      ? (cookiesOrRequest as AstroCookies).get(SESSION_COOKIE)?.value
+      : parseCookieHeader((cookiesOrRequest as Request).headers.get("cookie"), SESSION_COOKIE);
+  return verifyAdminSessionToken(token);
 }
 
 export function setAdminSession(cookies: AstroCookies, username: string) {
