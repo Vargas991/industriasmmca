@@ -609,6 +609,63 @@ const navItems = [
         color: var(--muted);
       }
 
+      /* Estilos para el modal de selección de imágenes */
+      #image-selector-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #image-selector-modal > div {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        max-width: 90vw;
+        max-height: 90vh;
+        overflow: auto;
+        position: relative;
+      }
+
+      #image-selector-modal h3 {
+        margin: 0;
+      }
+
+      #image-selector-modal #close-image-selector {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      #image-selector-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        max-height: 60vh;
+        overflow: auto;
+      }
+
+      .image-selector-item {
+        cursor: pointer;
+        border: 2px solid transparent;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        aspect-ratio: 1;
+        background: #f0f0f0 center center / cover no-repeat;
+        transition: border-color 0.2s;
+      }
+
+      .image-selector-item:hover {
+        border-color: var(--accent);
+      }
+
       @media (max-width: 1180px) {
         .hero-strip,
         .workspace-grid,
@@ -663,10 +720,6 @@ const navItems = [
         <section class="admin-login-card">
           <p class="eyebrow-badge">Panel propio</p>
           <h1>Entrar al panel</h1>
-          <p class="muted">
-            Inicia sesión con el usuario configurado en `ADMIN_USERNAME`. Si no lo cambiaste todavía, el valor por defecto es
-            <strong> {getAdminUsername()}</strong>.
-          </p>
           <form class="login-form" id="login-form">
             <div class="field">
               <label for="username">Usuario</label>
@@ -688,13 +741,12 @@ const navItems = [
             <div class="brand-block">
               <p class="eyebrow-badge">Industrias MM</p>
               <strong>Admin de catálogo</strong>
-              <p>Panel dividido por páginas para trabajar productos, categorías y medios con más claridad.</p>
             </div>
 
-            <div class="sidebar-status">
+            {/* <div class="sidebar-status">
               <strong>Base actual</strong>
               <p style="margin: 0.4rem 0 0;">Astro + Postgres + Cloudinary</p>
-            </div>
+            </div> */}
 
             <nav class="sidebar-nav" aria-label="Módulos del panel">
               {navItems.map((item) => (
@@ -705,7 +757,7 @@ const navItems = [
               ))}
             </nav>
 
-            <div class="sidebar-footer">Estructura preparada para sumar servicios, proyectos y configuración general.</div>
+            {/* <div class="sidebar-footer">Estructura preparada para sumar servicios, proyectos y configuración general.</div> */}
           </div>
         </aside>
 

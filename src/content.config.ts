@@ -106,6 +106,10 @@ const pages = defineCollection({
 		title: z.string(),
 		excerpt: z.string(),
 		seo: seoSchema,
+		video: z.string().optional(),
+		headerImage: z.string().optional(),
+		mision: z.string().optional(),
+		vision: z.string().optional(),
 	}),
 });
 

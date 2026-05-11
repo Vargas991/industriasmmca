@@ -126,6 +126,7 @@ const payload = {
                   <div class="field">
                     <label>&nbsp;</label>
                     <button class="button button--secondary" id="upload-cover-button" type="button">Subir portada</button>
+                    <button class="button button--secondary" id="select-cover-button" type="button" style="margin-left: 0.5rem;">Seleccionar existente</button>
                   </div>
                   <div class="field field--full">
                     <div class="preview-media" id="cover-preview"></div>
@@ -141,6 +142,7 @@ const payload = {
                   <div class="field">
                     <label>&nbsp;</label>
                     <button class="button button--secondary" id="upload-gallery-button" type="button">Agregar a galería</button>
+                    <button class="button button--secondary" id="select-gallery-button" type="button" style="margin-left: 0.5rem;">Seleccionar existentes</button>
                   </div>
                   <div class="field field--full">
                     <div class="gallery-grid" id="gallery-preview"></div>
@@ -188,7 +190,7 @@ const payload = {
                   <div class="field field--full"><label for="seoDescription">Descripción SEO</label><textarea id="seoDescription" name="seoDescription" required></textarea></div>
                   <div class="field"><label for="seoImage">Imagen social</label><input id="seoImage" name="seoImage" readonly /></div>
                   <div class="field"><label for="seo-image-file">Subir imagen SEO</label><input id="seo-image-file" type="file" accept="image/*" /></div>
-                  <div class="field"><label>&nbsp;</label><button class="button button--secondary" id="upload-seo-button" type="button">Subir imagen SEO</button></div>
+                  <div class="field"><label>&nbsp;</label><button class="button button--secondary" id="upload-seo-button" type="button">Subir imagen SEO</button><button class="button button--secondary" id="select-seo-button" type="button" style="margin-left: 0.5rem;">Seleccionar existente</button></div>
                 </div>
               </section>
             </div>
@@ -217,6 +219,31 @@ const payload = {
     </div>
   </section>
 
+  <!-- Modal para seleccionar imágenes existentes -->
+  <div id="image-selector-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 1rem; padding: 2rem; width: 95%; max-height: 95vh; overflow: auto; position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="margin: 0;">Seleccionar imagen existente</h3>
+        <button id="close-image-selector" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+      </div>
+      <div id="image-selector-feedback" style="margin-bottom: 0.8rem; color: #666;"></div>
+      <div id="image-selector-breadcrumbs" style="margin-bottom: 1rem; font-size: 0.95rem; color: #333;"></div>
+      <div id="image-selector-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; max-height: 70vh; overflow: auto;">
+        <!-- Las imágenes se cargarán aquí -->
+      </div>
+      <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <input id="upload-to-folder-file" type="file" accept="image/*" multiple style="display: none;" />
+          <button id="upload-to-folder-button" class="button button--secondary" type="button">Subir aquí</button>
+        </div>
+        <button id="cancel-image-selector" class="button button--secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor de notificaciones -->
+  <div id="notifications-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 400px;"></div>
+
   <script type="application/json" id="products-bootstrap" set:html={JSON.stringify(payload)}></script>
   <script is:inline>
     const bootstrapNode = document.getElementById("products-bootstrap");
@@ -244,6 +271,16 @@ const payload = {
       const productPreviewStatus = document.getElementById("product-preview-status");
       const productPreviewSheet = document.getElementById("product-preview-sheet");
 
+      // Variables para el selector de imágenes
+      const imageSelectorModal = document.getElementById("image-selector-modal");
+      const imageSelectorGrid = document.getElementById("image-selector-grid");
+      const imageSelectorFeedback = document.getElementById("image-selector-feedback");
+      const imageSelectorBreadcrumbs = document.getElementById("image-selector-breadcrumbs");
+      let currentImageTarget = ""; // "cover", "gallery", "seo"
+      let currentImageFolder = "industriasmm";
+      let availableFolders = [];
+      let availableImages = [];
+
       const productBaseState = {
         productId: "", title: "", slug: "", category: "", excerpt: "", description: "",
         status: "draft", coverImage: "", coverAlt: "", specSheet: "", featured: false,
@@ -256,6 +293,84 @@ const payload = {
         node.textContent = message;
         node.dataset.tone = tone;
       }
+
+      // Sistema de notificaciones
+      const notificationsContainer = document.getElementById("notifications-container");
+
+      function showNotification(message, type = "info", duration = 5000) {
+        const notification = document.createElement("div");
+        notification.className = `notification notification--${type}`;
+        notification.style.cssText = `
+          background: ${type === "success" ? "#10b981" : type === "error" ? "#ef4444" : type === "warning" ? "#f59e0b" : "#3b82f6"};
+          color: white;
+          padding: 12px 16px;
+          border-radius: 8px;
+          margin-bottom: 8px;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          font-size: 14px;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          animation: slideIn 0.3s ease-out;
+          max-width: 100%;
+          word-wrap: break-word;
+        `;
+
+        const messageSpan = document.createElement("span");
+        messageSpan.textContent = message;
+        messageSpan.style.flex = "1";
+
+        const closeButton = document.createElement("button");
+        closeButton.innerHTML = "&times;";
+        closeButton.style.cssText = `
+          background: none;
+          border: none;
+          color: white;
+          font-size: 18px;
+          cursor: pointer;
+          margin-left: 12px;
+          padding: 0;
+          opacity: 0.8;
+        `;
+        closeButton.onclick = () => removeNotification(notification);
+
+        notification.appendChild(messageSpan);
+        notification.appendChild(closeButton);
+        notificationsContainer.appendChild(notification);
+
+        // Auto-remover después de la duración especificada
+        if (duration > 0) {
+          setTimeout(() => removeNotification(notification), duration);
+        }
+
+        return notification;
+      }
+
+      function removeNotification(notification) {
+        if (notification && notification.parentNode) {
+          notification.style.animation = "slideOut 0.3s ease-in";
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }
+      }
+
+      // Agregar estilos CSS para las animaciones
+      const style = document.createElement("style");
+      style.textContent = `
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+          from { transform: translateX(0); opacity: 1; }
+          to { transform: translateX(100%); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
 
       function joinLines(items) {
         return Array.isArray(items) ? items.join("\n") : "";
@@ -364,6 +479,129 @@ const payload = {
             renderGalleryPreview();
           });
         });
+      }
+
+      // Funciones para el selector de imágenes
+      async function loadAvailableImages(folder = "industriasmm") {
+        try {
+          currentImageFolder = folder;
+          imageSelectorFeedback.textContent = "Cargando contenido...";
+          const response = await fetch(`/api/admin/images?folder=${encodeURIComponent(folder)}`);
+          const result = await response.json();
+          if (!response.ok) {
+            throw new Error(result.message || "Error al cargar imágenes");
+          }
+
+          availableFolders = result.folders || [];
+          availableImages = result.images || [];
+          renderImageSelectorBreadcrumbs();
+          renderImageSelector();
+          imageSelectorFeedback.textContent = `${availableFolders.length} carpeta(s), ${availableImages.length} imagen(es) disponibles`;
+        } catch (error) {
+          imageSelectorFeedback.textContent = error.message;
+          imageSelectorGrid.innerHTML = '<div class="empty-note">Error al cargar imágenes</div>';
+        }
+      }
+
+      function renderImageSelectorBreadcrumbs() {
+        const segments = String(currentImageFolder || "industriasmm").split("/").filter(Boolean);
+        let path = "";
+        const breadcrumbs = segments.map((segment, index) => {
+          path += (index ? "/" : "") + segment;
+          return `<button type=\"button\" class=\"image-selector-breadcrumb\" data-folder=\"${encodeURIComponent(path)}\" style=\"all: unset; cursor: pointer; color: var(--accent); font-weight: 700; margin-right: 0.5rem;\">${segment}</button>` + (index < segments.length - 1 ? '<span style=\"margin-right: 0.5rem;color:#999;\">/</span>' : '');
+        }).join("");
+
+        imageSelectorBreadcrumbs.innerHTML = breadcrumbs || '<span>Carpeta raíz</span>';
+        imageSelectorBreadcrumbs.querySelectorAll(".image-selector-breadcrumb").forEach((button) => {
+          button.addEventListener("click", () => {
+            const folder = decodeURIComponent(button.getAttribute("data-folder") || "industriasmm");
+            loadAvailableImages(folder);
+          });
+        });
+      }
+
+      function renderImageSelector() {
+        if (availableFolders.length === 0 && availableImages.length === 0) {
+          imageSelectorGrid.innerHTML = '<div class="empty-note">No hay carpetas ni imágenes en esta ubicación.</div>';
+          return;
+        }
+
+        const foldersHtml = availableFolders.map((folder, index) => `
+          <div class="image-selector-folder" data-folder="${encodeURIComponent(folder.path)}" style="cursor: pointer; border: 2px solid transparent; border-radius: 0.5rem; padding: 0.75rem; min-height: 7rem; display: grid; place-items: center; background: #f7f8f7;">
+            <strong style="color: var(--accent);">📁</strong>
+            <small style="display:block; margin-top:0.5rem; text-align:center; color:#334;">${folder.name}</small>
+          </div>
+        `).join("");
+
+        const imagesHtml = availableImages.map((image, index) => `
+          <div class="image-selector-item" data-index="${index}" style="cursor: pointer; border: 2px solid transparent; border-radius: 0.5rem; overflow: hidden; aspect-ratio: 1; background: #f0f0f0 center center / cover no-repeat; background-image: url('${image.secure_url.replace(/'/g, "%27")}'); transition: border-color 0.2s;">
+            <div style="width: 100%; height: 100%; display: flex; align-items: flex-end; background: linear-gradient(transparent, rgba(0,0,0,0.7)); padding: 0.5rem; box-sizing: border-box;">
+              <small style="color: white; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${image.public_id.split('/').pop()}</small>
+            </div>
+          </div>
+        `).join("");
+
+        imageSelectorGrid.innerHTML = `${foldersHtml}${imagesHtml}`;
+
+        imageSelectorGrid.querySelectorAll('.image-selector-folder').forEach((folderItem) => {
+          folderItem.addEventListener('click', () => {
+            const folder = decodeURIComponent(folderItem.getAttribute('data-folder') || 'industriasmm');
+            loadAvailableImages(folder);
+          });
+          folderItem.addEventListener('mouseenter', () => {
+            folderItem.style.borderColor = 'var(--accent)';
+          });
+          folderItem.addEventListener('mouseleave', () => {
+            folderItem.style.borderColor = 'transparent';
+          });
+        });
+
+        imageSelectorGrid.querySelectorAll('.image-selector-item').forEach((item) => {
+          item.addEventListener('click', () => {
+            const index = parseInt(item.getAttribute('data-index'));
+            const selectedImage = availableImages[index];
+            selectImage(selectedImage.secure_url);
+          });
+          item.addEventListener('mouseenter', () => {
+            item.style.borderColor = 'var(--accent)';
+          });
+          item.addEventListener('mouseleave', () => {
+            item.style.borderColor = 'transparent';
+          });
+        });
+      }
+
+      function selectImage(url) {
+        if (currentImageTarget === "cover") {
+          productForm.elements.namedItem("coverImage").value = url;
+          updateProductPreview();
+          setFeedback(productFeedback, "Imagen de portada seleccionada.");
+          showNotification("Imagen de portada seleccionada.", "success");
+        } else if (currentImageTarget === "gallery") {
+          const current = productForm.elements.namedItem("gallery").value.trim();
+          const urls = current ? current.split('\n') : [];
+          urls.push(url);
+          productForm.elements.namedItem("gallery").value = urls.join('\n');
+          renderGalleryPreview();
+          setFeedback(productFeedback, "Imagen agregada a la galería.");
+          showNotification("Imagen agregada a la galería.", "success");
+        } else if (currentImageTarget === "seo") {
+          productForm.elements.namedItem("seoImage").value = url;
+          setFeedback(productFeedback, "Imagen SEO seleccionada.");
+          showNotification("Imagen SEO seleccionada.", "success");
+        }
+        closeImageSelector();
+      }
+
+      function openImageSelector(target) {
+        currentImageTarget = target;
+        imageSelectorModal.style.display = "flex";
+        loadAvailableImages("industriasmm");
+      }
+
+      function closeImageSelector() {
+        imageSelectorModal.style.display = "none";
+        currentImageTarget = "";
       }
 
       function updateProductPreview(product) {
@@ -494,12 +732,13 @@ const payload = {
         }
       }
 
-      async function uploadFiles(files, kind) {
+      async function uploadFiles(files, kind, folder = "industriasmm") {
         const urls = [];
         for (const file of files) {
           const data = new FormData();
           data.append("file", file);
           data.append("kind", kind);
+          data.append("folder", folder);
           const response = await fetch("/api/admin/uploads", { method: "POST", body: data });
           const result = await response.json();
           if (!response.ok) {
@@ -556,65 +795,163 @@ const payload = {
 
       document.getElementById("upload-cover-button").addEventListener("click", async () => {
         const input = document.getElementById("cover-file");
-        if (!bootstrap.cloudinaryConfigured) return setFeedback(productFeedback, "Cloudinary no está configurado.", "error");
-        if (!input.files?.length) return setFeedback(productFeedback, "Selecciona una imagen de portada.", "error");
+        if (!bootstrap.cloudinaryConfigured) {
+          setFeedback(productFeedback, "Cloudinary no está configurado.", "error");
+          showNotification("Cloudinary no está configurado.", "error");
+          return;
+        }
+        if (!input.files?.length) {
+          setFeedback(productFeedback, "Selecciona una imagen de portada.", "error");
+          showNotification("Selecciona una imagen de portada.", "warning");
+          return;
+        }
         setFeedback(productFeedback, "Subiendo portada...");
+        showNotification("Subiendo imagen de portada...", "info");
         try {
           const [url] = await uploadFiles([input.files[0]], "image");
           productForm.elements.namedItem("coverImage").value = url;
           updateProductPreview();
           setFeedback(productFeedback, "Portada subida correctamente.");
+          showNotification("Imagen de portada subida correctamente.", "success");
           input.value = "";
         } catch (error) {
           setFeedback(productFeedback, error.message, "error");
+          showNotification(error.message, "error");
         }
       });
 
       document.getElementById("upload-gallery-button").addEventListener("click", async () => {
         const input = document.getElementById("gallery-files");
-        if (!bootstrap.cloudinaryConfigured) return setFeedback(productFeedback, "Cloudinary no está configurado.", "error");
-        if (!input.files?.length) return setFeedback(productFeedback, "Selecciona una o más imágenes para la galería.", "error");
+        if (!bootstrap.cloudinaryConfigured) {
+          setFeedback(productFeedback, "Cloudinary no está configurado.", "error");
+          showNotification("Cloudinary no está configurado.", "error");
+          return;
+        }
+        if (!input.files?.length) {
+          setFeedback(productFeedback, "Selecciona una o más imágenes para la galería.", "error");
+          showNotification("Selecciona una o más imágenes para la galería.", "warning");
+          return;
+        }
         setFeedback(productFeedback, "Subiendo imágenes de galería...");
+        showNotification(`Subiendo ${input.files.length} imagen(es) a la galería...`, "info");
         try {
           const urls = await uploadFiles([...input.files], "image");
           const current = productForm.elements.namedItem("gallery").value.trim();
           productForm.elements.namedItem("gallery").value = [current, ...urls].filter(Boolean).join("\n");
           renderGalleryPreview();
           setFeedback(productFeedback, "Galería actualizada.");
+          showNotification(`${urls.length} imagen(es) agregada(s) a la galería.`, "success");
           input.value = "";
         } catch (error) {
           setFeedback(productFeedback, error.message, "error");
+          showNotification(error.message, "error");
         }
       });
 
       document.getElementById("upload-sheet-button").addEventListener("click", async () => {
         const input = document.getElementById("spec-sheet-file");
-        if (!bootstrap.cloudinaryConfigured) return setFeedback(productFeedback, "Cloudinary no está configurado.", "error");
-        if (!input.files?.length) return setFeedback(productFeedback, "Selecciona un PDF para la ficha técnica.", "error");
+        if (!bootstrap.cloudinaryConfigured) {
+          setFeedback(productFeedback, "Cloudinary no está configurado.", "error");
+          showNotification("Cloudinary no está configurado.", "error");
+          return;
+        }
+        if (!input.files?.length) {
+          setFeedback(productFeedback, "Selecciona un PDF para la ficha técnica.", "error");
+          showNotification("Selecciona un PDF para la ficha técnica.", "warning");
+          return;
+        }
         setFeedback(productFeedback, "Subiendo ficha técnica...");
+        showNotification("Subiendo ficha técnica PDF...", "info");
         try {
           const [url] = await uploadFiles([input.files[0]], "raw");
           productForm.elements.namedItem("specSheet").value = url;
           updateProductPreview();
           setFeedback(productFeedback, "Ficha técnica subida correctamente.");
+          showNotification("Ficha técnica subida correctamente.", "success");
           input.value = "";
         } catch (error) {
           setFeedback(productFeedback, error.message, "error");
+          showNotification(error.message, "error");
         }
       });
 
       document.getElementById("upload-seo-button").addEventListener("click", async () => {
         const input = document.getElementById("seo-image-file");
-        if (!bootstrap.cloudinaryConfigured) return setFeedback(productFeedback, "Cloudinary no está configurado.", "error");
-        if (!input.files?.length) return setFeedback(productFeedback, "Selecciona una imagen SEO.", "error");
+        if (!bootstrap.cloudinaryConfigured) {
+          setFeedback(productFeedback, "Cloudinary no está configurado.", "error");
+          showNotification("Cloudinary no está configurado.", "error");
+          return;
+        }
+        if (!input.files?.length) {
+          setFeedback(productFeedback, "Selecciona una imagen SEO.", "error");
+          showNotification("Selecciona una imagen SEO.", "warning");
+          return;
+        }
         setFeedback(productFeedback, "Subiendo imagen SEO...");
+        showNotification("Subiendo imagen SEO...", "info");
         try {
           const [url] = await uploadFiles([input.files[0]], "image");
           productForm.elements.namedItem("seoImage").value = url;
           setFeedback(productFeedback, "Imagen SEO subida correctamente.");
+          showNotification("Imagen SEO subida correctamente.", "success");
           input.value = "";
         } catch (error) {
           setFeedback(productFeedback, error.message, "error");
+          showNotification(error.message, "error");
+        }
+      });
+
+      // Event listeners para seleccionar imágenes existentes
+      document.getElementById("select-cover-button").addEventListener("click", () => {
+        openImageSelector("cover");
+      });
+
+      document.getElementById("select-gallery-button").addEventListener("click", () => {
+        openImageSelector("gallery");
+      });
+
+      document.getElementById("select-seo-button").addEventListener("click", () => {
+        openImageSelector("seo");
+      });
+
+      document.getElementById("upload-to-folder-button").addEventListener("click", () => {
+        const input = document.getElementById("upload-to-folder-file");
+        input.click();
+      });
+
+      document.getElementById("upload-to-folder-file").addEventListener("change", async () => {
+        const input = document.getElementById("upload-to-folder-file");
+        if (!bootstrap.cloudinaryConfigured) {
+          setFeedback(imageSelectorFeedback, "Cloudinary no está configurado.", "error");
+          showNotification("Cloudinary no está configurado.", "error");
+          return;
+        }
+        if (!input.files?.length) {
+          setFeedback(imageSelectorFeedback, "Selecciona una o más imágenes para subir.", "error");
+          showNotification("Selecciona una o más imágenes para subir.", "warning");
+          return;
+        }
+        setFeedback(imageSelectorFeedback, "Subiendo imágenes...");
+        showNotification(`Subiendo ${input.files.length} imagen(es) a la carpeta ${currentImageFolder}...`, "info");
+        try {
+          await uploadFiles([...input.files], "image", currentImageFolder);
+          setFeedback(imageSelectorFeedback, "Imágenes subidas correctamente. Recargando...");
+          showNotification(`${input.files.length} imagen(es) subida(s) correctamente.`, "success");
+          await loadAvailableImages(currentImageFolder);
+        } catch (error) {
+          setFeedback(imageSelectorFeedback, error.message, "error");
+          showNotification(error.message, "error");
+        }
+        input.value = "";
+      });
+
+      document.getElementById("close-image-selector").addEventListener("click", closeImageSelector);
+      document.getElementById("cancel-image-selector").addEventListener("click", closeImageSelector);
+
+      // Cerrar modal al hacer clic fuera
+      imageSelectorModal.addEventListener("click", (e) => {
+        if (e.target === imageSelectorModal) {
+          closeImageSelector();
         }
       });
 
@@ -623,6 +960,7 @@ const payload = {
         const saveButton = document.getElementById("save-product-button");
         saveButton.disabled = true;
         setFeedback(productFeedback, "Guardando producto...");
+        showNotification("Guardando producto...", "info");
         const id = Number(productForm.elements.namedItem("productId")?.value || 0);
         const isEditing = Number.isInteger(id) && id > 0;
         const response = await fetch(isEditing ? `/api/admin/products/${id}` : "/api/admin/products", {
@@ -634,12 +972,14 @@ const payload = {
         if (!response.ok) {
           saveButton.disabled = false;
           setFeedback(productFeedback, result.message ?? "No fue posible guardar el producto.", "error");
+          showNotification(result.message ?? "No fue posible guardar el producto.", "error");
           return;
         }
         await syncProducts();
         selectedProductId = result.product?.id ?? selectedProductId;
         hydrateProductEditor();
         setFeedback(productFeedback, "Producto guardado correctamente.");
+        showNotification(isEditing ? "Producto actualizado correctamente." : "Producto creado correctamente.", "success");
         saveButton.disabled = false;
       });
 
@@ -647,16 +987,19 @@ const payload = {
         const id = Number(productForm.elements.namedItem("productId")?.value || 0);
         if (!id || !window.confirm("¿Seguro que quieres eliminar este producto?")) return;
         setFeedback(productFeedback, "Eliminando producto...");
+        showNotification("Eliminando producto...", "warning");
         const response = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
         const result = await response.json();
         if (!response.ok) {
           setFeedback(productFeedback, result.message ?? "No fue posible eliminar el producto.", "error");
+          showNotification(result.message ?? "No fue posible eliminar el producto.", "error");
           return;
         }
         await syncProducts();
         selectedProductId = products[0]?.id ?? null;
         hydrateProductEditor();
         setFeedback(productFeedback, "Producto eliminado.");
+        showNotification("Producto eliminado correctamente.", "success");
       });
       // Botón para volver al listado
       document.getElementById("back-to-list").addEventListener("click", () => {
