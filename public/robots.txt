@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.industriasmm.com/sitemap-index.xml
+Sitemap: https://industriasmmca.com/sitemap-index.xml

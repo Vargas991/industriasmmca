@@ -12,6 +12,8 @@ import {
 import { buildServiceSeo } from "@/lib/seo/metadata";
 import ServiceLayout from "@/layouts/ServiceLayout.astro";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const services = await getPublishedServices();
   return services.map((service) => ({

@@ -30,7 +30,7 @@ const { specs, measurements = [], specSheet } = Astro.props;
                 <th>Ancho</th>
                 <th>Alto</th>
                 <th>Prof.</th>
-                <th>Largo</th>
+                {/* <th>Largo</th> */}
                 <th>Capacidad</th>
               </tr>
             </thead>
@@ -41,7 +41,7 @@ const { specs, measurements = [], specSheet } = Astro.props;
                   <td>{measurement.width ?? "-"}</td>
                   <td>{measurement.height ?? "-"}</td>
                   <td>{measurement.depth ?? "-"}</td>
-                  <td>{measurement.length ?? "-"}</td>
+                  {/* <td>{measurement.length ?? "-"}</td> */}
                   <td>
                     {measurement.capacity
                       ? `${measurement.capacity}${measurement.unit ? ` ${measurement.unit}` : ""}`

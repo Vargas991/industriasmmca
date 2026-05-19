@@ -5,9 +5,16 @@ import ProductGallery from "@/components/products/ProductGallery.astro";
 import ProductSpecs from "@/components/products/ProductSpecs.astro";
 import RelatedProducts from "@/components/products/RelatedProducts.astro";
 import { getProductCategoryBySlug } from "@/lib/content/productCategories";
-import { getProductBySlug, getRelatedProducts } from "@/lib/content/products";
+import { getProductBySlug, getPublishedProducts, getRelatedProducts } from "@/lib/content/products";
 import { buildProductSeo } from "@/lib/seo/metadata";
 import ProductLayout from "@/layouts/ProductLayout.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const products = await getPublishedProducts();
+  return products.map((product) => ({ params: { slug: product.slug } }));
+}
 
 const { slug } = Astro.params;
 const product = await getProductBySlug(slug!);

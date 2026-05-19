@@ -4,7 +4,7 @@ import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: process.env.PUBLIC_SITE_URL ?? "https://industriasmmca.onrender.com",
+  site: process.env.PUBLIC_SITE_URL ?? "https://industriasmmca.com",
   output: "server",
   security: {
     checkOrigin: false,
@@ -12,7 +12,11 @@ export default defineConfig({
   adapter: node({
     mode: "standalone",
   }),
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (url) => !url.includes("/admin/"),
+    }),
+  ],
   vite: {
     resolve: {
       alias: {

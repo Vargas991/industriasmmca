@@ -2,10 +2,20 @@
 import EmptyState from "@/components/shared/EmptyState.astro";
 import ProductGrid from "@/components/products/ProductGrid.astro";
 import Container from "@/components/ui/Container.astro";
-import { getProductCategoryBySlug } from "@/lib/content/productCategories";
+import {
+  getProductCategoryBySlug,
+  getPublishedProductCategories,
+} from "@/lib/content/productCategories";
 import { getProductsByCategory } from "@/lib/content/products";
 import { buildPageSeo } from "@/lib/seo/metadata";
 import PageLayout from "@/layouts/PageLayout.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const categories = await getPublishedProductCategories();
+  return categories.map((category) => ({ params: { slug: category.slug } }));
+}
 
 const { slug } = Astro.params;
 const [category, products] = await Promise.all([
