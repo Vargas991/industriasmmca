@@ -7,7 +7,7 @@
   "theme_color": "#46645f",
   "icons": [
     {
-      "src": "/images/brand/logo.webp",
+      "src": "/favicon.webp",
       "sizes": "512x512",
       "type": "image/webp"
     },

@@ -8,5 +8,6 @@ import { formatPhoneForHref } from "@/lib/utils/format";
   <p>{siteConfig.address}</p>
   <a href={`tel:${formatPhoneForHref(siteConfig.phone)}`}>{siteConfig.phone}</a>
   <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+  <br>
   <SocialLinks />
 </div>

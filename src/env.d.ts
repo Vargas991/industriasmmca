@@ -5,6 +5,10 @@ interface ImportMetaEnv {
   readonly PUBLIC_WHATSAPP_NUMBER?: string;
   readonly CONTACT_EMAIL?: string;
   readonly CONTACT_FORM_RECIPIENT?: string;
+  readonly EMAIL_PASSWORD?: string;
+  readonly SMTP_HOST?: string;
+  readonly SMTP_PORT?: string;
+  readonly SMTP_SECURE?: string;
   readonly DATABASE_URL?: string;
   readonly AUTO_RUN_MIGRATIONS?: string;
   readonly PGHOST?: string;

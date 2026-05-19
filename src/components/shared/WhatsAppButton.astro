@@ -6,6 +6,37 @@ import { siteConfig } from "@/config/site";
   href={`https://wa.me/${siteConfig.whatsappNumber}`}
   target="_blank"
   rel="noreferrer"
+  aria-label="Ir a WhatsApp"
 >
-  WhatsApp
+  <span class="icon" aria-hidden="true">
+    <svg  fill="currentColor" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
+    <path d="M25,2C12.318,2,2,12.318,2,25c0,3.96,1.023,7.854,2.963,11.29L2.037,46.73c-0.096,0.343-0.003,0.711,0.245,0.966 C2.473,47.893,2.733,48,3,48c0.08,0,0.161-0.01,0.24-0.029l10.896-2.699C17.463,47.058,21.21,48,25,48c12.682,0,23-10.318,23-23 S37.682,2,25,2z M36.57,33.116c-0.492,1.362-2.852,2.605-3.986,2.772c-1.018,0.149-2.306,0.213-3.72-0.231 c-0.857-0.27-1.957-0.628-3.366-1.229c-5.923-2.526-9.791-8.415-10.087-8.804C15.116,25.235,13,22.463,13,19.594 s1.525-4.28,2.067-4.864c0.542-0.584,1.181-0.73,1.575-0.73s0.787,0.005,1.132,0.021c0.363,0.018,0.85-0.137,1.329,1.001 c0.492,1.168,1.673,4.037,1.819,4.33c0.148,0.292,0.246,0.633,0.05,1.022c-0.196,0.389-0.294,0.632-0.59,0.973 s-0.62,0.76-0.886,1.022c-0.296,0.291-0.603,0.606-0.259,1.19c0.344,0.584,1.529,2.493,3.285,4.039 c2.255,1.986,4.158,2.602,4.748,2.894c0.59,0.292,0.935,0.243,1.279-0.146c0.344-0.39,1.476-1.703,1.869-2.286 s0.787-0.487,1.329-0.292c0.542,0.194,3.445,1.604,4.035,1.896c0.59,0.292,0.984,0.438,1.132,0.681 C37.062,30.587,37.062,31.755,36.57,33.116z"></path>
+    </svg>
+  </span>
+
+  <span class="label">WhatsApp</span>
+
+  <span class="notify-badge" aria-hidden="true"></span>
 </a>
+
+<style>
+  .whatsapp-button{display:flex;align-items:center;gap:.6rem;background:#25D366;color:#fff;padding:.55rem .75rem;border-radius:9999px;text-decoration:none;font-weight:600;box-shadow:0 6px 18px rgba(37,211,102,0.18);position:fixed;right:1rem;bottom:1rem;z-index:50;transition:transform .12s ease,box-shadow .12s ease;}
+  .whatsapp-button:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(37,211,102,0.22)}
+  .whatsapp-button .icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:1.4rem;height:1.4rem}
+  .whatsapp-button svg{width:1.4rem;height:1.4rem;color:inherit;fill:currentColor}
+  .whatsapp-button svg path{fill:currentColor}
+  .whatsapp-button .label{font-size:.95rem;line-height:1}
+
+  .notify-badge{position:absolute;top:-6px;right:-6px;width:12px;height:12px;background:#ff3b30;border:2px solid #fff;border-radius:50%;transform-origin:center;box-shadow:0 0 0 rgba(0,0,0,0.0)}
+
+  /* Arrival animation: drop + pop, then gentle pulse */
+  .notify-badge{animation:badge-drop 700ms cubic-bezier(.2,.9,.3,1) forwards, badge-pulse 1800ms 900ms infinite ease-out}
+
+  @keyframes badge-drop{0%{transform:translateY(-12px) scale(0);opacity:0}60%{transform:translateY(6px) scale(1.12);opacity:1}100%{transform:translateY(0) scale(1)}}
+  @keyframes badge-pulse{0%{box-shadow:0 0 0 0 rgba(255,59,48,0.6)}70%{box-shadow:0 0 0 8px rgba(255,59,48,0)}100%{box-shadow:0 0 0 0 rgba(255,59,48,0)}}
+
+  @media (max-width:640px){
+    .whatsapp-button{right:.75rem;bottom:.75rem;padding:.45rem .5rem}
+    .whatsapp-button .label{display:none}
+  }
+</style>

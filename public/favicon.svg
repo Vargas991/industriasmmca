@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Industrias MM">
-  <rect width="64" height="64" rx="12" fill="#0d3b66"/>
-  <path d="M14 48V16h8l10 15 10-15h8v32h-8V29L32 43 22 29v19z" fill="#f4d35e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Industrias MM">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#ff5252" />
+      <stop offset="100%" stop-color="#b91c1c" />
+    </radialGradient>
+  </defs>
+  <circle cx="60" cy="60" r="56" fill="url(#bg)" />
+  <path d="M38 36v48h8V44l14 24 14-24v40h8V36h-8l-14 24-14-24h-8z" fill="#ffffff" />
 </svg>
