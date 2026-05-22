@@ -17,6 +17,6 @@ const { title, description, seo, breadcrumbs } = Astro.props;
 <BaseLayout seo={seo}>
   <Breadcrumbs items={breadcrumbs} />
   <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
-  <JsonLd data={buildThingSchema("Product", seo, description)} />
+  <JsonLd data={buildThingSchema("Service", seo, description)} />
   <slot />
 </BaseLayout>

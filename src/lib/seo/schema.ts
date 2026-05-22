@@ -47,5 +47,6 @@ export function buildThingSchema(
     name: seo.title,
     description,
     url: toAbsoluteUrl(seo.canonical ?? "/"),
+    areaServed: "Colombia",
   };
 }

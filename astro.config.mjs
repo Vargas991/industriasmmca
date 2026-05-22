@@ -4,7 +4,7 @@ import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: process.env.PUBLIC_SITE_URL ?? "https://industriasmmca.com",
+  site: process.env.PUBLIC_SITE_URL ?? "https://www.industriasmmca.com",
   output: "server",
   security: {
     checkOrigin: false,
