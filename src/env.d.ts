@@ -6,6 +6,8 @@ interface ImportMetaEnv {
   readonly CONTACT_EMAIL?: string;
   readonly CONTACT_FORM_RECIPIENT?: string;
   readonly EMAIL_PASSWORD?: string;
+  readonly PUBLIC_TURNSTILE_SITE_KEY?: string;
+  readonly TURNSTILE_SECRET_KEY?: string;
   readonly SMTP_HOST?: string;
   readonly SMTP_PORT?: string;
   readonly SMTP_SECURE?: string;

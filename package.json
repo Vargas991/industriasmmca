@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
+    "@types/nodemailer": "^8.0.1",
     "typescript": "^5.9.3"
   }
 }

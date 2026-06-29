@@ -73,6 +73,40 @@ function buildClientConfirmationHtml(payload: { name: string; email: string; pho
   `;
 }
 
+async function verifyTurnstileToken(token: string, request: Request) {
+  const secretKey = import.meta.env.TURNSTILE_SECRET_KEY;
+
+  if (!secretKey) {
+    return { ok: true };
+  }
+
+  if (!token) {
+    return { ok: false, errors: ["Completa la verificación de seguridad para enviar el mensaje."] };
+  }
+
+  const forwardedIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? request.headers.get("cf-connecting-ip") ?? undefined;
+  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      secret: secretKey,
+      response: token,
+      ...(forwardedIp ? { remoteip: forwardedIp } : {}),
+    }),
+  });
+
+  const result = (await response.json()) as { success?: boolean; "error-codes"?: string[] };
+
+  if (!response.ok || !result.success) {
+    return {
+      ok: false,
+      errors: ["No pudimos verificar la seguridad del formulario. Intenta nuevamente."],
+    };
+  }
+
+  return { ok: true };
+}
+
 export const POST: APIRoute = async ({ request }) => {
   const recipient = import.meta.env.CONTACT_FORM_RECIPIENT ?? import.meta.env.CONTACT_EMAIL;
   const sender = import.meta.env.CONTACT_EMAIL;
@@ -88,11 +122,20 @@ export const POST: APIRoute = async ({ request }) => {
     phone: String(form.get("phone") ?? ""),
     message: String(form.get("message") ?? ""),
   };
+  const turnstileToken = String(form.get("cf-turnstile-response") ?? "");
 
   const errors = validateContactPayload(payload);
 
   if (errors.length > 0) {
     return new Response(JSON.stringify({ ok: false, errors }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const turnstileVerification = await verifyTurnstileToken(turnstileToken, request);
+  if (!turnstileVerification.ok) {
+    return new Response(JSON.stringify({ ok: false, errors: turnstileVerification.errors }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });

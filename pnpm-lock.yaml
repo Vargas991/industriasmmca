@@ -36,6 +36,9 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.8
         version: 0.9.9(prettier@3.8.3)(typescript@5.9.3)
+      '@types/nodemailer':
+        specifier: ^8.0.1
+        version: 8.0.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -795,6 +798,9 @@ packages:
 
   '@types/node@24.12.4':
     resolution: {integrity: sha512-GUUEShf+PBCGW2KaXwcIt3Yk+e3pkKwWKb9GSyM9WQVE+ep2jzmHdGsHzu4wgcZy5fN9FBdVzjpBQsYlpfpgLA==}
+
+  '@types/nodemailer@8.0.1':
+    resolution: {integrity: sha512-PxpaInm8V1JQDd4j0ds5HfvWQk8JupS1C0Picb96QJsrrRDjBH+DlK7L4ZdNSqNULhiZRQHc40nLVShaGxXAMw==}
 
   '@types/sax@1.2.7':
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
@@ -2644,6 +2650,10 @@ snapshots:
   '@types/node@24.12.4':
     dependencies:
       undici-types: 7.16.0
+
+  '@types/nodemailer@8.0.1':
+    dependencies:
+      '@types/node': 24.12.4
 
   '@types/sax@1.2.7':
     dependencies:

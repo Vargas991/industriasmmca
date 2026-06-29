@@ -2,9 +2,10 @@
 interface Props {
   href?: string;
   variant?: "primary" | "secondary";
+  type?: "submit" | "button" | "reset";
 }
 
-const { href, variant = "primary" } = Astro.props;
+const { href, variant = "primary", type = "submit" } = Astro.props;
 const className = `button button--${variant}`;
 ---
 {
@@ -13,7 +14,7 @@ const className = `button button--${variant}`;
       <slot />
     </a>
   ) : (
-    <button class={className} type="submit">
+    <button class={className} type={type}>
       <slot />
     </button>
   )

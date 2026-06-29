@@ -3,6 +3,8 @@ import Button from "@/components/ui/Button.astro";
 import { siteConfig } from "@/config/site";
 import Input from "@/components/ui/Input.astro";
 import Textarea from "@/components/ui/Textarea.astro";
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 <form id="contact-form" class="contact-form flow" method="post" action="/api/contact">
   <p>
@@ -12,6 +14,18 @@ import Textarea from "@/components/ui/Textarea.astro";
   <Input id="email" name="email" label="Correo" type="email" required />
   <Input id="phone" name="phone" label="Telefono" />
   <Textarea id="message" name="message" label="Mensaje" required />
+  {turnstileSiteKey ? (
+    <>
+      <div class="cf-turnstile turnstile-widget" data-sitekey={turnstileSiteKey} data-theme="light"></div>
+      <div id="turnstile-error" class="turnstile-error hidden" role="alert">
+        No se pudo conectar con el servicio de seguridad. Verifica que la clave de Turnstile esté configurada y que tu dominio esté registrado en Cloudflare.
+      </div>
+    </>
+  ) : (
+    <div class="turnstile-missing" role="alert">
+      Falta la variable de entorno <strong>PUBLIC_TURNSTILE_SITE_KEY</strong>. Añádela a tu archivo <code>.env</code> y reinicia el servidor.
+    </div>
+  )}
   <div id="form-status" class="contact-form-status" aria-live="polite"></div>
   <Button type="submit">Enviar solicitud</Button>
 </form>
@@ -26,6 +40,7 @@ import Textarea from "@/components/ui/Textarea.astro";
   </div>
 </div>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer onerror="document.getElementById('turnstile-error')?.classList.remove('hidden')"></script>
 <script type="module">
   const form = document.querySelector('#contact-form');
   const status = document.querySelector('#form-status');
@@ -162,5 +177,22 @@ import Textarea from "@/components/ui/Textarea.astro";
     color: white;
     font-weight: 600;
     cursor: pointer;
+  }
+
+  .turnstile-widget {
+    display: flex;
+    justify-content: center;
+    margin: 0.5rem 0 1rem;
+  }
+
+  .turnstile-error {
+    color: #b91c1c;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  .turnstile-error.hidden {
+    display: none;
   }
 </style>
