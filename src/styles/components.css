@@ -1726,6 +1726,78 @@
   object-fit: contain;
 }
 
+/* Lightbox overlay for product images */
+.product-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-lightbox-overlay.is-open {
+  display: flex;
+}
+
+.product-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.86);
+}
+
+.product-lightbox-frame {
+  position: relative;
+  max-width: 98vw;
+  max-height: 98vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.product-lightbox-content {
+  pointer-events: auto;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-lightbox-image {
+  max-width: 100%;
+  max-height: 100vh;
+  object-fit: contain;
+  display: block;
+}
+
+.product-lightbox-close,
+.product-lightbox-prev,
+.product-lightbox-next {
+  position: absolute;
+  top: 1rem;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  border: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 1.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.product-lightbox-close { right: 1rem; top: 1rem; }
+.product-lightbox-prev { left: 0.5rem; top: 50%; transform: translateY(-50%); }
+.product-lightbox-next { right: 0.5rem; top: 50%; transform: translateY(-50%); }
+
+.product-lightbox-prev, .product-lightbox-next {
+  padding: 0.75rem 1rem;
+  font-size: 2rem;
+  border-radius: 999px;
+}
+
 .product-gallery-thumbnails {
   display: flex;
   gap: 0.85rem;
@@ -2681,6 +2753,26 @@
   .product-spec-row {
     grid-template-columns: 1fr;
     gap: 0.35rem;
+  }
+
+  .product-detail-copy,
+  .product-detail-copy img,
+  .product-detail-copy figure,
+  .product-detail-copy table,
+  .product-detail-copy iframe,
+  .product-detail-copy embed,
+  .product-detail-copy video {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .product-detail-copy table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .product-measurement-table {
+    min-width: 100%;
   }
 
   .hero-section {
