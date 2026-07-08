@@ -8,5 +8,6 @@ export const siteConfig = {
   email: import.meta.env.CONTACT_EMAIL ?? "industriasmm1@gmail.com",
   address: "Calle 5 #1-3 Barrio Ocumare Detras del Estadio, San Antonio del Táchira, Venezuela",
   whatsappNumber: import.meta.env.PUBLIC_WHATSAPP_NUMBER ?? "5804127815210",
+  whatsappNumber2: import.meta.env.PUBLIC_WHATSAPP_NUMBER2 ?? "5804166764858",
   tagline: "Diseño, Fabricación e instalación de soluciones industriales que duran.",
 };

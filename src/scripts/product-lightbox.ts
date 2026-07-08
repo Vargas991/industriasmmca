@@ -89,12 +89,6 @@ galleries.forEach((gallery) => {
       const index = images.indexOf(mainImage.src);
       lightbox.open(images, index >= 0 ? index : 0);
     });
-
-    thumbs.forEach((thumb, i) => {
-      thumb.addEventListener('click', () => {
-        lightbox.open(images, images.indexOf(thumb.dataset.image as string));
-      });
-    });
   }
 });
 

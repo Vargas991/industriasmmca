@@ -18,7 +18,8 @@ const footerGroups = [
   {
     title: "Contacto",
     links: [
-      { label: siteConfig.phone, href: `tel:${formatPhoneForHref(siteConfig.phone)}` },
+      { label: "+58 0412 781 5210", href: `https://wa.me/${formatPhoneForHref(siteConfig.whatsappNumber)}` },
+      { label: "+58 0416 676 4858", href: `https://wa.me/${formatPhoneForHref(siteConfig.whatsappNumber2)}` },
       { label: siteConfig.email, href: `mailto:${siteConfig.email}` },
       { label: siteConfig.address, href: "/contacto" },
     ],
@@ -43,7 +44,7 @@ const iconMap: Record<SocialLink["label"], string> = {
           <img class="brand-logo brand-logo--footer" src="/images/brand/logo.webp" alt="Industrias MM" />
         </a>
         <p>{siteConfig.tagline}</p>
-        <p>{siteConfig.address}</p>
+        <!-- <p>{siteConfig.address}</p> -->
         <ul class="footer-socials">
           {socialLinks.map((link) => (
             <li>

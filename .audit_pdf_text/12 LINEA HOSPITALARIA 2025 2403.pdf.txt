@@ -1,0 +1,149 @@
+
+--- PAGE 1 ---
+CODIGO MEDIDA PMVP (USD) IVA (16 %) PRECIO (USD) FECHA DE 
+MARCAJE
+HOS001 1.90 185.60 29.70 215.30 10/01/2025
+CODIGO MEDIDA PMVP (USD) IVA (16 %) PRECIO (USD) FECHA DE 
+MARCAJE
+HOS001 0.21 31.32 5.01 36.33 10/01/2025
+LÍNEA HOSPITALARIA
+Diván médico fijo
+Elaborado con estructura tubular metálica redonda con pintura de aplicación electrostática y superficie 
+acolchada con espuma de alta densidad recubierta de cuero sintético
+Escabel de un paso
+Elaborado con estructura tubular metálica con pintura de aplicación elctrostática y peldaño en lámina 
+metálica forrado con goma antiresbalante
+1.90 m0.60 m
+0.80 m
+Rojo
+Blanco
+Beis
+Gris
+Negro
+Verde
+Azul
+Amarillo
+0.35 m
+0.25 m
+0.21 m
+Rojo
+Blanco
+Beis
+Gris
+Negro
+Verde
+Azul
+Amarillo
+ * SI CANCELAS EN MONEDA EXTRANJERA, SE SUMARA UN IMPUESTO DEL 3% SOBRE EL TOTAL CON IVA                                                          
+(IMPUESTO A LAS GRANDES TRANSACCIONES FINANCIERAS) 
+--- PAGE 2 ---
+LÍNEA VITRINAS
+CODIGO MEDIDA PMVP (USD) IVA (16 %) PRECIO (USD) FECHA DE 
+MARCAJE
+HOS002 0.38 48.26 7.72 55.98 10/01/2025
+CODIGO MEDIDA PMVP (USD) IVA (16 %) PRECIO (USD) FECHA DE 
+MARCAJE
+HOS007 1.60 197.20 31.55 228.75 10/01/2025
+Elaborado con estructura tubular metálica con pintura de aplicación elctrostática y peldaño en lámina 
+metálica forrado con goma antiresbalante
+Vitrina instrumental de un cuerpo con gaveta
+Elaborado en lámina cold rolled , acabado en pintura en polvo de aplicación electrostática, con 2 entrepaños 
+graduables. Incluye gaveta y puerta batiente con vidrio de 4 mm enmarcado
+LÍNEA HOSPITALARIA
+Escabel de un paso
+0.43 m 0.65 m
+0.375 m
+1.60 m  
+0.40 m 0.425 m
+Rojo
+Blanco
+Beis
+Gris
+Negro
+Verde
+Azul
+Amarillo
+Rojo
+Blanco
+Beis
+Gris
+Negro
+Verde
+Azul
+Amarillo
+ * SI CANCELAS EN MONEDA EXTRANJERA, SE SUMARA UN IMPUESTO DEL 3% SOBRE EL TOTAL CON IVA                                                          
+(IMPUESTO A LAS GRANDES TRANSACCIONES FINANCIERAS) 
+--- PAGE 3 ---
+CODIGO MEDIDA PMVP (USD) IVA (16 %) PRECIO (USD) FECHA DE 
+MARCAJE
+HOS013 1.60 179.80 28.77 208.57 10/01/2025
+CODIGO MEDIDA PMVP (USD) IVA (16 %) PRECIO (USD) FECHA DE 
+MARCAJE
+HOS008 1.60 330.60 52.90 383.50 10/01/2025
+LÍNEA HOPITALARIA
+Vitrina instrumental de un cuerpo sin gaveta
+Vitrina instrumental de un cuerpo con gavetas
+Elaborado en lámina cold rolled , acabado en pintura en polvo de aplicación electrostática, con 5 entrepaños 
+graduables. Incluye puerta batiente con vidrio de 4 mm enmarcado
+Elaborado en lámina cold rolled , acabado en pintura en polvo de aplicación electrostática, con 2 entrepaños 
+graduables. Incluye gavetas y puerta batiente con vidrio de 4 mm enmarcado
+0.425 m0.40 m
+1.60 m
+0.40 m
+0.425 m
+1.60 m
+Rojo
+Blanco
+Beis
+Gris
+Negro
+Verde
+Azul
+Amarillo
+Rojo
+Blanco
+Beis
+Gris
+Negro
+Verde
+Azul
+Amarillo
+ * SI CANCELAS EN MONEDA EXTRANJERA, SE SUMARA UN IMPUESTO DEL 3% SOBRE EL TOTAL CON IVA                                                          
+(IMPUESTO A LAS GRANDES TRANSACCIONES FINANCIERAS) 
+--- PAGE 4 ---
+CODIGO MEDIDA PMVP (USD) IVA (16 %) PRECIO (USD) FECHA DE 
+MARCAJE
+2000173 DESCRITA 55.68 8.91 64.59 10/01/2025
+CODIGO MEDIDA PMVP (USD) IVA (16 %) PRECIO (USD) FECHA DE 
+MARCAJE
+2000173 DESCRITA 48.72 7.80 56.52 10/01/2025
+Estructura elaborada en tubo redondo metálico con portatobo con pintura de aplicación electrostática con 
+Carro de cura con portatobo
+Estructura elaborada en tubo redondo metálico con portatobo con pintura de aplicación electrostática con 
+dos niveles de superficie forradas en acero inoxidable
+LÍNEA HOSPITALARIA
+Carro de cura
+0.85 m
+0.94 m
+Rojo
+Blanco
+Beis
+Gris
+Negro
+Verde
+Azul
+Amarillo
+0.40 m
+0.85 m
+0.60 m
+Rojo
+Blanco
+Beis
+Gris
+Negro
+Verde
+Azul
+Amarillo
+0.40 m
+ * SI CANCELAS EN MONEDA EXTRANJERA, SE SUMARA UN IMPUESTO DEL 3% SOBRE EL TOTAL CON IVA                                                          
+(IMPUESTO A LAS GRANDES TRANSACCIONES FINANCIERAS) 
