@@ -4,35 +4,48 @@ import ProductCTA from "@/components/products/ProductCTA.astro";
 import ProductGallery from "@/components/products/ProductGallery.astro";
 import ProductSpecs from "@/components/products/ProductSpecs.astro";
 import RelatedProducts from "@/components/products/RelatedProducts.astro";
+
 import { getProductCategoryBySlug } from "@/lib/content/productCategories";
-import { getProductBySlug, getPublishedProducts, getRelatedProducts } from "@/lib/content/products";
+import {
+  getProductBySlug,
+  getRelatedProducts,
+} from "@/lib/content/products";
+
 import { buildProductSeo } from "@/lib/seo/metadata";
 import ProductLayout from "@/layouts/ProductLayout.astro";
 
-export const prerender = true;
-
-export async function getStaticPaths() {
-  const products = await getPublishedProducts();
-  return products.map((product) => ({ params: { slug: product.slug } }));
-}
-
 const { slug } = Astro.params;
+
 const product = await getProductBySlug(slug!);
 
 if (!product) {
-  throw new Error(`Producto no encontrado: ${slug}`);
+  return new Response(null, {
+    status: 404,
+  });
 }
 
 const category = await getProductCategoryBySlug(product.data.category);
-const relatedProducts = await getRelatedProducts(product.slug, product.data.category);
+
+const relatedProducts = await getRelatedProducts(
+  product.slug,
+  product.data.category
+);
+
 const seo = buildProductSeo(
   product.data.seo.title,
   product.data.seo.description,
   product.data.seo.canonical ?? `/productos/${product.slug}`,
-  product.data.seo.image ?? product.data.coverImage,
+  product.data.seo.image ?? product.data.coverImage
 );
-const galleryImages = Array.from(new Set([product.data.coverImage, ...product.data.gallery]));
+
+const galleryImages = Array.from(
+  new Set([
+    product.data.coverImage,
+    ...product.data.gallery,
+  ])
+);
 ---
+
 <ProductLayout
   title={product.data.title}
   description={product.data.description}
@@ -40,17 +53,31 @@ const galleryImages = Array.from(new Set([product.data.coverImage, ...product.da
   breadcrumbs={[
     { name: "Productos", url: "/productos" },
     ...(category
-      ? [{ name: category.data.title, url: `/productos/categoria/${category.slug}` }]
+      ? [
+          {
+            name: category.data.title,
+            url: `/productos/categoria/${category.slug}`,
+          },
+        ]
       : []),
-    { name: product.data.title, url: `/productos/${product.slug}` },
+    {
+      name: product.data.title,
+      url: `/productos/${product.slug}`,
+    },
   ]}
 >
   <section class="product-detail-page">
     <Container>
       <div class="product-detail-shell">
         <div class="product-detail-hero">
+
           <div class="product-detail-header flow">
-            {category && <p class="eyebrow product-detail-category">{category.data.title}</p>}
+            {category && (
+              <p class="eyebrow product-detail-category">
+                {category.data.title}
+              </p>
+            )}
+
             <h1>{product.data.title}</h1>
           </div>
 
@@ -63,20 +90,34 @@ const galleryImages = Array.from(new Set([product.data.coverImage, ...product.da
           </div>
 
           <div class="product-detail-meta flow">
-            <p class="product-detail-summary">{product.data.description}</p>
 
-            {product.data.show_price && typeof product.data.price === 'number' && (
-              <p class="product-detail-price"><strong>Precio:</strong> ${product.data.price}</p>
-            )}
+            <p class="product-detail-summary">
+              {product.data.description}
+            </p>
+
+            {product.data.show_price &&
+              typeof product.data.price === "number" && (
+                <p class="product-detail-price">
+                  <strong>Precio:</strong> ${product.data.price}
+                </p>
+              )}
 
             {product.data.benefits.length > 0 && (
-              <ul class="product-benefit-list" aria-label="Beneficios del producto">
-                {product.data.benefits.map((benefit) => <li>{benefit}</li>)}
+              <ul
+                class="product-benefit-list"
+                aria-label="Beneficios del producto"
+              >
+                {product.data.benefits.map((benefit) => (
+                  <li>{benefit}</li>
+                ))}
               </ul>
             )}
 
             <div class="product-detail-actions">
-              <a class="button button--primary product-detail-primary-cta" href="/contacto">
+              <a
+                class="button button--primary product-detail-primary-cta"
+                href="/contacto"
+              >
                 Solicitar cotización
               </a>
             </div>
@@ -86,18 +127,25 @@ const galleryImages = Array.from(new Set([product.data.coverImage, ...product.da
               measurements={product.data.measurements}
               specSheet={product.data.specSheet}
             />
+
           </div>
         </div>
 
         <div class="product-detail-story">
-          <article class="product-detail-copy prose flow" set:html={product.bodyHtml} />
+
+          <article
+            class="product-detail-copy prose flow"
+            set:html={product.bodyHtml}
+          />
 
           <aside class="product-detail-sidebar">
             <ProductCTA />
           </aside>
+
         </div>
 
         <RelatedProducts products={relatedProducts} />
+
       </div>
     </Container>
   </section>
