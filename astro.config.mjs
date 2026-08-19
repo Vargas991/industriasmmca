@@ -4,23 +4,38 @@ import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: process.env.PUBLIC_SITE_URL ?? "https://industriasmmca.com",
+  site:
+    process.env.PUBLIC_SITE_URL ??
+    "https://industriasmmca.com",
+
+  trailingSlash: "always",
+
   output: "server",
+
   security: {
     checkOrigin: false,
   },
+
   adapter: node({
     mode: "standalone",
   }),
+
   integrations: [
     sitemap({
       filter: (url) => !url.includes("/admin/"),
+
+      customSitemaps: [
+        "https://industriasmmca.com/sitemap-products.xml",
+      ],
     }),
   ],
+
   vite: {
     resolve: {
       alias: {
-        "@": fileURLToPath(new URL("./src", import.meta.url)),
+        "@": fileURLToPath(
+          new URL("./src", import.meta.url)
+        ),
       },
     },
   },
