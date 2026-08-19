@@ -8,7 +8,7 @@ export default defineConfig({
     process.env.PUBLIC_SITE_URL ??
     "https://industriasmmca.com",
 
-  trailingSlash: "always",
+  trailingSlash: "ignore",
 
   output: "server",
 

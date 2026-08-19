@@ -779,7 +779,7 @@ const navItems = [
           loginFeedback.textContent = "Validando acceso...";
           loginFeedback.dataset.tone = "info";
 
-          const response = await fetch("/api/admin/session", {
+          const response = await fetch("/api/admin/session/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

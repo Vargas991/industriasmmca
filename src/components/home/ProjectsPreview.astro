@@ -35,7 +35,7 @@ const { projects } = Astro.props;
               <h3 data-project-title>{projects[0].data.title}</h3>
               <p class="eyebrow" data-project-sector>{projects[0].data.sector}</p>
               <p data-project-description>{projects[0].data.description}</p>
-              <a class="button button--primary" data-project-link href={`/proyectos/${projects[0].slug}`}>
+              <a class="button button--primary" data-project-link href={`/proyectos/${projects[0].slug}/`}>
                 Ver proyecto
               </a>
             </div>
