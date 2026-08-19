@@ -801,7 +801,7 @@ const navItems = [
 
       logoutButtons.forEach((button) => {
         button.addEventListener("click", async () => {
-          await fetch("/api/admin/session", { method: "DELETE" });
+          await fetch("/api/admin/session/", { method: "DELETE" });
           window.location.reload();
         });
       });
