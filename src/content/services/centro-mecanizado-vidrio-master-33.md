@@ -15,7 +15,6 @@ materials:
 benefits:
   - "Cortes y perforaciones limpias."
   - "Bordes pulidos y acabados premium."
-  - "Materiales templados y laminados."
   - "Alta estabilidad dimensional."
 process:
   - "Evaluación del material y diseño."

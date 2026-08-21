@@ -18,7 +18,7 @@ benefits:
   - "Acabados de superficie pulida."
   - "Cortes precisos en MDF, pino y tablero trabajado."
   - "Componentes listos para ensamble."
-  - "Agilidad en tiradas pequeñas y medias."
+  - "Agilidad en trabajos pequeños, medianos y grandes."
 process:
   - "Revisión del proyecto y material."
   - "Programación CNC y ajuste de herramientas."
