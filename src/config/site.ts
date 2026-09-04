@@ -3,7 +3,7 @@ export const siteConfig = {
   legalName: "Industrias MM C.A.",
   rif: "J-30527862-2",
   description:
-    "Acompañamos tu proyecto con mobiliario funcional y servicios especializados para resolver lo que necesitas.",
+    "Diseñamos, fabricamos e instalamos mobiliario y soluciones metálicas para supermercados, oficinas, ferreterías, comercios e industrias en todo el país.",
   url: import.meta.env.PUBLIC_SITE_URL ?? "https://industriasmmca.com",
   phone: "+58 4127815210",
   email: import.meta.env.CONTACT_EMAIL ?? "industriasmm1@gmail.com",
