@@ -14,7 +14,7 @@ import { testimonials } from "@/data/testimonials";
         />
       </div>
 
-      <div class="testimonial-grid">
+      <div class="testimonial-grid" data-testimonial-slider>
         {testimonials.map((item, index) => (
           <article class={`testimonial-card ${index === 0 ? "testimonial-card--featured" : ""}`}>
             <div class="testimonial-mark" aria-hidden="true">“</div>
@@ -31,4 +31,7 @@ import { testimonials } from "@/data/testimonials";
       </div>
     </div>
   </Container>
+  <script>
+    import "@/scripts/testimonial-slider";
+  </script>
 </section>

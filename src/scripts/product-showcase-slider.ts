@@ -96,7 +96,7 @@ if (slider && track && progressFill) {
   };
 
   window.addEventListener("resize", () => {
-    update(index, "auto");
+    updateProgressAndControls();
     restart();
   });
 
@@ -119,7 +119,7 @@ if (slider && track && progressFill) {
   previousButton?.addEventListener("click", goToPrevious);
   nextButton?.addEventListener("click", goToNext);
 
-  update(0, "auto");
+  updateProgressAndControls();
   restart();
 }
 

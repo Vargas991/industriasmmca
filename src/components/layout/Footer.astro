@@ -11,10 +11,10 @@ const footerGroups = [
     title: "Navegacion",
     links: mainNavigation.filter((item) => item.href !== "/"),
   },
-  {
-    title: "Catalogo",
-    links: footerNavigation,
-  },
+  // {
+  //   title: "Catalogo",
+  //   links: footerNavigation,
+  // },
   {
     title: "Contacto",
     links: [
@@ -84,8 +84,8 @@ const iconMap: Record<SocialLink["label"], string> = {
       ))}
     </div>
     <div class="footer-bottom">
-      <p class="footer-copyright">Copyright {new Date().getFullYear()} {siteConfig.legalName}. Todos los derechos reservados.</p>
-      <p class="footer-copyright">Desarrollado por <a href="https://www.vareddev.com" target="_blank" rel="noreferrer">VaredDev</a></p>
+      <p class="footer-copyright">Copyright {new Date().getFullYear()} {siteConfig.legalName}® RIF: {siteConfig.rif}. Todos los derechos reservados.</p>
+      <p class="footer-copyright">Desarrollado por <strong><a href="https://www.vareddev.com" target="_blank" rel="noreferrer">VaredDev</a></strong></p>
     </div>
   </Container>
 </footer>

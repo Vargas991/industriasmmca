@@ -12,6 +12,10 @@ export default defineConfig({
 
   output: "server",
 
+  build: {
+    inlineStylesheets: "always",
+  },
+
   security: {
     checkOrigin: false,
   },

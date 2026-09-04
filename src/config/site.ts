@@ -1,6 +1,7 @@
 export const siteConfig = {
   name: "Industrias MM",
   legalName: "Industrias MM C.A.",
+  rif: "J-30527862-2",
   description:
     "Acompañamos tu proyecto con mobiliario funcional y servicios especializados para resolver lo que necesitas.",
   url: import.meta.env.PUBLIC_SITE_URL ?? "https://industriasmmca.com",

@@ -4,16 +4,22 @@ import Container from "@/components/ui/Container.astro";
 import { siteConfig } from "@/config/site";
 
 const heroVideoMobile =
-  "https://res.cloudinary.com/df9taulat/video/upload/q_auto:eco,vc_auto,w_720/v1778302402/WhatsApp_Video_2026-05-01_at_12.15.31_PM_uhant9.mp4";
+  "https://res.cloudinary.com/df9taulat/video/upload/q_auto:low,vc_auto,br_450k,w_540/v1778302402/WhatsApp_Video_2026-05-01_at_12.15.31_PM_uhant9.mp4";
 const heroVideoDesktop =
-  "https://res.cloudinary.com/df9taulat/video/upload/q_auto:eco,vc_auto,w_1280/v1778302402/WhatsApp_Video_2026-05-01_at_12.15.31_PM_uhant9.mp4";
+  "https://res.cloudinary.com/df9taulat/video/upload/q_auto:eco,vc_auto,br_1400k,w_1200/v1778302402/WhatsApp_Video_2026-05-01_at_12.15.31_PM_uhant9.mp4";
 ---
 <section class="hero-section">
   <div class="hero-media" aria-hidden="true">
-    <video autoplay muted loop playsinline preload="metadata" data-hero-video>
-      <source src={heroVideoMobile} type="video/mp4" media="(max-width: 720px)" />
-      <source src={heroVideoDesktop} type="video/mp4" />
-    </video>
+    <video
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="none"
+      data-hero-video
+      data-mobile-src={heroVideoMobile}
+      data-desktop-src={heroVideoDesktop}
+    ></video>
   </div>
   <Container>
     <div class="hero-grid">
@@ -32,6 +38,20 @@ const heroVideoDesktop =
 
 <script>
   const heroVideoEl = document.querySelector("[data-hero-video]");
+  const loadHeroVideo = () => {
+    if (!(heroVideoEl instanceof HTMLVideoElement) || heroVideoEl.dataset.loaded) return;
+
+    const source = document.createElement("source");
+    source.src = window.matchMedia("(max-width: 900px)").matches
+      ? heroVideoEl.dataset.mobileSrc ?? ""
+      : heroVideoEl.dataset.desktopSrc ?? "";
+    source.type = "video/mp4";
+
+    heroVideoEl.dataset.loaded = "true";
+    heroVideoEl.append(source);
+    heroVideoEl.load();
+    heroVideoEl.play().catch(() => undefined);
+  };
 
   if (heroVideoEl?.readyState >= 3) {
     heroVideoEl.classList.add("is-ready");
@@ -44,4 +64,6 @@ const heroVideoDesktop =
     },
     { once: true }
   );
+
+  window.setTimeout(loadHeroVideo, 900);
 </script>

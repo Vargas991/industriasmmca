@@ -146,11 +146,11 @@ if (slider && track && progressFill) {
   slider.addEventListener("touchend", restart, { passive: true });
 
   window.addEventListener("resize", () => {
-    update(index, "auto");
+    updateProgressAndControls();
     restart();
   });
 
-  update(0, "auto");
+  updateProgressAndControls();
   restart();
 }
 
