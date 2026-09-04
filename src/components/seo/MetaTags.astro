@@ -24,6 +24,10 @@ const image = seo.image ? toAbsoluteUrl(seo.image) : undefined;
 <meta property="og:type" content={seo.type ?? "website"} />
 {canonical && <meta property="og:url" content={canonical} />}
 {image && <meta property="og:image" content={image} />}
+{image && <meta property="og:image:secure_url" content={image} />}
+{image && <meta property="og:image:type" content="image/png" />}
+{image && <meta property="og:image:width" content="1200" />}
+{image && <meta property="og:image:height" content="630" />}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={seo.title} />
 <meta name="twitter:description" content={seo.description} />
