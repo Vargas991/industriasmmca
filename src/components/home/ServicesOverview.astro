@@ -1,6 +1,7 @@
 ---
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import Container from "@/components/ui/Container.astro";
+import Image from "@/components/ui/Image.astro";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -23,11 +24,15 @@ const firstService = services[0];
         <div class="services-showcase" data-service-showcase>
           <article class="services-showcase-main">
             <div class="services-showcase-media">
-              <img
+              <Image
                 data-service-image
                 src={firstService.data.coverImage}
                 alt={firstService.data.coverAlt}
                 loading="lazy"
+                width={760}
+                height={540}
+                sizes="(max-width: 900px) 100vw, 50vw"
+                widths={[480, 640, 760]}
               />
             </div>
             <div class="services-showcase-summary flow">
@@ -70,7 +75,15 @@ const firstService = services[0];
               {services.map((service) => (
                 <article class="service-mobile-card">
                   <a class="service-mobile-link" href={`/servicios/${service.slug}/`}>
-                    <img src={service.data.coverImage} alt={service.data.coverAlt} loading="lazy" />
+                    <Image
+                      src={service.data.coverImage}
+                      alt={service.data.coverAlt}
+                      loading="lazy"
+                      width={640}
+                      height={480}
+                      sizes="100vw"
+                      widths={[360, 520, 640]}
+                    />
                     <div class="flow">
                       <p class="eyebrow">Servicio</p>
                       <h3>{service.data.title}</h3>

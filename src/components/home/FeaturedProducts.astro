@@ -1,5 +1,6 @@
 ---
 import Button from "@/components/ui/Button.astro";
+import Image from "@/components/ui/Image.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import Container from "@/components/ui/Container.astro";
 import { slugToTitle } from "@/lib/utils/strings";
@@ -36,11 +37,15 @@ const paletteClasses = [
           {products.map((product, index) => (
               <article class={`product-showcase-card ${paletteClasses[index % paletteClasses.length]}`}>
               <a class="product-showcase-link" href={`/productos/${product.slug}/`}>
-                <img
+                <Image
                   class="product-showcase-image"
                   src={product.data.coverImage}
                   alt={product.data.coverAlt}
                   loading="lazy"
+                  width={720}
+                  height={920}
+                  sizes="(max-width: 900px) 100vw, 33vw"
+                  widths={[360, 540, 720]}
                 />
                 <div class="product-showcase-overlay">
                   <div class="product-showcase-copy">

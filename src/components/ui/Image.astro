@@ -9,6 +9,7 @@ const {
   widths = [480, 720, 960],
   width,
   height,
+  ...attrs
 } = Astro.props;
 
 const optimizedSrc = getOptimizedCloudinaryImage(src, {
@@ -19,10 +20,13 @@ const optimizedSrc = getOptimizedCloudinaryImage(src, {
 const srcset = getCloudinarySrcSet(src, widths, { height, fit: "limit" });
 ---
 <img
+  {...attrs}
   src={optimizedSrc}
   srcset={srcset}
   sizes={srcset ? sizes : undefined}
   alt={alt}
+  width={width}
+  height={height}
   loading={loading}
   decoding="async"
 />

@@ -1,5 +1,6 @@
 ---
 import Container from "@/components/ui/Container.astro";
+import Image from "@/components/ui/Image.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import type { CollectionEntry } from "astro:content";
 
@@ -24,11 +25,15 @@ const { projects } = Astro.props;
         <div class="projects-showcase" data-project-showcase>
           <article class="projects-showcase-main">
             <div class="projects-showcase-media">
-              <img
+              <Image
                 data-project-image
                 src={projects[0].data.coverImage}
                 alt={projects[0].data.coverAlt}
                 loading="lazy"
+                width={900}
+                height={620}
+                sizes="(max-width: 900px) 100vw, 60vw"
+                widths={[480, 720, 900]}
               />
               <div class="projects-showcase-overlay">
                 <div class="projects-showcase-summary flow">
@@ -58,7 +63,15 @@ const { projects } = Astro.props;
                 data-project-alt={project.data.coverAlt}
                 data-project-link={`/proyectos/${project.slug}`}
               >
-                <img src={project.data.coverImage} alt="" loading="lazy" />
+                <Image
+                  src={project.data.coverImage}
+                  alt=""
+                  loading="lazy"
+                  width={160}
+                  height={120}
+                  sizes="5rem"
+                  widths={[120, 160, 240]}
+                />
                 <span class="project-option-copy">
                   <strong>{project.data.title}</strong>
                   <small>{project.data.sector}</small>
