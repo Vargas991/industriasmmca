@@ -7,6 +7,7 @@ export function buildOrganizationSchema() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: siteConfig.legalName,
+    alternateName: siteConfig.name,
     url: siteConfig.url,
     email: siteConfig.email,
     telephone: siteConfig.phone,
@@ -19,6 +20,7 @@ export function buildWebSiteSchema() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: siteConfig.name,
+    alternateName: siteConfig.legalName,
     url: siteConfig.url,
   };
 }

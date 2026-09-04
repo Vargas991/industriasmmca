@@ -1,5 +1,6 @@
 ---
 import CanonicalLink from "@/components/seo/CanonicalLink.astro";
+import { siteConfig } from "@/config/site";
 import { metadataDefaults } from "@/consts/metadata";
 import { toAbsoluteUrl } from "@/lib/utils/urls";
 import type { SeoData } from "@/types/seo";
@@ -14,7 +15,10 @@ const image = seo.image ? toAbsoluteUrl(seo.image) : undefined;
 ---
 <title>{seo.title}</title>
 <meta name="description" content={seo.description} />
+<meta name="application-name" content={siteConfig.name} />
+<meta name="apple-mobile-web-app-title" content={siteConfig.name} />
 <meta property="og:locale" content={metadataDefaults.locale} />
+<meta property="og:site_name" content={siteConfig.name} />
 <meta property="og:title" content={seo.title} />
 <meta property="og:description" content={seo.description} />
 <meta property="og:type" content={seo.type ?? "website"} />

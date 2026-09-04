@@ -1,1 +1,1 @@
-export const defaultSeoImage = "/images/brand/logo.webp";
+export const defaultSeoImage = "/images/brand/logo-circle.webp";
