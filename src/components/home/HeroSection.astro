@@ -3,13 +3,16 @@ import Button from "@/components/ui/Button.astro";
 import Container from "@/components/ui/Container.astro";
 import { siteConfig } from "@/config/site";
 
-const heroVideo =
-  "https://res.cloudinary.com/df9taulat/video/upload/v1778302402/WhatsApp_Video_2026-05-01_at_12.15.31_PM_uhant9.mp4";
+const heroVideoMobile =
+  "https://res.cloudinary.com/df9taulat/video/upload/q_auto:eco,vc_auto,w_720/v1778302402/WhatsApp_Video_2026-05-01_at_12.15.31_PM_uhant9.mp4";
+const heroVideoDesktop =
+  "https://res.cloudinary.com/df9taulat/video/upload/q_auto:eco,vc_auto,w_1280/v1778302402/WhatsApp_Video_2026-05-01_at_12.15.31_PM_uhant9.mp4";
 ---
 <section class="hero-section">
   <div class="hero-media" aria-hidden="true">
     <video autoplay muted loop playsinline preload="metadata" data-hero-video>
-      <source src={heroVideo} type="video/mp4" />
+      <source src={heroVideoMobile} type="video/mp4" media="(max-width: 720px)" />
+      <source src={heroVideoDesktop} type="video/mp4" />
     </video>
   </div>
   <Container>

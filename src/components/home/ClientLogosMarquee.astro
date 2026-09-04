@@ -4,55 +4,55 @@ import Container from "@/components/ui/Container.astro";
 const clients = [
   {
     name: "Coca-Cola Femsa",
-    logo: "/images/clientes/transparent/Coca-Cola_Femsa_Logo.png",
+    logo: "/images/clientes/transparent/Coca-Cola_Femsa_Logo.webp",
   },
   {
     name: "Deportivo Tachira",
-    logo: "/images/clientes/transparent/Dep.Tachira_Escudo.png",
+    logo: "/images/clientes/transparent/Dep.Tachira_Escudo.webp",
   },
   {
     name: "Empresas Polar",
-    logo: "/images/clientes/transparent/empresas%20polar.png",
+    logo: "/images/clientes/transparent/empresas%20polar.webp",
   },
   {
     name: "Farmabien",
-    logo: "/images/clientes/transparent/farmabien_logo.png",
+    logo: "/images/clientes/transparent/farmabien_logo.webp",
   },
   {
     name: "Cliente Industrias MM",
-    logo: "/images/clientes/transparent/ghokvC6ihFfadEbg1DQIucSfWdod4OVPA9nGc26Y.png",
+    logo: "/images/clientes/transparent/ghokvC6ihFfadEbg1DQIucSfWdod4OVPA9nGc26Y.webp",
+  },
+  {
+    name: "Jautec",
+    logo: "/images/clientes/transparent/i0gqm3dbrtgyutgi49uu.webp",
   },
   {
     name: "Cliente Industrias MM",
-    logo: "/images/clientes/transparent/images.png",
+    logo: "/images/clientes/transparent/images.webp",
   },
   {
     name: "Cliente Industrias MM",
-    logo: "/images/clientes/transparent/logo.png",
+    logo: "/images/clientes/transparent/logo.webp",
   },
   {
     name: "Grupo JHS",
-    logo: "/images/clientes/transparent/Logo_Grupo_JHS.png",
+    logo: "/images/clientes/transparent/Logo_Grupo_JHS.webp",
   },
   {
     name: "Macuro",
-    logo: "/images/clientes/transparent/macuro.png",
+    logo: "/images/clientes/transparent/n1eb1cgvyzg6uyiubrrq.webp",
   },
   {
     name: "Mango Center",
-    logo: "/images/clientes/transparent/mango%20center.png",
+    logo: "/images/clientes/transparent/o1scclyoacwjqujkdixs.webp",
   },
   {
     name: "Cliente Industrias MM",
-    logo: "/images/clientes/transparent/maxresdefault.png",
-  },
-  {
-    name: "Seniat",
-    logo: "/images/clientes/transparent/seniat-e1652835879808.png",
+    logo: "/images/clientes/transparent/q1ac1rvlxn5dcxfbp1wi.webp",
   },
   {
     name: "Super Garzon",
-    logo: "/images/clientes/transparent/supergarzon-logo-1589950454.png",
+    logo: "/images/clientes/transparent/supergarzon-logo-1589950454.webp",
   },
 ];
 
@@ -68,7 +68,7 @@ const marqueeClients = [...clients, ...clients];
       <div class="clients-marquee__track">
         {marqueeClients.map((client) => (
           <div class="clients-marquee__item">
-            <img src={client.logo} alt={client.name} loading="lazy" />
+            <img src={client.logo} alt={client.name} width="180" height="80" loading="lazy" decoding="async" />
           </div>
         ))}
       </div>
