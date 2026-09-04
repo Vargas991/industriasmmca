@@ -9,7 +9,7 @@ interface Props {
 
 const { projects } = Astro.props;
 ---
-<section class="section-padding section-alt">
+<section class="section-padding home-section home-projects-section">
   <Container>
     <div class="projects-showcase-shell">
       <div class="projects-showcase-heading">
@@ -30,14 +30,16 @@ const { projects } = Astro.props;
                 alt={projects[0].data.coverAlt}
                 loading="lazy"
               />
-            </div>
-            <div class="projects-showcase-summary flow">
-              <h3 data-project-title>{projects[0].data.title}</h3>
-              <p class="eyebrow" data-project-sector>{projects[0].data.sector}</p>
-              <p data-project-description>{projects[0].data.description}</p>
-              <a class="button button--primary" data-project-link href={`/proyectos/${projects[0].slug}/`}>
-                Ver proyecto
-              </a>
+              <div class="projects-showcase-overlay">
+                <div class="projects-showcase-summary flow">
+                  <p class="eyebrow" data-project-sector>{projects[0].data.sector}</p>
+                  <h3 data-project-title>{projects[0].data.title}</h3>
+                  <p data-project-description>{projects[0].data.description}</p>
+                  <a class="button button--primary" data-project-link href={`/proyectos/${projects[0].slug}/`}>
+                    Ver proyecto
+                  </a>
+                </div>
+              </div>
             </div>
           </article>
 

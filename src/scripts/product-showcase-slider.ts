@@ -122,3 +122,5 @@ if (slider && track && progressFill) {
   update(0, "auto");
   restart();
 }
+
+export {};

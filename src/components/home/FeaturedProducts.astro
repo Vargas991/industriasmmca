@@ -17,7 +17,7 @@ const paletteClasses = [
   "product-showcase-card--sand",
 ];
 ---
-<section class="section-padding product-showcase-section">
+<section class="section-padding home-section home-products-section product-showcase-section">
   <Container>
     <div class="product-showcase-shell">
       <div class="product-showcase-heading">
@@ -42,10 +42,13 @@ const paletteClasses = [
                   alt={product.data.coverAlt}
                   loading="lazy"
                 />
-                <div class="flow">
-                  <p class="eyebrow">{slugToTitle(product.data.category)}</p>
-                  <h3>{product.data.title}</h3>
-                  <p>{product.data.excerpt}</p>
+                <div class="product-showcase-overlay">
+                  <div class="product-showcase-copy">
+                    <p class="eyebrow">{slugToTitle(product.data.category)}</p>
+                    <h3>{product.data.title}</h3>
+                    <p>{product.data.excerpt}</p>
+                  </div>
+                  <span class="product-showcase-action">Ver producto</span>
                 </div>
               </a>
             </article>

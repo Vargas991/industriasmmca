@@ -29,3 +29,5 @@ if (showcase) {
     option.addEventListener("click", () => setActive(option));
   });
 }
+
+export {};

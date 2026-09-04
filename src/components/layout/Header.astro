@@ -1,16 +1,67 @@
 ---
 import Container from "@/components/ui/Container.astro";
-import Navbar from "@/components/layout/Navbar.astro";
+import { mainNavigation } from "@/config/navigation";
+import { socialLinks } from "@/data/social-links";
+
+const pageLinks = mainNavigation.filter((item) => item.href !== "/contacto");
+const contactLink = mainNavigation.find((item) => item.href === "/contacto") ?? {
+  label: "CONTÁCTANOS",
+  href: "/contacto",
+};
+const splitIndex = Math.ceil(pageLinks.length / 2);
+const leftLinks = pageLinks.slice(0, splitIndex);
+const rightLinks = pageLinks.slice(splitIndex);
+
+const socialIconPaths: Record<string, string> = {
+  facebook:
+    "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.6l.4-4h-4V7a1 1 0 0 1 1-1h3V2z",
+  instagram:
+    "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm4.8-3.3a1 1 0 1 1 0 2 1 1 0 0 1 0-2z",
+  whatsapp:
+    "M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.3-4.7a8.5 8.5 0 1 1 16.2-4zm-8.5-6.6a6.6 6.6 0 0 0-5.7 9.9l.3.5-.7 2.4 2.5-.7.5.3A6.6 6.6 0 1 0 12 5.2zm-2 3.4c.2 0 .4 0 .5.4l.6 1.4c.1.3 0 .5-.1.6l-.4.5c-.1.1-.2.3-.1.5.2.4.7 1.2 1.4 1.8.9.8 1.7 1.1 2.1 1.2.2.1.4 0 .5-.1l.7-.8c.2-.2.4-.2.6-.1l1.4.7c.3.2.4.3.3.6-.1.5-.6 1.4-1.2 1.6-.6.3-1.4.3-2.4 0-1.7-.5-3.1-1.6-4.2-3-1-1.2-1.6-2.5-1.7-3.1-.1-.6.1-1.4.6-1.9.3-.4.6-.6.9-.6z",
+};
+
+function getSocialIcon(label: string) {
+  return socialIconPaths[label.toLowerCase()] ?? socialIconPaths.whatsapp;
+}
 ---
 <header class="site-header">
   <Container>
     <div class="header-inner">
-      <a class="brand" href="/" aria-label="Ir al inicio de Industrias MM">
+      <ul class="header-socials" aria-label="Redes sociales">
+        {socialLinks.map((link, index) => (
+          <li>
+            <a href={link.href} target="_blank" rel="noreferrer" aria-label={`${link.label} ${index + 1}`}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d={getSocialIcon(link.label)}></path>
+              </svg>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <nav class="desktop-nav desktop-nav--left" aria-label="Principal izquierda">
+        <ul class="nav-list">
+          {leftLinks.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <a class="brand header-brand" href="/" aria-label="Ir al inicio de Industrias MM">
         <img class="brand-logo" src="/images/brand/logo.webp" alt="Industrias MM" />
       </a>
-      <div class="desktop-nav">
-        <Navbar />
-      </div>
+
+      <nav class="desktop-nav desktop-nav--right" aria-label="Principal derecha">
+        <ul class="nav-list">
+          {rightLinks.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <a class="header-contact" href={contactLink.href}>Contáctanos</a>
+
       <details class="mobile-nav">
         <summary aria-label="Abrir menu de navegacion">
           <span></span>
@@ -18,9 +69,37 @@ import Navbar from "@/components/layout/Navbar.astro";
           <span></span>
         </summary>
         <div class="mobile-nav-panel">
-          <Navbar />
+          <nav aria-label="Principal">
+            <ul class="nav-list">
+              {mainNavigation.map((item) => (
+                <li><a href={item.href}>{item.label}</a></li>
+              ))}
+            </ul>
+          </nav>
+          <ul class="header-socials header-socials--mobile" aria-label="Redes sociales">
+            {socialLinks.map((link, index) => (
+              <li>
+                <a href={link.href} target="_blank" rel="noreferrer" aria-label={`${link.label} ${index + 1}`}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d={getSocialIcon(link.label)}></path>
+                  </svg>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </details>
     </div>
   </Container>
 </header>
+
+<script>
+  const header = document.querySelector(".site-header");
+
+  function updateHeaderState() {
+    header?.classList.toggle("is-scrolled", window.scrollY > 12);
+  }
+
+  updateHeaderState();
+  window.addEventListener("scroll", updateHeaderState, { passive: true });
+</script>

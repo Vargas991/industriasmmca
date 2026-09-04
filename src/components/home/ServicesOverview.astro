@@ -1,5 +1,4 @@
 ---
-import ServiceGrid from "@/components/services/ServiceGrid.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import Container from "@/components/ui/Container.astro";
 import type { CollectionEntry } from "astro:content";
@@ -9,14 +8,96 @@ interface Props {
 }
 
 const { services } = Astro.props;
+const firstService = services[0];
 ---
-<section class="section-padding section-alt">
+<section class="section-padding home-section home-services-section">
   <Container>
     <SectionHeading
       eyebrow="Servicios"
       title="Acompañamos desde el diseño hasta la instalación."
       description="Fabricamos, montamos y resolvemos necesidades a medida."
     />
-    <ServiceGrid services={services} variant="showcase" />
+
+    {firstService && (
+      <>
+        <div class="services-showcase" data-service-showcase>
+          <article class="services-showcase-main">
+            <div class="services-showcase-media">
+              <img
+                data-service-image
+                src={firstService.data.coverImage}
+                alt={firstService.data.coverAlt}
+                loading="lazy"
+              />
+            </div>
+            <div class="services-showcase-summary flow">
+              <p class="eyebrow">Servicio destacado</p>
+              <h3 data-service-title>{firstService.data.title}</h3>
+              <p data-service-description>{firstService.data.excerpt}</p>
+              <a class="button button--primary" data-service-link href={`/servicios/${firstService.slug}/`}>
+                Ver servicio
+              </a>
+            </div>
+          </article>
+
+          <div class="services-showcase-list" role="tablist" aria-label="Servicios destacados">
+            {services.map((service, index) => (
+              <button
+                class={`service-option ${index === 0 ? "is-active" : ""}`}
+                type="button"
+                role="tab"
+                aria-selected={index === 0 ? "true" : "false"}
+                data-service-option
+                data-service-title={service.data.title}
+                data-service-description={service.data.excerpt}
+                data-service-image={service.data.coverImage}
+                data-service-alt={service.data.coverAlt}
+                data-service-link={`/servicios/${service.slug}/`}
+              >
+                <span class="service-option-index">{String(index + 1).padStart(2, "0")}</span>
+                <span class="service-option-copy">
+                  <strong>{service.data.title}</strong>
+                  <small>{service.data.excerpt}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="services-mobile-showcase">
+          <div class="services-mobile-slider" data-service-slider>
+            <div class="services-mobile-track" data-service-track>
+              {services.map((service) => (
+                <article class="service-mobile-card">
+                  <a class="service-mobile-link" href={`/servicios/${service.slug}/`}>
+                    <img src={service.data.coverImage} alt={service.data.coverAlt} loading="lazy" />
+                    <div class="flow">
+                      <p class="eyebrow">Servicio</p>
+                      <h3>{service.data.title}</h3>
+                      <p>{service.data.excerpt}</p>
+                    </div>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div class="services-mobile-controls" aria-label="Controles de servicios destacados">
+            <button class="product-showcase-control" type="button" data-service-prev aria-label="Servicio anterior">
+              <span aria-hidden="true">&lsaquo;</span>
+            </button>
+            <div class="product-showcase-rail" data-service-progress>
+              <span class="product-showcase-rail-fill" data-service-progress-fill></span>
+            </div>
+            <button class="product-showcase-control" type="button" data-service-next aria-label="Servicio siguiente">
+              <span aria-hidden="true">&rsaquo;</span>
+            </button>
+          </div>
+        </div>
+      </>
+    )}
   </Container>
+
+  <script>
+    import "@/scripts/service-showcase";
+  </script>
 </section>

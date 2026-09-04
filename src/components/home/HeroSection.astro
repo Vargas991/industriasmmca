@@ -2,8 +2,16 @@
 import Button from "@/components/ui/Button.astro";
 import Container from "@/components/ui/Container.astro";
 import { siteConfig } from "@/config/site";
+
+const heroVideo =
+  "https://res.cloudinary.com/df9taulat/video/upload/v1778302402/WhatsApp_Video_2026-05-01_at_12.15.31_PM_uhant9.mp4";
 ---
 <section class="hero-section">
+  <div class="hero-media" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata">
+      <source src={heroVideo} type="video/mp4" />
+    </video>
+  </div>
   <Container>
     <div class="hero-grid">
       <div class="hero-copy flow animate-fade-in">

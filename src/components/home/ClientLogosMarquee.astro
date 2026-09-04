@@ -1,0 +1,77 @@
+---
+import Container from "@/components/ui/Container.astro";
+
+const clients = [
+  {
+    name: "Coca-Cola Femsa",
+    logo: "/images/clientes/transparent/Coca-Cola_Femsa_Logo.png",
+  },
+  {
+    name: "Deportivo Tachira",
+    logo: "/images/clientes/transparent/Dep.Tachira_Escudo.png",
+  },
+  {
+    name: "Empresas Polar",
+    logo: "/images/clientes/transparent/empresas%20polar.png",
+  },
+  {
+    name: "Farmabien",
+    logo: "/images/clientes/transparent/farmabien_logo.png",
+  },
+  {
+    name: "Cliente Industrias MM",
+    logo: "/images/clientes/transparent/ghokvC6ihFfadEbg1DQIucSfWdod4OVPA9nGc26Y.png",
+  },
+  {
+    name: "Cliente Industrias MM",
+    logo: "/images/clientes/transparent/images.png",
+  },
+  {
+    name: "Cliente Industrias MM",
+    logo: "/images/clientes/transparent/logo.png",
+  },
+  {
+    name: "Grupo JHS",
+    logo: "/images/clientes/transparent/Logo_Grupo_JHS.png",
+  },
+  {
+    name: "Macuro",
+    logo: "/images/clientes/transparent/macuro.png",
+  },
+  {
+    name: "Mango Center",
+    logo: "/images/clientes/transparent/mango%20center.png",
+  },
+  {
+    name: "Cliente Industrias MM",
+    logo: "/images/clientes/transparent/maxresdefault.png",
+  },
+  {
+    name: "Seniat",
+    logo: "/images/clientes/transparent/seniat-e1652835879808.png",
+  },
+  {
+    name: "Super Garzon",
+    logo: "/images/clientes/transparent/supergarzon-logo-1589950454.png",
+  },
+];
+
+const marqueeClients = [...clients, ...clients];
+---
+<section class="home-section clients-marquee-section" aria-label="Clientes que han confiado en Industrias MM">
+  <Container>
+    <div class="clients-marquee-heading">
+      <p class="eyebrow">Nuestros clientes</p>
+      <h2>Empresas que confian en nosotros</h2>
+    </div>
+    <div class="clients-marquee">
+      <div class="clients-marquee__track">
+        {marqueeClients.map((client) => (
+          <div class="clients-marquee__item">
+            <img src={client.logo} alt={client.name} loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </Container>
+</section>

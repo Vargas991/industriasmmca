@@ -1,6 +1,7 @@
 export const prerender = false;
 ---
 import CTASection from "@/components/home/CTASection.astro";
+import ClientLogosMarquee from "@/components/home/ClientLogosMarquee.astro";
 import FeaturedProducts from "@/components/home/FeaturedProducts.astro";
 import HeroSection from "@/components/home/HeroSection.astro";
 import ProjectsPreview from "@/components/home/ProjectsPreview.astro";
@@ -22,6 +23,7 @@ const [products, services, projects] = await Promise.all([
 <BaseLayout seo={buildPageSeo()}>
   <HeroSection />
   <FeaturedProducts products={products} />
+  <ClientLogosMarquee />
   <ServicesOverview services={services} />
   <WhyChooseUs />
   <ProjectsPreview projects={projects} />

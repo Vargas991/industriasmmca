@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Industrias MM",
   legalName: "Industrias MM C.A.",
   description:
-    "Le acompañamos con soluciones metalmecánicas a la medida.",
+    "Acompañamos tu proyecto con mobiliario funcional y servicios especializados para resolver lo que necesitas.",
   url: import.meta.env.PUBLIC_SITE_URL ?? "https://industriasmmca.com",
   phone: "+58 4127815210",
   email: import.meta.env.CONTACT_EMAIL ?? "industriasmm1@gmail.com",

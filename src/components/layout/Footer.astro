@@ -58,17 +58,34 @@ const iconMap: Record<SocialLink["label"], string> = {
         </ul>
       </div>
       {footerGroups.map((group) => (
-        <div class="flow footer-link-group">
+        <div class={`flow footer-link-group ${group.title === "Contacto" ? "footer-link-group--contact" : ""}`}>
           <strong>{group.title}</strong>
-          <ul class="footer-links footer-links--stacked">
-            {group.links.map((item) => (
-              <li><a href={item.href}>{item.label}</a></li>
-            ))}
-          </ul>
+          {group.title === "Contacto" ? (
+            <div class="footer-contact-grid">
+              <ul class="footer-links footer-links--stacked">
+                {group.links.slice(0, 3).map((item) => (
+                  <li><a href={item.href}>{item.label}</a></li>
+                ))}
+              </ul>
+              <ul class="footer-links footer-links--stacked">
+                {group.links.slice(3).map((item) => (
+                  <li><a href={item.href}>{item.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <ul class="footer-links footer-links--stacked">
+              {group.links.map((item) => (
+                <li><a href={item.href}>{item.label}</a></li>
+              ))}
+            </ul>
+          )}
         </div>
       ))}
     </div>
-    <p class="footer-copyright">Copyright {new Date().getFullYear()} {siteConfig.legalName}. Todos los derechos reservados.</p>
-    <p class="footer-copyright">Desarrollado por <a href="https://www.vareddev.com" target="_blank" rel="noreferrer">VaredDev</a></p>
+    <div class="footer-bottom">
+      <p class="footer-copyright">Copyright {new Date().getFullYear()} {siteConfig.legalName}. Todos los derechos reservados.</p>
+      <p class="footer-copyright">Desarrollado por <a href="https://www.vareddev.com" target="_blank" rel="noreferrer">VaredDev</a></p>
+    </div>
   </Container>
 </footer>
