@@ -11,8 +11,8 @@ const { items } = Astro.props;
 <Container>
   <nav aria-label="Breadcrumb" class="breadcrumbs">
     <ol>
-      {items.map((item) => (
-        <li><a href={item.url}>{item.name}</a></li>
+      {items.map((item, idx) => (
+        <li><a href={item.url}>{item.name} {idx < items.length - 1 ? ' > ' : ''} </a></li>
       ))}
     </ol>
   </nav>

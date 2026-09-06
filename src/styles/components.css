@@ -2370,11 +2370,12 @@
   font-weight: 700;
 }
 
-.breadcrumbs ol {
+.breadcrumbs ol { 
+
   display: flex;
   gap: 0.75rem;
   list-style: none;
-  padding: 1rem 0 0;
+  padding: 6rem 0 0;
 }
 
 .breadcrumbs a {
