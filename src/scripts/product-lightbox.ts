@@ -90,6 +90,13 @@ galleries.forEach((gallery) => {
       lightbox.open(images, index >= 0 ? index : 0);
     });
   }
+
+  if (mainImage && images.length === 0) {
+    mainImage.style.cursor = 'zoom-in';
+    mainImage.addEventListener('click', () => {
+      lightbox.open([mainImage.currentSrc || mainImage.src], 0);
+    });
+  }
 });
 
 export {};

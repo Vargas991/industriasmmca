@@ -2411,13 +2411,28 @@
 .breadcrumbs ol { 
 
   display: flex;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  align-items: center;
   list-style: none;
   padding: 6rem 0 0;
 }
 
+.breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
 .breadcrumbs a {
   color: var(--color-sage-deep);
+}
+
+.breadcrumbs span {
+  color: var(--color-sage-deep);
+  line-height: 1;
+  opacity: 0.72;
 }
 
 .cta-section {

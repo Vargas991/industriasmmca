@@ -12,7 +12,10 @@ const { items } = Astro.props;
   <nav aria-label="Breadcrumb" class="breadcrumbs">
     <ol>
       {items.map((item, idx) => (
-        <li><a href={item.url}>{item.name} {idx < items.length - 1 ? ' > ' : ''} </a></li>
+        <li>
+          <a href={item.url}>{item.name}</a>
+          {idx < items.length - 1 && <span aria-hidden="true">&rsaquo;</span>}
+        </li>
       ))}
     </ol>
   </nav>
