@@ -3672,6 +3672,26 @@
     aspect-ratio: 0.82;
   }
 
+  .product-showcase-overlay {
+    padding-top: 3.4rem;
+    padding-bottom: 4rem;
+    transform: translateY(0);
+  }
+
+  .product-showcase-action {
+    opacity: 1;
+    visibility: visible;
+    background: var(--color-gold-light);
+    color: #1d2724;
+    transform: translateY(0);
+  }
+
+  .product-showcase-copy > p:not(.eyebrow) {
+    max-height: 3.2rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .product-showcase-card h3,
   .product-showcase-card p {
     overflow-wrap: anywhere;
