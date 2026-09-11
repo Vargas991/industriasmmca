@@ -1438,6 +1438,32 @@
   flex-wrap: wrap;
 }
 
+.hero-actions .button--primary {
+  color: #ffffff;
+  border-color: var(--color-sage-deep);
+  background: var(--color-sage-deep);
+}
+
+.hero-actions .button--primary:hover,
+.hero-actions .button--primary:focus-visible {
+  color: var(--color-ink);
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.hero-actions .button--secondary {
+  color: var(--color-ink);
+  border-color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.hero-actions .button--secondary:hover,
+.hero-actions .button--secondary:focus-visible {
+  color: var(--color-ink);
+  border-color: var(--color-gold-deep);
+  background: var(--color-gold-light);
+}
+
 .hero-copy {
   max-width: 70rem;
   padding: 0;
@@ -1710,37 +1736,49 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.9rem 1.4rem;
-  border-radius: 999px;
-  border: 1px solid transparent;
+  min-height: 2.7rem;
+  padding: 0.68rem 1.2rem;
+  border-radius: 0;
+  border: 2px solid var(--color-ink);
+  color: var(--color-ink);
+  font-size: 0.76rem;
   font-weight: 700;
-  box-shadow: var(--shadow-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: none;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
 }
 
 .button--primary {
-  background: linear-gradient(
-    135deg,
-    var(--color-sage-deep),
-    var(--color-sage)
-  );
-  color: #fff;
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.42);
 }
 
 .button--primary:hover,
 .button--primary:focus-visible {
-  background: linear-gradient(135deg, var(--color-ink), var(--color-sage-deep));
+  color: #ffffff;
+  background: var(--color-ink);
+  transform: translateY(-2px);
 }
 
 .button--secondary {
-  background: rgba(255, 255, 255, 0.7);
-  color: var(--color-sage-deep);
-  border-color: rgba(200, 166, 75, 0.7);
+  color: var(--color-ink);
+  border-color: var(--color-gold);
+  background: rgba(255, 255, 255, 0.42);
 }
 
 .button--secondary:hover,
 .button--secondary:focus-visible {
-  background: rgba(200, 166, 75, 0.12);
-  color: var(--color-gold-deep);
+  color: var(--color-ink);
+  background: var(--color-gold-light);
+  border-color: var(--color-gold-deep);
+  transform: translateY(-2px);
 }
 
 .grid-cards,
