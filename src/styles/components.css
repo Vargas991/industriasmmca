@@ -2427,6 +2427,7 @@
 
 .breadcrumbs a {
   color: var(--color-sage-deep);
+  overflow-wrap: anywhere;
 }
 
 .breadcrumbs span {
@@ -2663,30 +2664,40 @@
   max-height: 100vh;
   object-fit: contain;
   display: block;
+  border-radius: 0;
 }
 
 .product-lightbox-close,
 .product-lightbox-prev,
 .product-lightbox-next {
   position: absolute;
-  top: 1rem;
-  background: rgba(0,0,0,0.45);
+  background: transparent;
   color: #fff;
   border: 0;
-  padding: 0.5rem 0.75rem;
-  font-size: 1.6rem;
-  border-radius: 0.5rem;
+  padding: 0;
+  font-size: 0;
   cursor: pointer;
   pointer-events: auto;
+  opacity: 0;
 }
 
-.product-lightbox-close { right: 1rem; top: 1rem; }
-.product-lightbox-prev { left: 0.5rem; top: 50%; transform: translateY(-50%); }
-.product-lightbox-next { right: 0.5rem; top: 50%; transform: translateY(-50%); }
+.product-lightbox-close {
+  display: none;
+}
+
+.product-lightbox-prev,
+.product-lightbox-next {
+  top: 0;
+  bottom: 0;
+  width: min(18rem, 28vw);
+}
+
+.product-lightbox-prev { left: 0; }
+.product-lightbox-next { right: 0; }
 
 .product-lightbox-prev, .product-lightbox-next {
-  padding: 0.75rem 1rem;
-  font-size: 2rem;
+  padding: 0;
+  font-size: 0;
   border-radius: 999px;
 }
 
@@ -3550,6 +3561,16 @@
 }
 
 @media (max-width: 900px) {
+  .breadcrumbs ol {
+    width: 100%;
+    max-width: 100%;
+    padding-top: 4.8rem;
+  }
+
+  .breadcrumbs li {
+    max-width: 100%;
+  }
+
   .hero-grid,
   .detail-grid,
   .footer-grid,
@@ -3592,15 +3613,24 @@
   }
 
   .product-showcase-slider {
+    max-width: 100%;
     margin-left: 0;
   }
 
   .product-showcase-track {
     gap: 0.75rem;
+    max-width: 100%;
   }
 
   .product-showcase-card {
     flex-basis: 100%;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .product-showcase-link,
+  .product-showcase-overlay {
+    max-width: 100%;
   }
 
   .clients-marquee__item {
@@ -3631,6 +3661,11 @@
   .product-showcase-card {
     min-height: 23rem;
     aspect-ratio: 0.82;
+  }
+
+  .product-showcase-card h3,
+  .product-showcase-card p {
+    overflow-wrap: anywhere;
   }
 
   .header-inner {

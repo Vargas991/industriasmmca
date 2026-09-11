@@ -28,6 +28,7 @@ function createLightbox() {
 
   let currentImages: string[] = [];
   let currentIndex = 0;
+  let touchStartX = 0;
 
   function show(index: number) {
     currentIndex = index;
@@ -57,6 +58,18 @@ function createLightbox() {
   prevBtn.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
   nextBtn.addEventListener('click', (e) => { e.stopPropagation(); next(); });
 
+  imgEl.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0]?.clientX ?? 0;
+  }, { passive: true });
+
+  imgEl.addEventListener('touchend', (e) => {
+    const touchEndX = e.changedTouches[0]?.clientX ?? touchStartX;
+    const deltaX = touchEndX - touchStartX;
+    if (Math.abs(deltaX) < 40 || currentImages.length < 2) return;
+    if (deltaX < 0) next();
+    if (deltaX > 0) prev();
+  });
+
   document.addEventListener('keydown', (e) => {
     if (!overlay.classList.contains('is-open')) return;
     if (e.key === 'Escape') close();
@@ -67,6 +80,9 @@ function createLightbox() {
   return {
     open(images: string[], index = 0) {
       currentImages = images.slice();
+      const hasMultipleImages = currentImages.length > 1;
+      prevBtn.hidden = !hasMultipleImages;
+      nextBtn.hidden = !hasMultipleImages;
       show(index);
     },
     close,
