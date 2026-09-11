@@ -547,8 +547,9 @@
 
 .product-showcase-card {
   flex: 0 0 calc((100% - 1.8rem) / 3);
-  aspect-ratio: 0.78;
+  /* aspect-ratio: 0.78; */
   min-height: 24rem;
+  width: fit-content;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   border-radius: 0.45rem;
@@ -656,21 +657,37 @@
   inset: auto 0 0;
   z-index: 2;
   display: grid;
-  gap: 0.85rem;
-  padding: clamp(1.2rem, 2vw, 1.55rem);
+  grid-template-rows: auto auto auto auto;
+  gap: 0.45rem;
+  padding: 2.7rem clamp(1.2rem, 2vw, 1.55rem) 0.55rem;
   color: #ffffff;
   background:
-    linear-gradient(180deg, transparent 0%, rgba(3, 5, 5, 0.48) 24%, rgba(3, 5, 5, 0.95) 100%);
+    linear-gradient(180deg, transparent 0%, rgba(3, 5, 5, 0.42) 34%, rgba(3, 5, 5, 0.86) 72%, rgba(3, 5, 5, 0.98) 100%);
+  transform: translateY(0);
+  transition:
+    padding-bottom 220ms ease,
+    padding-top 220ms ease,
+    transform 220ms ease;
+}
+
+.product-showcase-link:hover .product-showcase-overlay,
+.product-showcase-link:focus-visible .product-showcase-overlay {
+  padding-top: 3.4rem;
+  padding-bottom: 4rem;
+  transform: translateY(-0.45rem);
 }
 
 .product-showcase-copy {
-  display: grid;
-  gap: 0.35rem;
+  display: contents;
 }
 
 .product-showcase-action {
+  position: absolute;
+  right: clamp(1.2rem, 2vw, 1.55rem);
+  bottom: 0.95rem;
   display: inline-flex;
   width: fit-content;
+  justify-self: end;
   align-items: center;
   justify-content: center;
   min-height: 2.45rem;
@@ -682,7 +699,12 @@
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(0.55rem);
+  visibility: hidden;
   transition:
+    opacity 180ms ease,
+    visibility 180ms ease,
     background-color 180ms ease,
     color 180ms ease,
     transform 180ms ease;
@@ -690,9 +712,11 @@
 
 .product-showcase-link:hover .product-showcase-action,
 .product-showcase-link:focus-visible .product-showcase-action {
+  opacity: 1;
+  visibility: visible;
   background: var(--color-gold-light);
   color: #1d2724;
-  transform: translateY(-2px);
+  transform: translateY(0);
 }
 
 .product-showcase-card h3 {
@@ -708,9 +732,23 @@
 .product-showcase-copy > p:not(.eyebrow) {
   display: -webkit-box;
   overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(0.4rem);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-clamp: 2;
+  transition:
+    max-height 220ms ease,
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.product-showcase-link:hover .product-showcase-copy > p:not(.eyebrow),
+.product-showcase-link:focus-visible .product-showcase-copy > p:not(.eyebrow) {
+  max-height: 3.2rem;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .product-showcase-card .eyebrow {
