@@ -8,11 +8,20 @@ html {
   font-family: var(--font-body);
   color: var(--color-ink);
   background: var(--color-ice);
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   background:#fff;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+main {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 img {
