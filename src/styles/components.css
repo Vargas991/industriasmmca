@@ -559,7 +559,7 @@
     transform 180ms ease,
     filter 180ms ease;
 }
-
+ 
 .product-showcase-card:hover,
 .product-showcase-card:focus-within {
   transform: translateY(-6px);
